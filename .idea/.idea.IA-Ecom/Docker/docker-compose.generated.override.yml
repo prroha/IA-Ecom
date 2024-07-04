@@ -1,0 +1,22 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  ia-ecom:
+    build:
+      context: "/home/proha/.worspace/IA-Ecom"
+      dockerfile: "IA-Ecom/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/IA-Ecom.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_STATICWEBASSETS: "/app/bin/Debug/net8.0/IA-Ecom.staticwebassets.runtime.CT.json"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "ia-ecom:dev"
+    ports: []
+    volumes:
+    - "/home/proha/.nuget/packages:/home/app/.nuget/packages"
+    - "/home/proha/.worspace/IA-Ecom/IA-Ecom:/app:rw"
+    - "/home/proha/.worspace/IA-Ecom:/src:rw"
+    working_dir: "/app"
