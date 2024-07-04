@@ -1,0 +1,23 @@
+/* Updated .nav styles */
+.nav {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    height: var(--header-height);
+    padding: 0 var(--spacing-medium);
+}
+
+/* Ensure dropdown menu is positioned correctly */
+.header__profile-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--white-color);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    display: none;
+    flex-direction: column;
+}
+
+
+/* Additional styling to ensure proper layout */
+
