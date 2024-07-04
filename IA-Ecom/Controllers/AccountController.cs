@@ -16,9 +16,24 @@ public class AccountController(
     [HttpGet]
     public IActionResult Login(string returnUrl = null)
     {
-        ViewData["ReturnUrl"] = returnUrl;
-        var model = new LoginViewModel();
-        return View(model);
+        if (User.Identity.IsAuthenticated)
+        {
+            // Check if the user is in the Admin role
+            if (User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Dashboard", "Admin"); // Redirect to Admin Dashboard
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home"); // Redirect to Home Page for regular users
+            }
+        }
+        else
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            var model = new LoginViewModel();
+            return View(model);
+        }
     }
 
     // POST: /Account/Login

@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("IA-Ecom")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+459a82c5daab076ecc004369caeec630fe178dcc")]
 [assembly: System.Reflection.AssemblyProductAttribute("IA-Ecom")]
 [assembly: System.Reflection.AssemblyTitleAttribute("IA-Ecom")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
