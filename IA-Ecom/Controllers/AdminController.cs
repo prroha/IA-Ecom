@@ -7,30 +7,20 @@ using IA_Ecom.Models;
 using IA_Ecom.Services;
 using IA_Ecom.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace IA_Ecom.Controllers
 {
     [Route("admin")]
     [Authorize(Roles = "Admin")]
-    public class AdminController : Controller
+    public class AdminController(
+        IProductService productService,
+        IOrderService orderService,
+        IUserService userService,
+    UserManager<User> userManager,
+        IFeedbackService feedbackService)
+        : Controller
     {
-        private readonly IProductService _productService;
-        private readonly IOrderService _orderService;
-        private readonly IUserService _userService;
-        private readonly IFeedbackService _feedbackService;
-
-        public AdminController(
-            IProductService productService,
-            IOrderService orderService,
-            IUserService userService,
-            IFeedbackService feedbackService)
-        {
-            _productService = productService;
-            _orderService = orderService;
-            _userService = userService;
-            _feedbackService = feedbackService;
-        }
-
         public IActionResult Index()
         {
                 return RedirectToAction(nameof(Dashboard));
@@ -41,9 +31,9 @@ namespace IA_Ecom.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Dashboard()
         {
-            var usersCount = await _userService.CountAllAsync();
-            var productsCount = await _productService.CountAllAsync();
-            var ordersCount = await _orderService.CountAllAsync();
+            var usersCount = await userService.CountAllAsync();
+            var productsCount = await productService.CountAllAsync();
+            var ordersCount = await orderService.CountAllAsync();
 
             var dashboardData = new AdminDashboardViewModel
             {
@@ -63,11 +53,23 @@ namespace IA_Ecom.Controllers
 
             return View(dashboardData);
         }
+        
+        [HttpPost("profile")]
+        public async Task<IActionResult> Profile()
+        {
+            var profile = new ProfileViewModel();
+            if (ModelState.IsValid)
+            {
+                // await _productService.AddProductAsync(product);
+                // return RedirectToAction(nameof(Products));
+            }
+            return View(profile);
+        }
         // GET: /admin/products
         [HttpGet("products")]
-        public async Task<IActionResult> Products()
+        public async Task<IActionResult> ManageProducts()
         {
-            var products = await _productService.GetAllProductsAsync();
+            var products = await productService.GetAllProductsAsync();
             return View(products);
         }
 
@@ -75,7 +77,7 @@ namespace IA_Ecom.Controllers
         [HttpGet("products/{id}")]
         public async Task<IActionResult> ProductDetails(int id)
         {
-            var product = await _productService.GetProductByIdAsync(id);
+            var product = await productService.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound();
@@ -89,17 +91,17 @@ namespace IA_Ecom.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _productService.AddProductAsync(product);
-                return RedirectToAction(nameof(Products));
+                await productService.AddProductAsync(product);
+                return RedirectToAction(nameof(ManageProducts));
             }
             return View(product);
         }
 
         // GET: /admin/orders
         [HttpGet("orders")]
-        public async Task<IActionResult> Orders()
+        public async Task<IActionResult> ManageOrders()
         {
-            var orders = await _orderService.GetAllOrdersAsync();
+            var orders = await orderService.GetAllOrdersAsync();
             return View(orders);
         }
 
@@ -107,7 +109,7 @@ namespace IA_Ecom.Controllers
         [HttpGet("orders/{id}")]
         public async Task<IActionResult> OrderDetails(int id)
         {
-            var order = await _orderService.GetOrderByIdAsync(id);
+            var order = await orderService.GetOrderByIdAsync(id);
             if (order == null)
             {
                 return NotFound();
@@ -117,17 +119,33 @@ namespace IA_Ecom.Controllers
 
         // GET: /admin/users
         [HttpGet("users")]
-        public async Task<IActionResult> Users()
+        public async Task<IActionResult> ManageUsers()
         {
-            var users = await _userService.GetAllUsersAsync();
-            return View(users);
+            var users = await userService.GetAllUsersAsync(); // Replace with your service method
+            var model = new List<UserViewModel>();
+
+            foreach (var user in users)
+            {
+                var roles = await userManager.GetRolesAsync(user);
+                var userViewModel = new UserViewModel
+                {
+                    UserId = user.Id,
+                    Username = user.UserName,
+                    Email = user.Email,
+                    FullName = user.FullName,
+                    Role = roles.FirstOrDefault() // Assuming you have a method to fetch user's role
+                };
+                model.Add(userViewModel);
+            }
+
+            return View(model);
         }
 
         // GET: /admin/users/{id}
         [HttpGet("users/{id}")]
         public async Task<IActionResult> UserDetails(int id)
         {
-            var user = await _userService.GetUserByIdAsync(id);
+            var user = await userService.GetUserByIdAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -137,9 +155,9 @@ namespace IA_Ecom.Controllers
 
         // GET: /admin/feedbacks
         [HttpGet("feedbacks")]
-        public async Task<IActionResult> Feedbacks()
+        public async Task<IActionResult> ManageFeedbacks()
         {
-            var feedbacks = await _feedbackService.GetAllFeedbacksAsync();
+            var feedbacks = await feedbackService.GetAllFeedbacksAsync();
             return View(feedbacks);
         }
 
@@ -147,7 +165,7 @@ namespace IA_Ecom.Controllers
         [HttpGet("feedbacks/{id}")]
         public async Task<IActionResult> FeedbackDetails(int id)
         {
-            var feedback = await _feedbackService.GetFeedbackByIdAsync(id);
+            var feedback = await feedbackService.GetFeedbackByIdAsync(id);
             if (feedback == null)
             {
                 return NotFound();

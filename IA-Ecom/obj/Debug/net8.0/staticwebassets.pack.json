@@ -5,12 +5,220 @@
       "PackagePath": "staticwebassets/IA-Ecom.bundle.scp.css"
     },
     {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/css/admin.css",
+      "PackagePath": "staticwebassets/css/admin.css"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/css/base.css",
+      "PackagePath": "staticwebassets/css/base.css"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/css/cart.css",
+      "PackagePath": "staticwebassets/css/cart.css"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/css/contact.css",
+      "PackagePath": "staticwebassets/css/contact.css"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/css/main.css",
+      "PackagePath": "staticwebassets/css/main.css"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/css/process-payment.css",
+      "PackagePath": "staticwebassets/css/process-payment.css"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/css/product-details.css",
+      "PackagePath": "staticwebassets/css/product-details.css"
+    },
+    {
       "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/css/site.css",
       "PackagePath": "staticwebassets/css/site.css"
     },
     {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/css/style.css",
+      "PackagePath": "staticwebassets/css/style.css"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/css/test.css",
+      "PackagePath": "staticwebassets/css/test.css"
+    },
+    {
       "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/favicon.ico",
       "PackagePath": "staticwebassets/favicon.ico"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/appstore1.png",
+      "PackagePath": "staticwebassets/images/appstore1.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/appstore2.png",
+      "PackagePath": "staticwebassets/images/appstore2.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/customer1.jpg",
+      "PackagePath": "staticwebassets/images/customer1.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/customer2.jpg",
+      "PackagePath": "staticwebassets/images/customer2.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/customer3.jpg",
+      "PackagePath": "staticwebassets/images/customer3.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/file (2).png",
+      "PackagePath": "staticwebassets/images/file (2).png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/hom1.png",
+      "PackagePath": "staticwebassets/images/hom1.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/home2.png",
+      "PackagePath": "staticwebassets/images/home2.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/home3.jpg",
+      "PackagePath": "staticwebassets/images/home3.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/home3.png",
+      "PackagePath": "staticwebassets/images/home3.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/home4.jpg",
+      "PackagePath": "staticwebassets/images/home4.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/home4.png",
+      "PackagePath": "staticwebassets/images/home4.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/logo1.png",
+      "PackagePath": "staticwebassets/images/logo1.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/logo2.png",
+      "PackagePath": "staticwebassets/images/logo2.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/logo3.png",
+      "PackagePath": "staticwebassets/images/logo3.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/logo4.png",
+      "PackagePath": "staticwebassets/images/logo4.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/offer.jpg",
+      "PackagePath": "staticwebassets/images/offer.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/pexels-craytive-1464625.jpg",
+      "PackagePath": "staticwebassets/images/pexels-craytive-1464625.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/pexels-craytive-1476209.jpg",
+      "PackagePath": "staticwebassets/images/pexels-craytive-1476209.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product0.png",
+      "PackagePath": "staticwebassets/images/product0.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product1.jpg",
+      "PackagePath": "staticwebassets/images/product1.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product1.png",
+      "PackagePath": "staticwebassets/images/product1.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product10.jpg",
+      "PackagePath": "staticwebassets/images/product10.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product11.jpg",
+      "PackagePath": "staticwebassets/images/product11.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product12.jpg",
+      "PackagePath": "staticwebassets/images/product12.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product12.png",
+      "PackagePath": "staticwebassets/images/product12.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product13.jpg",
+      "PackagePath": "staticwebassets/images/product13.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product14.jpg",
+      "PackagePath": "staticwebassets/images/product14.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product14.png",
+      "PackagePath": "staticwebassets/images/product14.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product2.jpg",
+      "PackagePath": "staticwebassets/images/product2.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product2.png",
+      "PackagePath": "staticwebassets/images/product2.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product3.jpg",
+      "PackagePath": "staticwebassets/images/product3.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product3.png",
+      "PackagePath": "staticwebassets/images/product3.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product4.jpg",
+      "PackagePath": "staticwebassets/images/product4.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product5.jpg",
+      "PackagePath": "staticwebassets/images/product5.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product5.png",
+      "PackagePath": "staticwebassets/images/product5.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product6.jpg",
+      "PackagePath": "staticwebassets/images/product6.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product7.jpg",
+      "PackagePath": "staticwebassets/images/product7.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product8.jpg",
+      "PackagePath": "staticwebassets/images/product8.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product8.png",
+      "PackagePath": "staticwebassets/images/product8.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product9.jpg",
+      "PackagePath": "staticwebassets/images/product9.jpg"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/images/product9.png",
+      "PackagePath": "staticwebassets/images/product9.png"
+    },
+    {
+      "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/js/main.js",
+      "PackagePath": "staticwebassets/js/main.js"
     },
     {
       "Id": "/home/proha/.worspace/IA-Ecom/IA-Ecom/wwwroot/js/site.js",

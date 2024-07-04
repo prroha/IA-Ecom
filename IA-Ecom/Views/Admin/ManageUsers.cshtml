@@ -1,0 +1,147 @@
+@model List<IA_Ecom.ViewModels.UserViewModel>;
+@{
+ViewData["Title"] = "User Management";
+Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+    <div class="page-title">
+        <h2>User Management</h2>
+    </div>
+    <div class="responsive-grid">
+        <div class="card">
+            <div class="">
+                <h3>User List</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>FullName</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                    @foreach (var user in Model)
+                    {
+                    <tr>
+                        <td>@user.Username</td>
+                        <td>@user.Email</td>
+                        <td>@user.FullName</td>
+                        <td>@user.Role</td>
+                        <td>
+                            <a href="@Url.Action("EditUser", new { id = user.UserId })" class="button">Edit</a>
+                            <a href="@Url.Action("DeleteUser", new { id = user.UserId })" class="button-secondary">Delete</a>
+                        </td>
+                    </tr>
+                    }                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="">
+                <h3>Create / Edit User</h3>
+                <form id="userForm" class="user-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" class="user-form__input form-control" placeholder="Enter your name" name="username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="user-form__input form-control" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <select name="role" id="role">
+                            <option value="admin">Admin</option>
+                            <option value="editor">Editor</option>
+                            <option value="viewer">Viewer</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="button">Save User</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const profileDropdownButton = document.getElementById('profileDropdownButton');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const logoutButton = document.getElementById('logout');
+        const toggle = document.querySelector('.header__toggle');
+        const sidebar = document.querySelector('.sidebar');
+
+        toggle.addEventListener('click', function () {
+            sidebar.classList.toggle('sidebar--active');
+        });
+
+        profileDropdownButton.addEventListener('click', function (e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('admin-header__profile--active');
+        });
+
+        document.addEventListener('click', function () {
+            profileDropdown.classList.remove('admin-header__profile--active');
+        });
+        logoutButton.addEventListener('click', function () {
+            logout();
+        });
+    });
+    function logout(username, password) {
+        // const users = JSON.parse(localStorage.getItem('users')) || [];
+        // users = users.remove(user => user.username === username && user.password === password);
+        // users.push(userData);
+        // return localStorage.setItem('users', JSON.stringify(users));
+
+        window.location.href = '../../login/login.html';
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const userForm = document.getElementById('userForm');
+        const userTableBody = document.getElementById('userTableBody');
+
+        userForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const username = userForm.username.value;
+            const email = userForm.email.value;
+            const role = userForm.role.value;
+
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                    <td>${username}</td>
+                    <td>${email}</td>
+                    <td>${role}</td>
+                    <td>
+                        <button class="button" onclick="editUser(this)">Edit</button>
+                        <button class="button-secondary" onclick="deleteUser(this)">Delete</button>
+                    </td>
+                `;
+            userTableBody.appendChild(newRow);
+            userForm.reset();
+        });
+    });
+
+    function editUser(button) {
+        const row = button.parentElement.parentElement;
+        const username = row.cells[0].textContent;
+        const email = row.cells[1].textContent;
+        const role = row.cells[2].textContent;
+
+        const userForm = document.getElementById('userForm');
+        userForm.username.value = username;
+        userForm.email.value = email;
+        userForm.role.value = role;
+
+        // row.remove();
+    }
+
+    function deleteUser(button) {
+        const row = button.parentElement.parentElement;
+        row.remove();
+    }
+</script>
