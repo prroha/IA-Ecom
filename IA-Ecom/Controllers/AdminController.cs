@@ -1,18 +1,17 @@
+using System.Collections;
+using IA_Ecom.Mappers;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using IA_Ecom.Models;
-using IA_Ecom.Services;
 using IA_Ecom.Models;
 using IA_Ecom.Services;
 using IA_Ecom.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis;
 
 namespace IA_Ecom.Controllers
 {
     [Route("admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "ADMIN")]
     public class AdminController(
         IProductService productService,
         IOrderService orderService,
@@ -28,7 +27,7 @@ namespace IA_Ecom.Controllers
         
 // GET: /Admin/Dashboard
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Dashboard()
         {
             var usersCount = await userService.CountAllAsync();
@@ -69,8 +68,9 @@ namespace IA_Ecom.Controllers
         [HttpGet("products")]
         public async Task<IActionResult> ManageProducts()
         {
-            var products = await productService.GetAllProductsAsync();
-            return View(products);
+            IEnumerable<Product> products = await productService.GetAllProductsAsync();
+            List<ProductViewModel> viewModel = products.Select(o => ProductMapper.MapToViewModel(o)).ToList();
+            return View(viewModel);
         }
 
         // GET: /admin/products/{id}
@@ -101,8 +101,9 @@ namespace IA_Ecom.Controllers
         [HttpGet("orders")]
         public async Task<IActionResult> ManageOrders()
         {
-            var orders = await orderService.GetAllOrdersAsync();
-            return View(orders);
+            IEnumerable<Order> orders = await orderService.GetAllOrdersAsync();
+            List<OrderViewModel> viewModel = orders.Select(o => OrderMapper.MapToViewModel(o)).ToList();
+            return View(viewModel);
         }
 
         // GET: /admin/orders/{id}

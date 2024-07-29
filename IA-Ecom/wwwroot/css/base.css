@@ -40,6 +40,16 @@
     --background-color: #f4f4f4;    /* Background color */
     --text-color: #333333;          /* Text color */
 
+    --info-color: #3498db;       /* Info color */
+    --info-color-light: #85c1e9; /* Lighter variant for backgrounds or borders */
+    --info-color-dark: #2a7bb8;  /* Darker variant for emphasis */
+    --warning-color: #f39c12;       /* Warning color */
+    --warning-color-light: #f7c66f; /* Lighter variant for backgrounds or borders */
+    --warning-color-dark: #c87f0b;  /* Darker variant for emphasis */
+    --error-color: #e74c3c;       /* Error color */
+    --error-color-light: #f1948a; /* Lighter variant for backgrounds or borders */
+    --error-color-dark: #c0392b;  /* Darker variant for emphasis */
+
     /* For Typography */
     --body-font: 'Open Sans', sans-serif;
     --font-size-base: 1rem;

@@ -1,0 +1,141 @@
+@model List<IA_Ecom.ViewModels.ProductViewModel>;
+<!-- FEATURED PRODUCTS -->
+<section class="featured section" id="featured">
+    <h2 class="section-title">ALL PRODUCTS</h2>
+
+    <div class="featured__container grid">
+
+        @foreach (var product in Model)
+        {
+            <div class="featured__product">
+                <a href="product-detail.html">
+                    <div class="featured__box">
+                        <div class="featured__new">NEW</div>
+                        <img src="../img/product0.png" class="featured__img" alt="">
+                    </div>
+
+                    <div class="featured__data">
+                        <h3 class="featured__name">White Shoes</h3>
+                        <span class="featured__price">$29</span>
+                    </div>
+                </a>
+            </div>
+        }
+
+        <div class="featured__product">
+            <div class="featured__box">
+                <div class="featured__new">NEW</div>
+                <img src="../img/product2.png" class="featured__img" alt="">
+            </div>
+
+            <div class="featured__data">
+                <h3 class="featured__name">Orange Suede Bag</h3>
+                <span class="featured__price">$199</span>
+            </div>
+        </div>
+
+        <div class="featured__product">
+            <div class="featured__box">
+                <div class="featured__new">NEW</div>
+                <img src="../img/product1.png" class="featured__img" alt="">
+            </div>
+
+            <div class="featured__data">
+                <h3 class="featured__name">Nikkon Camera</h3>
+                <span class="featured__price">$122</span>
+            </div>
+        </div>
+
+        <div class="featured__product">
+            <div class="featured__box">
+                <div class="featured__new">NEW</div>
+                <img src="../img/product8.png" class="featured__img" alt="">
+            </div>
+
+            <div class="featured__data">
+                <h3 class="featured__name">Casual Shoes</h3>
+                <span class="featured__price">$99</span>
+            </div>
+        </div>
+
+        <div class="featured__product">
+            <div class="featured__box">
+                <img src="../img/product0.png" class="featured__img" alt="">
+            </div>
+
+            <div class="featured__data">
+                <h3 class="featured__name">White Shoes</h3>
+                <span class="featured__price">$29</span>
+            </div>
+        </div>
+
+        <div class="featured__product">
+            <div class="featured__box">
+                <img src="../img/product5.png" class="featured__img" alt="">
+            </div>
+
+            <div class="featured__data">
+                <h3 class="featured__name">Ladies Shoes</h3>
+                <span class="featured__price">$199</span>
+            </div>
+        </div>
+
+        <div class="featured__product">
+            <div class="featured__box">
+                <img src="../img/product14.png" class="featured__img" alt="">
+            </div>
+
+            <div class="featured__data">
+                <h3 class="featured__name">Premium Blue Shoes</h3>
+                <span class="featured__price">$122</span>
+            </div>
+        </div>
+
+        <div class="featured__product">
+            <div class="featured__box">
+                <img src="../img/product8.png" class="featured__img" alt="">
+            </div>
+
+            <div class="featured__data">
+                <h3 class="featured__name">Casual Shoes</h3>
+                <span class="featured__price">$99</span>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter section" id="subscribed">
+    <div class="newsletter__container grid">
+        <div class="newsletter__subscribed">
+            <h2 class="section-title">OUR NEWSLETTER</h2>
+            <p class="newsletter__description">Promotion new products and sales. Directly to your inbox.</p>
+
+            <form action="" class="newsletter__form">
+                <input type="text" class="newsletter__input" placeholder="Enter your email">
+                <a href="#" class="button">SUBSCRIBE</a>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- SPONSORS -->
+<section class="sponsors section">
+    <div class="sponsors__container grid">
+        <div class="sponsors__logo">
+            <img src="../img/logo1.png" alt="">
+        </div>
+        <div class="sponsors__logo">
+            <img src="../img/logo2.png" alt="">
+        </div>
+        <div class="sponsors__logo">
+            <img src="../img/logo3.png" alt="">
+        </div>
+        <div class="sponsors__logo">
+            <img src="../img/logo4.png" alt="">
+        </div>
+    </div>
+</section>
+    
+

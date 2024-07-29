@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using IA_Ecom.Models;
 using IA_Ecom.Services;
+using IA_Ecom.ViewModels;
 
 namespace IA_Ecom.Controllers
 {
@@ -39,6 +40,29 @@ namespace IA_Ecom.Controllers
             return View(feedback);
         }
 
-        // Other actions for managing feedback
-    }
+// GET: /ContactUs
+        public IActionResult ContactUs()
+        {
+            return View("Home/ContactUs", new ContactUsViewModel());
+        }
+
+        // POST: /ContactUs
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ContactUs(ContactUsViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Process the form submission, e.g., save to database or send an email
+                // Redirect to a confirmation page or display a success message
+                return RedirectToAction("Confirmation");
+            }
+
+            return View("Home/ContactUs", new ContactUsViewModel());
+        }
+
+        public IActionResult Confirmation()
+        {
+            return View();
+        }    }
 }

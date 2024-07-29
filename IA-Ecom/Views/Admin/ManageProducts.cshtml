@@ -1,0 +1,157 @@
+@model List<IA_Ecom.ViewModels.ProductViewModel>;
+@{
+ViewData["Title"] = "Order Management";
+Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+    <div class="page-title">
+        <h2>Product Management</h2>
+    </div>
+    <div class="responsive-grid">
+        <div class="card">
+            <h3 class="card-title">Products</h3>
+            <table class="product-table">
+                <thead>
+                <tr>
+                    <th>Product ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var product in Model)
+                {
+                    <tr>
+                        <td>#001</td>
+                        <td>Product A</td>
+                        <td>Category 1</td>
+                        <td>$100</td>
+                        <td>50</td>
+                        <td>
+                            <button class="button edit-button" onclick="editProduct('001')">Edit</button>
+                            <button class="button-secondary delete-button" onclick="deleteProduct('001')">Delete</button>
+                        </td>
+                    </tr>
+                }
+                <!-- Repeat for more products -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title">Edit Product</h3>
+            <form id="edit-product-form" class="user-form">
+                <div class="form-group horizontal-group">
+                    <div >
+                        <label for="product-id">Product ID</label>
+                        <input type="text" id="product-id" class="user-form__input" readonly>
+                    </div>
+                    <div >
+                        <label for="product-category">Product Category</label>
+                        <input type="text" id="product-category" class="user-form__input">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="product-name">Product Name</label>
+                    <input type="text" id="product-name" class="user-form__input">
+                </div>
+                <div class="form-group horizontal-group">
+                    <div>
+                        <label for="product-price">Product Price</label>
+                        <input type="number" id="product-price" class="user-form__input">
+                    </div>
+                    <div>
+                        <label for="product-quantity">Product Quantity</label>
+                        <input type="number" id="product-quantity" class="user-form__input">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="product-description">Product Description</label>
+                    <textarea id="product-description" class="user-form__input"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="product-image">Product Image URL</label>
+                    <input type="url" id="product-image" class="user-form__input">
+                </div>
+                <div class="form-group horizontal-group">
+                    <div>
+                        <label for="product-sku">SKU</label>
+                        <input type="text" id="product-sku" class="user-form__input">
+                    </div>
+                    <div>
+                        <label for="product-weight">Weight</label>
+                        <input type="number" id="product-weight" class="user-form__input">
+                    </div>
+                </div>
+                <div class="form-group horizontal-group">
+                    <div>
+                        <label for="product-color">Color</label>
+                        <input type="text" id="product-color" class="user-form__input">
+                    </div>
+                    <div>
+                        <label for="product-size">Size</label>
+                        <input type="text" id="product-size" class="user-form__input">
+                    </div>
+                </div>
+                <button type="submit" class="button">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+<script>
+    function editProduct(productId) {
+        // Populate the form with product details for editing
+        // For demonstration, we're using hardcoded values
+        document.getElementById('product-id').value = productId;
+        document.getElementById('product-name').value = 'Product A';
+        document.getElementById('product-category').value = 'Category 1';
+        document.getElementById('product-price').value = 100;
+        document.getElementById('product-quantity').value = 50;
+        document.getElementById('product-description').value = 'This is a sample product description.';
+        document.getElementById('product-image').value = 'http://example.com/product-a.jpg';
+        document.getElementById('product-sku').value = 'SKU001';
+        document.getElementById('product-weight').value = '1.5';
+        document.getElementById('product-color').value = 'Red';
+        document.getElementById('product-size').value = 'M';    }
+
+    function deleteProduct(productId) {
+        // Implement product deletion logic
+        alert(`Product #${productId} deleted.`);
+    }
+
+    document.getElementById('edit-product-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        // Implement product update logic
+        alert('Product updated.');
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const profileDropdownButton = document.getElementById('profileDropdownButton');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const logoutButton = document.getElementById('logout');
+        const toggle = document.querySelector('.header__toggle');
+        const sidebar = document.querySelector('.sidebar');
+
+        toggle.addEventListener('click', function () {
+            sidebar.classList.toggle('sidebar--active');
+        });
+
+        profileDropdownButton.addEventListener('click', function (e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('admin-header__profile--active');
+        });
+
+        document.addEventListener('click', function () {
+            profileDropdown.classList.remove('admin-header__profile--active');
+        });
+        logoutButton.addEventListener('click', function () {
+            logout();
+        });
+        function logout(username, password) {
+            window.location.href = '../../login/login.html';
+        }
+    });
+</script>

@@ -670,3 +670,19 @@
     font-weight: bold;
     color: #e74c3c;
 }
+/*Other Shared Styles*/
+
+.text-info {
+    --bs-text-opacity: 1;
+    color: var(--info-color) !important;
+}
+
+.text-warning {
+    --bs-text-opacity: 1;
+    color: var(--warning-color) !important;
+}
+
+.text-error {
+    --bs-text-opacity: 1;
+    color: var(--error-color) !important;
+}

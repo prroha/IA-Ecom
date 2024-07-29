@@ -1,8 +1,249 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+Layout = "_PageLayout.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+            <!-- HOME -->
+            <section class="home" id="home">
+                <div class="home__container grid">
+                    <div class="home__data">
+                        <h1 class="home__title">Attire <br><span>For You</span></h1>
+                        <a href="#featured" class="button">Explore</a>
+                    </div>
+
+                    <div class="home-img">
+                        <img src="~/images/hom1.png" class="home__img" alt="">
+                    </div>
+                </div>
+            </section>
+
+            <!-- COLLECTION -->
+            <section class="collection section">
+                <div class="collection__container grid">
+                    <div class="collection__box">
+                        <img src="../img/product3.png" alt="" class="collection__img">
+
+                        <div class="collection__data">
+                            <h2 class="collection__title"><span class="collection__subtitle">Mens</span><br>Wear</h2>
+                            <a href="product-list.html" class="collection__view">View collection</a>
+                        </div>
+                    </div>
+
+                    <div class="collection__box">
+                        <div class="collection__data">
+                            <h2 class="collection__title"><span class="collection__subtitle">Women</span><br>Wear</h2>
+                            <a href="product-list.html" class="collection__view">View collection</a>
+                        </div>
+
+                        <img src="../img/product5.png" alt="" class="collection__img">
+                    </div>
+                </div>
+            </section>
+
+            <!-- FEATURED PRODUCTS -->
+            <section class="featured section" id="featured">
+                <h2 class="section-title">FEATURED PRODUCTS</h2>
+                <a href="product-list.html" class="section-link">View All</a>
+
+                <div class="featured__container grid">
+                    <div class="featured__product">
+                        <div class="featured__box">
+                            <div class="featured__new">NEW</div>
+                            <img src="../img/product0.png" class="featured__img" alt="">
+                        </div>
+
+                        <div class="featured__data">
+                            <h3 class="featured__name">White Sneakers</h3>
+                            <span class="featured__price">$25</span>
+                        </div>
+                    </div>
+
+                    <div class="featured__product">
+                        <div class="featured__box">
+                            <div class="featured__new">NEW</div>
+                            <img src="../img/product2.png" class="featured__img" alt="">
+                        </div>
+
+                        <div class="featured__data">
+                            <h3 class="featured__name">Orange Suede Bag</h3>
+                            <span class="featured__price">$99</span>
+                        </div>
+                    </div>
+
+                    <div class="featured__product">
+                        <div class="featured__box">
+                            <div class="featured__new">NEW</div>
+                            <img src="../img/product1.png" class="featured__img" alt="">
+                        </div>
+
+                        <div class="featured__data">
+                            <h3 class="featured__name">Nikkon Camera</h3>
+                            <span class="featured__price">$100</span>
+                        </div>
+                    </div>
+
+                    <div class="featured__product">
+                        <div class="featured__box">
+                            <div class="featured__new">NEW</div>
+                            <img src="../img/product3.png" class="featured__img" alt="">
+                        </div>
+
+                        <div class="featured__data">
+                            <h3 class="featured__name">Yellow Premium Shoes</h3>
+                            <span class="featured__price">$60</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- OFFER -->
+            <section class="offer section">
+                <div class="offer__bg">
+                    <div class="offer__data">
+                        <h2 class="offer__title">Special Offer</h2>
+                        <p class="offer__description">Special offers discounts for women this week only</p>
+
+                        <a href="#" class="button">SHOP NOW</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NEW ARRIVALS -->
+            <section class="featured section" id="new-products">
+                <h2 class="section-title">NEW ARRIVALS</h2>
+                <a href="new-arrivals.html" class="section-link">View All</a>
+
+                <div class="new__container grid">
+                    <div class="new__box">
+                        <img src="../img/product5.png" alt="" class="new__img">
+
+                        <div class="new__link">
+                            <a href="#" class="button">VIEW PRODUCT</a>
+                        </div>
+                    </div>
+
+                    <div class="new__box">
+                        <img src="../img/product8.png" alt="" class="new__img">
+
+                        <div class="new__link">
+                            <a href="#" class="button">VIEW PRODUCT</a>
+                        </div>
+                    </div>
+
+                    <div class="new__box">
+                        <img src="../img/product9.png" alt="" class="new__img">
+
+                        <div class="new__link">
+                            <a href="#" class="button">VIEW PRODUCT</a>
+                        </div>
+                    </div>
+
+                    <div class="new__box">
+                        <img src="../img/product12.png" alt="" class="new__img">
+
+                        <div class="new__link">
+                            <a href="#" class="button">VIEW PRODUCT</a>
+                        </div>
+                    </div>
+
+                    <div class="new__box">
+                        <img src="../img/product14.png" alt="" class="new__img">
+
+                        <div class="new__link">
+                            <a href="#" class="button">VIEW PRODUCT</a>
+                        </div>
+                    </div>
+
+                    <div class="new__box">
+                        <img src="../img/product12.png" alt="" class="new__img">
+
+                        <div class="new__link">
+                            <a href="#" class="button">VIEW PRODUCT</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- CUSTOMER REVIEWS -->
+            <section class="reviews section">
+                <h2 class="section-title">CUSTOMER REVIEWS</h2>
+                <div class="section_content__container grid">
+                    <div class="review">
+                        <p class="review__text">"Amazing quality and fast delivery. Highly recommend!"</p>
+                        <div class="review__author">
+                            <img src="../img/customer1.jpg" alt="Customer 1" class="review__img">
+                            <h4 class="review__name">John Doe</h4>
+                        </div>
+                    </div>
+                    <div class="review">
+                        <p class="review__text">"Great customer service and fantastic products."</p>
+                        <div class="review__author">
+                            <img src="../img/customer2.jpg" alt="Customer 2" class="review__img">
+                            <h4 class="review__name">Jane Smith</h4>
+                        </div>
+                    </div>
+                    <div class="review">
+                        <p class="review__text">"I love the variety and the special offers they provide."</p>
+                        <div class="review__author">
+                            <img src="../img/customer3.jpg" alt="Customer 3" class="review__img">
+                            <h4 class="review__name">Emily Johnson</h4>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- TESTIMONIALS -->
+            <section class="testimonials section">
+                <h2 class="section-title">TESTIMONIALS</h2>
+                <div class="section_content__container grid">
+                    <div class="testimonial">
+                        <p class="testimonial__text">"Simon Shoes has been my go-to shop for years. Their product quality and customer service are unmatched."</p>
+                        <div class="testimonial__author">
+                            <h4 class="testimonial__name">Michael Brown</h4>
+                            <p class="testimonial__role">CEO, Company</p>
+                        </div>
+                    </div>
+                    <div class="testimonial">
+                        <p class="testimonial__text">"I have never been disappointed with a purchase from Simon Shoes. They truly care about their customers."</p>
+                        <div class="testimonial__author">
+                            <h4 class="testimonial__name">Sarah Davis</h4>
+                            <p class="testimonial__role">Marketing Director</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NEWSLETTER -->
+            <section class="newsletter section" id="subscribed">
+                <div class="newsletter__container grid">
+                    <div class="newsletter__subscribed">
+                        <h2 class="section-title">OUR NEWSLETTER</h2>
+                        <p class="newsletter__description">Promotion new products and sales. Directly to your inbox.</p>
+
+                        <form action="" class="newsletter__form">
+                            <input type="text" class="newsletter__input" placeholder="Enter your email">
+                            <a href="#" class="button">SUBSCRIBE</a>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SPONSORS -->
+            <section class="sponsors section">
+                <div class="sponsors__container grid">
+                    <div class="sponsors__logo">
+                        <img src="../img/logo1.png" alt="">
+                    </div>
+                    <div class="sponsors__logo">
+                        <img src="../img/logo2.png" alt="">
+                    </div>
+                    <div class="sponsors__logo">
+                        <img src="../img/logo3.png" alt="">
+                    </div>
+                    <div class="sponsors__logo">
+                        <img src="../img/logo4.png" alt="">
+                    </div>
+                </div>
+            </section>
+        

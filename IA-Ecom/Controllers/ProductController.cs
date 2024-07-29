@@ -23,7 +23,7 @@ namespace IA_Ecom.Controllers
         public IActionResult Index()
         {
             var products = _productService.GetAllProductsAsync();
-            return View(products);
+            return View("Catalog", products);
         }
 
         // GET: /Product/Details/{id}

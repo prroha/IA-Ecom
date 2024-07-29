@@ -14,6 +14,10 @@
 # Binaries
 bin/
 obj/
+./.idea
+/.idea
+IA-Ecom/bin
+IA-Ecom/obj
 
 # User-specific files
 *.user

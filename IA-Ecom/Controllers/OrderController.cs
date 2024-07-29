@@ -17,7 +17,7 @@ namespace IA_Ecom.Controllers
         }
 
         // GET: /Order
-        [Authorize(Roles = "Admin")] // Example of restricting access to admin role
+        [Authorize(Roles = "ADMIN")] // Example of restricting access to admin role
         public IActionResult Index()
         {
             var orders = _orderService.GetAllOrdersAsync();
@@ -37,7 +37,7 @@ namespace IA_Ecom.Controllers
 
         // POST: /Order/Process/{id}
         [HttpPost]
-        [Authorize(Roles = "Admin")] // Example of restricting access to admin role
+        [Authorize(Roles = "ADMIN")] // Example of restricting access to admin role
         public IActionResult Process(int id)
         {
             var order = _orderService.GetOrderByIdAsync(id);
@@ -51,6 +51,16 @@ namespace IA_Ecom.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: /Order/CartDetails
+        public IActionResult CartDetails(string customerId)
+        {
+            var order = _orderService.GetCartItems(customerId);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            return View(order);
+        }
         // POST: /ShoppingCart/AddToCart/{productId}
         [HttpPost]
         public IActionResult AddToCart(int productId)

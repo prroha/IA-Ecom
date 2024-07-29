@@ -9,7 +9,8 @@ namespace IA_Ecom.Controllers;
 
 public class AccountController(
     SignInManager<User> signInManager,
-    UserManager<User> userManager)
+    UserManager<User> userManager,
+    RoleManager<IdentityRole> roleManager)
     : Controller
 {
     // GET: /Account/Login
@@ -19,7 +20,7 @@ public class AccountController(
         if (User.Identity.IsAuthenticated)
         {
             // Check if the user is in the Admin role
-            if (User.IsInRole("Admin"))
+            if (User.IsInRole("ADMIN"))
             {
                 return RedirectToAction("Dashboard", "Admin"); // Redirect to Admin Dashboard
             }
@@ -53,11 +54,11 @@ public class AccountController(
                 if (result.Succeeded)
                 {
                     var roles = await userManager.GetRolesAsync(user);
-                    if (roles.Contains("Admin"))
+                    if (roles.Contains("ADMIN"))
                     {
                         return RedirectToAction("Dashboard", "Admin");
                     }
-                    else if (roles.Contains("User"))
+                    else if (roles.Contains("USER"))
                     {
                         return RedirectToLocal(returnUrl);
                     }
@@ -82,20 +83,24 @@ public class AccountController(
         ViewData["ReturnUrl"] = returnUrl;
         if (ModelState.IsValid)
         {
-            var user = new User { UserName = model.Email, Email = model.Email };
+            var user = new User { UserName = model.Email, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName};
             var result = await userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
+                if (await roleManager.RoleExistsAsync(model.Role))
+                {
+                    await userManager.AddToRoleAsync(user, model.Role);
+                }
                 await signInManager.SignInAsync(user, isPersistent: false);
-                    var roles = await userManager.GetRolesAsync(user);
-                    if (roles.Contains("Admin"))
-                    {
-                        return RedirectToAction("Dashboard", "Admin");
-                    }
-                    else if (roles.Contains("User"))
-                    {
-                        return RedirectToLocal(returnUrl);
-                    }
+                var roles = await userManager.GetRolesAsync(user);
+                if (roles.Contains("ADMIN"))
+                {
+                    return RedirectToAction("Dashboard", "Admin");
+                }
+                else if (roles.Contains("USER"))
+                {
+                    return RedirectToLocal(returnUrl);
+                }
             }
             foreach (var error in result.Errors)
             {
@@ -105,14 +110,15 @@ public class AccountController(
         return View(model);
     }
     
-    [HttpPost]
+    [HttpGet]
     public async Task<IActionResult> Logout()
     {
         await signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Home");
+        // return RedirectToAction("Index", "Home");
+        return RedirectToLocal();
     }
     
-    private IActionResult RedirectToLocal(string returnUrl)
+    private IActionResult RedirectToLocal(string returnUrl = "")
     {
         if (Url.IsLocalUrl(returnUrl))
         {

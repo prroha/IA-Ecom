@@ -1,0 +1,232 @@
+@model List<IA_Ecom.ViewModels.OrderViewModel>;
+@{
+ViewData["Title"] = "Order Management";
+Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+<div class="page-title">
+        <h2>Order Management</h2>
+    </div>
+    <div class="responsive-grid">
+        <!-- Order List -->
+        <div class="card">
+            <div class="card-header">
+            <h3 class="card-title">Orders</h3>
+            <div class="summary-section">
+                <div class="summary-item">
+                    <p>Total Orders: <strong id="total-orders">0</strong></p>
+                </div>
+                <div class="summary-item">
+                    <p>Total Amount: <strong id="total-amount">$0.00</strong></p>
+                </div>
+                <div class="summary-item">
+                    <p>Unpaid Orders: <strong id="unpaid-orders">0</strong></p>
+                </div>
+            </div>
+            </div>
+            <table class="order-table" id="order-table">
+                <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Payment Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>#001</td>
+                        <td>John Doe</td>
+                        <td>2024-05-15</td>
+                        <td>Pending</td>
+                        <td>$120.00</td>
+                        <td>Unpaid</td>
+                        <td>
+                            <button class="button edit-button" onclick="editOrder('001')">Edit</button>
+                            <button class="button-secondary delete-button" onclick="deleteOrder('001')">Delete</button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Edit Order -->
+        <div class="card">
+            <h3 class="card-title">Edit Order</h3>
+            <form id="edit-order-form" class="user-form">
+                <!-- Order Information -->
+                <div class="form-group">
+                    <label for="order-id">Order ID</label>
+                    <input type="text" id="order-id" class="user-form__input" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="customer-name">Customer Name</label>
+                    <input type="text" id="customer-name" class="user-form__input">
+                </div>
+                <div class="form-group">
+                    <label for="customer-email">Customer Email</label>
+                    <input type="email" id="customer-email" class="user-form__input">
+                </div>
+                <div class="form-group">
+                    <label for="order-date">Order Date</label>
+                    <input type="date" id="order-date" class="user-form__input">
+                </div>
+                <div class="form-group">
+                    <label for="order-status">Order Status</label>
+                    <select id="order-status" class="user-form__input">
+                        <option value="pending">Pending</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+
+                <!-- Product Details -->
+                <div class="form-group">
+                    <label for="product-id">Product ID</label>
+                    <input type="text" id="product-id" class="user-form__input">
+                </div>
+                <div class="form-group">
+                    <label for="product-name">Product Name</label>
+                    <input type="text" id="product-name" class="user-form__input">
+                </div>
+                <div class="form-group">
+                    <label for="product-quantity">Quantity</label>
+                    <input type="number" id="product-quantity" class="user-form__input">
+                </div>
+                <div class="form-group">
+                    <label for="unit-price">Unit Price</label>
+                    <input type="text" id="unit-price" class="user-form__input">
+                </div>
+
+                <!-- Payment Information -->
+                <div class="form-group">
+                    <label for="payment-method">Payment Method</label>
+                    <input type="text" id="payment-method" class="user-form__input">
+                </div>
+                <div class="form-group">
+                    <label for="payment-status">Payment Status</label>
+                    <select id="payment-status" class="user-form__input">
+                        <option value="paid">Paid</option>
+                        <option value="pending">Pending</option>
+                        <option value="refunded">Refunded</option>
+                    </select>
+                </div>
+
+                <!-- Shipping Information -->
+                <div class="form-group">
+                    <label for="shipping-method">Shipping Method</label>
+                    <input type="text" id="shipping-method" class="user-form__input">
+                </div>
+                <div class="form-group">
+                    <label for="tracking-number">Tracking Number</label>
+                    <input type="text" id="tracking-number" class="user-form__input">
+                </div>
+
+                <!-- Addresses -->
+                <div class="form-group">
+                    <label for="shipping-address">Shipping Address</label>
+                    <textarea id="shipping-address" class="user-form__input"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="billing-address">Billing Address</label>
+                    <textarea id="billing-address" class="user-form__input"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="special-instructions">Special Instructions</label>
+                    <textarea id="special-instructions" class="user-form__input"></textarea>
+                </div>
+                <button type="submit" class="button">Save Changes</button>
+            </form>
+        </div>
+    </div>
+    
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const profileDropdownButton = document.getElementById('profileDropdownButton');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const logoutButton = document.getElementById('logout');
+        const toggle = document.querySelector('.header__toggle');
+        const sidebar = document.querySelector('.sidebar');
+
+        toggle.addEventListener('click', function () {
+            sidebar.classList.toggle('sidebar--active');
+        });
+
+        profileDropdownButton.addEventListener('click', function (e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('admin-header__profile--active');
+        });
+
+        document.addEventListener('click', function () {
+            profileDropdown.classList.remove('admin-header__profile--active');
+        });
+        logoutButton.addEventListener('click', function () {
+            logout();
+        });
+    });
+    function logout(username, password) {
+        // const users = JSON.parse(localStorage.getItem('users')) || [];
+        // users = users.remove(user => user.username === username && user.password === password);
+        // users.push(userData);
+        // return localStorage.setItem('users', JSON.stringify(users));
+
+        window.location.href = '../../login/login.html';
+    }
+</script>
+<script>
+    updateSummary(); // Initial update when the page loads
+    function editOrder(orderId) {
+        // Populate the form with order details for editing
+        // For demonstration, we're using hardcoded values
+        document.getElementById('order-id').value = orderId;
+        document.getElementById('customer-name').value = 'John Doe';
+        document.getElementById('order-date').value = '2024-05-15';
+        document.getElementById('order-status').value = 'pending';
+    }
+
+    function deleteOrder(orderId) {
+        // Implement order deletion logic
+        alert(`Order #${orderId} deleted.`);
+    }
+
+    document.getElementById('edit-order-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        // Implement order update logic
+        alert('Order updated.');
+        updateSummary();
+    });
+
+    // Function to update summary based on table data
+    function updateSummary() {
+        const table = document.getElementById('order-table');
+        const rows = table.getElementsByTagName('tr');
+        let totalOrders = 0;
+        let totalAmount = 0;
+        let unpaidOrders = 0;
+
+        for (let i = 1; i < rows.length; i++) { // Start from 1 to skip header row
+            const cells = rows[i].getElementsByTagName('td');
+            const amount = parseFloat(cells[4].innerText.replace('$', '')); // Assuming amount is in 5th cell (index 4)
+            const paymentStatus = cells[5].innerText.trim(); // Assuming payment status is in 6th cell (index 5)
+
+            totalOrders++;
+            totalAmount += amount;
+
+            if (paymentStatus === 'Unpaid') {
+                unpaidOrders++;
+            }
+        }
+
+        // Update summary section
+        document.getElementById('total-orders').innerText = totalOrders;
+        document.getElementById('total-amount').innerText = `$${totalAmount.toFixed(2)}`;
+        document.getElementById('unpaid-orders').innerText = unpaidOrders;
+    }
+</script>
+

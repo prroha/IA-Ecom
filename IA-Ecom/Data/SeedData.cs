@@ -33,7 +33,7 @@ public static class SeedData
                 throw new Exception("An error occurred creating the database.", ex);
             }
 
-            await EnsureRoles(roleManager, new[] { "Admin", "User" });
+            await EnsureRoles(roleManager, new[] { "ADMIN", "USER" });
             await EnsureAdmin(userManager, roleManager);
             await EnsureTestUsers(userManager, roleManager);
             // await EnsureTestProducts(context);
@@ -58,7 +58,6 @@ public static class SeedData
             UserName = "admin@admin.com",
             Email = "admin@admin.com",
             EmailConfirmed = true,
-            FullName = "Admin User",
             Address = "Admin Address",
             PhoneNumber = "1234567890",
             FirstName = "Admin",
@@ -77,7 +76,6 @@ public static class SeedData
                 UserName = "user@user.com",
                 Email = "user@user.com",
                 EmailConfirmed = true,
-                FullName = "User One",
                 Address = "Address 1",
                 PhoneNumber = "1234567890",
                 FirstName = "User",
@@ -88,7 +86,6 @@ public static class SeedData
                 UserName = "user2@user.com",
                 Email = "user2@user.com",
                 EmailConfirmed = true,
-                FullName = "User Two",
                 Address = "Address 2",
                 PhoneNumber = "1234567890",
                 FirstName = "User",
