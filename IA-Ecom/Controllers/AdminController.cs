@@ -85,16 +85,17 @@ namespace IA_Ecom.Controllers
             return View(product);
         }
 
-        // POST: /admin/products/add
-        [HttpPost("products/add")]
-        public async Task<IActionResult> AddProduct(Product product)
+        [HttpPost("products")]
+        public async Task<IActionResult> AddProduct(ProductViewModel productModel)
         {
             if (ModelState.IsValid)
             {
+                Product product = ProductMapper.MapToModel(productModel);
+                product.EntryDate = DateTime.Now;
                 await productService.AddProductAsync(product);
                 return RedirectToAction(nameof(ManageProducts));
             }
-            return View(product);
+            return View(productModel);
         }
 
         // GET: /admin/orders
@@ -159,7 +160,8 @@ namespace IA_Ecom.Controllers
         public async Task<IActionResult> ManageFeedbacks()
         {
             var feedbacks = await feedbackService.GetAllFeedbacksAsync();
-            return View(feedbacks);
+            List<FeedbackViewModel> viewModel = feedbacks.Select(o => FeedbackMapper.MapToViewModel(o)).ToList();
+            return View(viewModel);
         }
 
         // GET: /admin/feedbacks/{id}

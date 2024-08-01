@@ -26,8 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="App_Data\" />
-      <Folder Include="RequestModels\" />
+      <Folder Include="App_Data\Objects\" />
     </ItemGroup>
 
 </Project>

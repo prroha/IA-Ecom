@@ -20,9 +20,13 @@ namespace IA_Ecom.Models
 
         [Required]
         public int Quantity { get; set; }
+        [Required]
+        public string ProductSize { get; set; }
 
         [Required]
         public decimal UnitPrice { get; set; }
+        public string CustomerId { get; set; } // Assuming you have user-specific carts
+
 
         public decimal TotalPrice => Quantity * UnitPrice;
     }

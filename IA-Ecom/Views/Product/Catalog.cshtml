@@ -8,100 +8,19 @@
         @foreach (var product in Model)
         {
             <div class="featured__product">
-                <a href="product-detail.html">
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@product.ProductId">
                     <div class="featured__box">
-                        <div class="featured__new">NEW</div>
-                        <img src="../img/product0.png" class="featured__img" alt="">
+                        <div class="featured__new">@product.ProductCondition</div>
+                        <img src="@product.ImageUrl" class="featured__img" alt="@product.Name">
                     </div>
 
                     <div class="featured__data">
-                        <h3 class="featured__name">White Shoes</h3>
-                        <span class="featured__price">$29</span>
+                        <h3 class="featured__name">@product.Name</h3>
+                        <span class="featured__price">@product.Price</span>
                     </div>
                 </a>
             </div>
         }
-
-        <div class="featured__product">
-            <div class="featured__box">
-                <div class="featured__new">NEW</div>
-                <img src="../img/product2.png" class="featured__img" alt="">
-            </div>
-
-            <div class="featured__data">
-                <h3 class="featured__name">Orange Suede Bag</h3>
-                <span class="featured__price">$199</span>
-            </div>
-        </div>
-
-        <div class="featured__product">
-            <div class="featured__box">
-                <div class="featured__new">NEW</div>
-                <img src="../img/product1.png" class="featured__img" alt="">
-            </div>
-
-            <div class="featured__data">
-                <h3 class="featured__name">Nikkon Camera</h3>
-                <span class="featured__price">$122</span>
-            </div>
-        </div>
-
-        <div class="featured__product">
-            <div class="featured__box">
-                <div class="featured__new">NEW</div>
-                <img src="../img/product8.png" class="featured__img" alt="">
-            </div>
-
-            <div class="featured__data">
-                <h3 class="featured__name">Casual Shoes</h3>
-                <span class="featured__price">$99</span>
-            </div>
-        </div>
-
-        <div class="featured__product">
-            <div class="featured__box">
-                <img src="../img/product0.png" class="featured__img" alt="">
-            </div>
-
-            <div class="featured__data">
-                <h3 class="featured__name">White Shoes</h3>
-                <span class="featured__price">$29</span>
-            </div>
-        </div>
-
-        <div class="featured__product">
-            <div class="featured__box">
-                <img src="../img/product5.png" class="featured__img" alt="">
-            </div>
-
-            <div class="featured__data">
-                <h3 class="featured__name">Ladies Shoes</h3>
-                <span class="featured__price">$199</span>
-            </div>
-        </div>
-
-        <div class="featured__product">
-            <div class="featured__box">
-                <img src="../img/product14.png" class="featured__img" alt="">
-            </div>
-
-            <div class="featured__data">
-                <h3 class="featured__name">Premium Blue Shoes</h3>
-                <span class="featured__price">$122</span>
-            </div>
-        </div>
-
-        <div class="featured__product">
-            <div class="featured__box">
-                <img src="../img/product8.png" class="featured__img" alt="">
-            </div>
-
-            <div class="featured__data">
-                <h3 class="featured__name">Casual Shoes</h3>
-                <span class="featured__price">$99</span>
-            </div>
-        </div>
-
     </div>
 </section>
 
@@ -124,16 +43,16 @@
 <section class="sponsors section">
     <div class="sponsors__container grid">
         <div class="sponsors__logo">
-            <img src="../img/logo1.png" alt="">
+            <img src="images/logo1.png" alt="">
         </div>
         <div class="sponsors__logo">
-            <img src="../img/logo2.png" alt="">
+            <img src="images/logo2.png" alt="">
         </div>
         <div class="sponsors__logo">
-            <img src="../img/logo3.png" alt="">
+            <img src="images/logo3.png" alt="">
         </div>
         <div class="sponsors__logo">
-            <img src="../img/logo4.png" alt="">
+            <img src="images/logo4.png" alt="">
         </div>
     </div>
 </section>

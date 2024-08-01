@@ -36,7 +36,7 @@ public static class SeedData
             await EnsureRoles(roleManager, new[] { "ADMIN", "USER" });
             await EnsureAdmin(userManager, roleManager);
             await EnsureTestUsers(userManager, roleManager);
-            // await EnsureTestProducts(context);
+            await EnsureTestProducts(context);
         }
     }
 
@@ -122,9 +122,12 @@ public static class SeedData
         {
             var testProducts = new List<Product>
             {
-                new Product { Name = "Product 1", Description = "Description for product 1", Price = 19.99m, Stock = 100 },
-                new Product { Name = "Product 2", Description = "Description for product 2", Price = 29.99m, Stock = 200 },
-                new Product { Name = "Product 3", Description = "Description for product 3", Price = 39.99m, Stock = 150 }
+                new Product { Name = "Mens Shoes - White", Description = "The Gildan Ultra Shoe is made from a substantial 6.0 oz. per sq. yd. fabric constructed from 100% cotton, this classic fit preshrunk jersey knit provides unmatched comfort with each wear. Featuring a taped neck and shoulder, and a seamless double-needle collar, and available in a range of colors, it offers it all in the ultimate head-turning package.", Price = 19.99m, Stock = 100, ImageUrl = "images/product0.png"},
+                new Product { Name = "Mens Shoes - White", Description = "The Gildan Ultra Shoe is made from a substantial 6.0 oz. per sq. yd. fabric constructed from 100% cotton, this classic fit preshrunk jersey knit provides unmatched comfort with each wear. Featuring a taped neck and shoulder, and a seamless double-needle collar, and available in a range of colors, it offers it all in the ultimate head-turning package.", Price = 29.99m, Stock = 100, ImageUrl = "images/product1.png"},
+                new Product { Name = "Mens Shoes - White", Description = "The Gildan Ultra Shoe is made from a substantial 6.0 oz. per sq. yd. fabric constructed from 100% cotton, this classic fit preshrunk jersey knit provides unmatched comfort with each wear. Featuring a taped neck and shoulder, and a seamless double-needle collar, and available in a range of colors, it offers it all in the ultimate head-turning package.", Price = 14.99m, Stock = 100, ImageUrl = "images/product2.png"},
+                new Product { Name = "Premium Blue Shoes", Description = "The Gildan Ultra Shoe is made from a substantial 6.0 oz. per sq. yd. fabric constructed from 100% cotton, this classic fit preshrunk jersey knit provides unmatched comfort with each wear. Featuring a taped neck and shoulder, and a seamless double-needle collar, and available in a range of colors, it offers it all in the ultimate head-turning package.", Price = 16.99m, Stock = 100, ImageUrl = "images/product14.png"},
+                new Product { Name = "Ladies Shoes", Description = "The Gildan Ultra Shoe is made from a substantial 6.0 oz. per sq. yd. fabric constructed from 100% cotton, this classic fit preshrunk jersey knit provides unmatched comfort with each wear. Featuring a taped neck and shoulder, and a seamless double-needle collar, and available in a range of colors, it offers it all in the ultimate head-turning package.", Price = 23.99m, Stock = 100, ImageUrl = "images/product5.png"},
+                new Product { Name = "Casual Shoes", Description = "The Gildan Ultra Shoe is made from a substantial 6.0 oz. per sq. yd. fabric constructed from 100% cotton, this classic fit preshrunk jersey knit provides unmatched comfort with each wear. Featuring a taped neck and shoulder, and a seamless double-needle collar, and available in a range of colors, it offers it all in the ultimate head-turning package.", Price = 44.99m, Stock = 100, ImageUrl = "images/product8.png"},
             };
 
             context.Products.AddRange(testProducts);

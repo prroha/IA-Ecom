@@ -5,108 +5,131 @@ using IA_Ecom.Repositories;
 
 namespace IA_Ecom.Services
 {
-    public class OrderService : IOrderService
+    public class OrderService(IOrderRepository orderRepository, IPaymentService paymentService) : IOrderService
     {
-        private readonly IOrderRepository _orderRepository;
-
-        public OrderService(IOrderRepository orderRepository)
-        {
-            _orderRepository = orderRepository;
-        }
-
         public async Task<int> CountAllAsync()
         {
-            return await _orderRepository.CountAllAsync();
+            return await orderRepository.CountAllAsync();
         }
         public async Task<IEnumerable<Order>> GetAllOrdersAsync()
         {
-            return await _orderRepository.GetAllAsync();
+            return await orderRepository.GetAllAsync();
         }
 
         public async Task<Order> GetOrderByIdAsync(int id)
         {
-            return await _orderRepository.GetByIdAsync(id);
+            return await orderRepository.GetByIdAsync(id);
+        }
+        public async Task<Order> GetCartDetailsAsync(string customerId)
+        {
+            return await orderRepository.GetCartDetailsAsync(customerId);
         }
 
         public async Task AddOrderAsync(Order order)
         {
-            await _orderRepository.AddAsync(order);
-            await _orderRepository.SaveChangesAsync();
+            await orderRepository.AddAsync(order);
+            await orderRepository.SaveChangesAsync();
         }
 
         public async Task UpdateOrderAsync(Order order)
         {
-            _orderRepository.Update(order);
-            await _orderRepository.SaveChangesAsync();
+            orderRepository.Update(order);
+            await orderRepository.SaveChangesAsync();
         }
 
         public async Task DeleteOrderAsync(int id)
         {
-            var order = await _orderRepository.GetByIdAsync(id);
+            var order = await orderRepository.GetByIdAsync(id);
             if (order != null)
             {
-                _orderRepository.Remove(order);
-                await _orderRepository.SaveChangesAsync();
+                orderRepository.Remove(order);
+                await orderRepository.SaveChangesAsync();
             }
         }
+        public async Task<bool> CheckoutAsync(string customerId)
+        {
 
-            public IEnumerable<Order> GetAllOrders()
+            Order order = await orderRepository.GetOrderByCustomerIdAsync(customerId);
+            if (order == null)
             {
-                // Implementation to fetch all orders from database
-                throw new NotImplementedException();
+                return false; // Empty Cart
             }
 
-            public Order GetOrderById(int id)
+            bool paymentSuccessful = await paymentService.ProcessPayment(order);
+
+            if (!paymentSuccessful)
             {
-                // Implementation to fetch order by id from database
-                throw new NotImplementedException();
+                return false;
             }
 
-            public void PlaceOrder(Order order)
+            // Finalize the order
+            order.Status = "Finalized";
+            order.OrderDate = DateTime.UtcNow;
+            await orderRepository.SaveChangesAsync();
+
+            return true;
+
+        }
+
+        public IEnumerable<Order> GetAllOrders()
+        {
+            // Implementation to fetch all orders from database
+            throw new NotImplementedException();
+        }
+
+        public Order GetOrderById(int id)
+        {
+            // Implementation to fetch order by id from database
+            throw new NotImplementedException();
+        }
+
+        public void PlaceOrder(Order order)
+        {
+            if (order == null)
             {
-                if (order == null)
-                {
-                    throw new ArgumentNullException(nameof(order));
-                }
-
-                // Example business logic before saving order
-                // e.g., Calculate total, validate order, etc.
-
-                _orderRepository.AddAsync(order);
+                throw new ArgumentNullException(nameof(order));
             }
+
+            // Example business logic before saving order
+            // e.g., Calculate total, validate order, etc.
+
+            orderRepository.AddAsync(order);
+        }
             
-            public async Task<bool> ProcessOrderAsync(int orderId, string customerId)
+        public async Task<bool> ProcessOrderAsync(int orderId, string customerId)
+        {
+            var order = await GetOrderByIdAsync(orderId);
+            if (order == null)
             {
-                var order = await GetOrderByIdAsync(orderId);
-                if (order == null)
-                {
-                    return false;
-                }
-
-                var cartItems = GetCartItems(customerId);
-                foreach (var cartItem in cartItems)
-                {
-                    AddCartItemToOrder(order, cartItem);
-                }
-
-                PlaceOrder(order);
-                ClearCart(customerId);
-
-                return true;
-            }
-            public void AddCartItemToOrder(Order order, CartItem cartItem)
-            {
-                _orderRepository.AddCartItemToOrder(order, cartItem);
-            }
-            public IEnumerable<CartItem> GetCartItems(string customerId)
-            {
-                return _orderRepository.GetCartItems(customerId);
+                return false;
             }
 
-            public void ClearCart(string customerId)
-            {
-                _orderRepository.ClearCart(customerId);
-            } 
+            // var cartItems = GetCartItems(customerId);
+            // foreach (var cartItem in cartItems)
+            // {
+            // AddCartItemToOrder(order, cartItem);
+            // }
+
+            PlaceOrder(order);
+            ClearCart(customerId);
+
+            return true;
+        }
+
+        public Task AddToCartAsync(OrderItem orderItem)
+        {
+            return orderRepository.AddToCartAsync(orderItem);
+        }
+
+        public void AddCartItemToOrder(Order order, CartItem cartItem)
+        {
+            orderRepository.AddCartItemToOrder(order, cartItem);
+        }
+
+        public void ClearCart(string customerId)
+        {
+            orderRepository.ClearCart(customerId);
+        } 
     }
 
 }

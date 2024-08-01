@@ -4,7 +4,7 @@ namespace IA_Ecom.ViewModels
 {
     public class FeedbackViewModel
     {
-        public int Id { get; set; }
+        public int FeedbackId { get; set; }
 
         [Required]
         public string Name { get; set; }
@@ -15,6 +15,7 @@ namespace IA_Ecom.ViewModels
 
         [Required]
         public string Message { get; set; }
+        public DateTime Date { get; set; }
 
         // Additional fields as needed for feedback details
     }

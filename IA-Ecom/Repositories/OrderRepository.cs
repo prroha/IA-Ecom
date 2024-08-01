@@ -4,27 +4,56 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IA_Ecom.Repositories
 {
-    public class OrderRepository(ApplicationDbContext context) : GenericRepository<Order>(context), IOrderRepository
+    public class OrderRepository(ApplicationDbContext context, PaymentRepository paymentRepository) : GenericRepository<Order>(context), IOrderRepository
     {
         private readonly ApplicationDbContext _dbContext = context;
 
-// Add item to shopping cart (Order)
-    public async Task AddCartItemToOrderAsync(int orderId, CartItem cartItem)
-    {
-        var order = await GetOrderByIdAsync(orderId);
-        if (order != null)
+        public async Task AddToCartAsync(OrderItem orderItem)
         {
-            order.OrderItems.Add(new OrderItem
-            {
-                ProductId = cartItem.ProductId,
-                Quantity = cartItem.Quantity,
-                UnitPrice = cartItem.UnitPrice
-            });
+            // Retrieve the current cart (order) for the user or create a new one
+            var order = await _dbContext.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.CustomerId == orderItem.CustomerId && o.Status == "Cart");
 
-            _dbContext.Orders.Update(order);
+            if (order == null)
+            {
+                order = new Order
+                {
+                    CustomerId = orderItem.CustomerId,
+                    OrderDate = DateTime.UtcNow,
+                    Status = "Cart",
+                    TotalAmount = 0,
+                    OrderItems = new List<OrderItem>()
+                };
+                _dbContext.Orders.Add(order);
+            }
+
+            // Check if the product is already in the cart
+            var orderItemDb = order.OrderItems.FirstOrDefault(oi => oi.ProductId == orderItem.ProductId);
+            if (orderItemDb != null)
+            {
+                // Update quantity and price if product exists in cart
+                orderItemDb.Quantity += orderItem.Quantity;
+                orderItemDb.UnitPrice = orderItem.UnitPrice;
+            }
+            else
+            {
+                // Add new order item
+                orderItemDb = new OrderItem
+                {
+                    ProductId = orderItem.ProductId,
+                    Quantity = orderItem.Quantity,
+                    UnitPrice = orderItem.UnitPrice
+                };
+                order.OrderItems.Add(orderItemDb);
+            }
+
+            // Update the total amount
+            order.TotalAmount = order.OrderItems.Sum(oi => oi.Quantity * oi.UnitPrice);
+
             await _dbContext.SaveChangesAsync();
         }
-    }
+
     public async Task<Order> CreateOrderFromCartAsync(string customerId)
     {
         var cart = await _dbContext.Carts
@@ -89,13 +118,12 @@ namespace IA_Ecom.Repositories
             await _dbContext.SaveChangesAsync();
         }
     }
-    public IEnumerable<CartItem> GetCartItems(string customerId)
+    public async Task<Order> GetCartDetailsAsync(string customerId)
     {
-        var cart = _dbContext.Carts
-            .Include(c => c.CartItems)
-            .FirstOrDefault(c => c.CustomerId == customerId);
-
-        return cart?.CartItems ?? new List<CartItem>();
+        return await _dbContext.Orders
+            .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.Product)
+            .FirstOrDefaultAsync(o => o.CustomerId == customerId && o.Status == "Cart");
     }
 
     public void AddCartItemToOrder(Order order, CartItem cartItem)
@@ -147,6 +175,11 @@ namespace IA_Ecom.Repositories
         {
             return await GetByIdAsync(orderId);
         }
-        // Implement additional methods specific to Order if any
+        public async Task<Order> GetOrderByCustomerIdAsync(string customerId)
+        {
+            return  await _dbContext.Orders
+                                .Include(o => o.OrderItems)
+                                .FirstOrDefaultAsync(o => o.CustomerId ==customerId && o.Status == "Cart");
+        }
     }
 }

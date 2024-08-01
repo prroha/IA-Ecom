@@ -29,7 +29,6 @@ namespace IA_Ecom.ViewModels
         public decimal TotalAmount { get; set; }
 
         public string Status { get; set; }
-        // Additional fields as needed for displaying or editing order details
     }
 
     public class OrderItemViewModel
@@ -37,9 +36,9 @@ namespace IA_Ecom.ViewModels
         public int OrderItemId { get; set; }
         public int ProductId { get; set; }
         public string ProductName { get; set; }
+        
+        public string ProductSize { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
-
-        // Additional fields as needed for order item details
     }
 }

@@ -1,4 +1,6 @@
 using System.Security.Claims;
+using AutoMapper;
+using IA_Ecom.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using IA_Ecom.Models;
@@ -7,27 +9,20 @@ using IA_Ecom.ViewModels;
 
 namespace IA_Ecom.Controllers
 {
-    public class OrderController : Controller
+    public class OrderController(IOrderService orderService, Mapper mapper) : Controller
     {
-        private readonly IOrderService _orderService;
+        private readonly IMapper _mapper = mapper;
 
-        public OrderController(IOrderService orderService)
-        {
-            _orderService = orderService;
-        }
-
-        // GET: /Order
-        [Authorize(Roles = "ADMIN")] // Example of restricting access to admin role
+        [Authorize(Roles = "ADMIN")] 
         public IActionResult Index()
         {
-            var orders = _orderService.GetAllOrdersAsync();
+            var orders = orderService.GetAllOrdersAsync();
             return View(orders);
         }
 
-        // GET: /Order/Details/{id}
         public IActionResult Details(int id)
         {
-            var order = _orderService.GetOrderByIdAsync(id);
+            var order = orderService.GetOrderByIdAsync(id);
             if (order == null)
             {
                 return NotFound();
@@ -35,12 +30,11 @@ namespace IA_Ecom.Controllers
             return View(order);
         }
 
-        // POST: /Order/Process/{id}
         [HttpPost]
-        [Authorize(Roles = "ADMIN")] // Example of restricting access to admin role
+        [Authorize(Roles = "ADMIN")] 
         public IActionResult Process(int id)
         {
-            var order = _orderService.GetOrderByIdAsync(id);
+            var order = orderService.GetOrderByIdAsync(id);
             if (order == null)
             {
                 return NotFound();
@@ -51,54 +45,59 @@ namespace IA_Ecom.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: /Order/CartDetails
-        public IActionResult CartDetails(string customerId)
+        public async Task<IActionResult> GetCartDetails()
         {
-            var order = _orderService.GetCartItems(customerId);
-            if (order == null)
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cart = await orderService.GetCartDetailsAsync(customerId);
+
+            if (cart == null)
             {
+                // return View("EmptyCart");
                 return NotFound();
             }
-            return View(order);
+
+            return View("CartDetails", cart);
         }
-        // POST: /ShoppingCart/AddToCart/{productId}
+        
         [HttpPost]
-        public IActionResult AddToCart(int productId)
-        {
-            // _orderService.AddToCart(productId);
-            return RedirectToAction(nameof(Index));
-        }
-// POST: /Order/Checkout
-        [HttpPost]
-        [Authorize] // Require authentication to checkout
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Checkout(OrderViewModel model)
+        [Authorize] 
+        public async Task<IActionResult> AddToCartAsync(OrderItemViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the user ID from identity
-                if (string.IsNullOrEmpty(userId))
-                {
-                    return RedirectToAction("Login", "Account"); // Redirect to the login page if user ID is not found
-                }
-                // Example: Handle the complete order process in the service layer
-                var success = await _orderService.ProcessOrderAsync(model.OrderId, userId);
-                if (!success)
-                {
-                    return NotFound();
-                }
-
-                return RedirectToAction(nameof(Confirmation));
+                OrderItem orderItem = OrderMapper.MapToModel(viewModel);
+                orderItem.CustomerId = userId;
+                await orderService.AddToCartAsync(orderItem);
+                return RedirectToAction(nameof(Index));
             }
-            return View(model);
+            return View(viewModel);
         }
-        // GET: /Order/Confirmation
-        public IActionResult Confirmation()
+        
+        [HttpPost]
+        [Authorize] 
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Checkout()
         {
-            // Display order confirmation page
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "Account"); // Redirect to the login page if user ID is not found
+            }
+            var success = await orderService.CheckoutAsync(userId);
+
+            if (!success)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction(nameof(OrderConfirmation));
+        }
+
+        public IActionResult OrderConfirmation()
+        {
             return View();
         }
 
-        // Other actions for managing orders
     }
 }

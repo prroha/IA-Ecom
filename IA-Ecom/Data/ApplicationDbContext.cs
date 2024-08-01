@@ -13,6 +13,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
         
         public DbSet<Feedback> Feedbacks { get; set; }
         

@@ -41,22 +41,26 @@ public class OrderMapper
         };
     }
 
-    private static OrderItemViewModel MapToViewModel(OrderItem orderItem)
+    public static OrderItemViewModel MapToViewModel(OrderItem orderItem)
     {
         return new OrderItemViewModel
         {
             OrderItemId = orderItem.OrderItemId,
+            ProductId = orderItem.ProductId,
             ProductName = orderItem.Product.Name, // Assuming OrderItem has a ProductName property
+            ProductSize = orderItem.ProductSize,
             Quantity = orderItem.Quantity,
             UnitPrice = orderItem.UnitPrice
         };
     }
 
-    private static OrderItem MapToModel(OrderItemViewModel viewModel)
+    public static OrderItem MapToModel(OrderItemViewModel viewModel)
     {
         return new OrderItem
         {
             OrderItemId = viewModel.OrderItemId,
+            ProductId = viewModel.ProductId,
+            ProductSize = viewModel.ProductSize,
             Quantity = viewModel.Quantity,
             UnitPrice = viewModel.UnitPrice
         };

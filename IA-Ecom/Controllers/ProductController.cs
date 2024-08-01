@@ -20,10 +20,11 @@ namespace IA_Ecom.Controllers
         }
 
         // GET: /Product
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var products = _productService.GetAllProductsAsync();
-            return View("Catalog", products);
+            var products = await _productService.GetAllProductsAsync();
+            List<ProductViewModel> viewModel = products.Select(p => _mapper.Map<ProductViewModel>(p)).ToList();
+            return View("Catalog", viewModel);
         }
 
         // GET: /Product/Details/{id}

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using IA_Ecom.RequestModels;
 
 namespace IA_Ecom.Models
 {
@@ -20,6 +21,7 @@ namespace IA_Ecom.Models
 
         [Required]
         public string Status { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
         public ICollection<OrderItem> OrderItems { get; set; }
 
 
