@@ -54,6 +54,12 @@ namespace IA_Ecom.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<Order>> GetAllOrdersAsync()
+        {
+            
+        return _dbContext.Orders
+            .Include(o => o.OrderItems);
+        }
     public async Task<Order> CreateOrderFromCartAsync(string customerId)
     {
         var cart = await _dbContext.Carts

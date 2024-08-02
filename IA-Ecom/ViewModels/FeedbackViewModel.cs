@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using IA_Ecom.Models;
 
 namespace IA_Ecom.ViewModels
 {
@@ -7,7 +8,9 @@ namespace IA_Ecom.ViewModels
         public int FeedbackId { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        public string Username { get; set; }
+        [Required]
+        public string UserFullName { get; set; }
 
         [Required]
         [DataType(DataType.EmailAddress)]
@@ -17,6 +20,7 @@ namespace IA_Ecom.ViewModels
         public string Message { get; set; }
         public DateTime Date { get; set; }
 
-        // Additional fields as needed for feedback details
+        public int Rating { get; set; }
+        public User User { get; set; }
     }
 }

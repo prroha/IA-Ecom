@@ -71,12 +71,6 @@ namespace IA_Ecom.Services
 
         }
 
-        public IEnumerable<Order> GetAllOrders()
-        {
-            // Implementation to fetch all orders from database
-            throw new NotImplementedException();
-        }
-
         public Order GetOrderById(int id)
         {
             // Implementation to fetch order by id from database

@@ -24,8 +24,11 @@ public class ProductMapper
             ProductId = viewModel.ProductId,
             Name = viewModel.Name,
             Description = viewModel.Description,
+            Category = viewModel.Category,
             Price = viewModel.Price,
             Stock = viewModel.Stock,
+            Color = viewModel.Color,
+            ImageUrl = viewModel.ImageUrl,
             OrderItems = new List<OrderItem>() // Initialize empty list, if needed
         };
     }

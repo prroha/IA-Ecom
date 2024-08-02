@@ -1,4 +1,4 @@
-@model List<IA_Ecom.ViewModels.OrderViewModel>;
+@model IA_Ecom.ViewModels.ManageOrderViewModel;
 @{
 ViewData["Title"] = "Order Management";
 Layout = "~/Views/Admin/_AdminLayout.cshtml";
@@ -36,18 +36,18 @@ Layout = "~/Views/Admin/_AdminLayout.cshtml";
                 </tr>
                 </thead>
                 <tbody>
-                @foreach (var order in Model)
+                @foreach (var order in Model.Orders)
                 {
                     <tr>
-                        <td>#001</td>
-                        <td>John Doe</td>
-                        <td>2024-05-15</td>
-                        <td>Pending</td>
-                        <td>$120.00</td>
-                        <td>Unpaid</td>
+                        <td>@order.OrderId</td>
+                        <td>@order.CustomerName</td>
+                        <td>@order.OrderDate</td>
+                        <td>@order.Status</td>
+                        <td>@order.TotalAmount</td>
+                        <td>@order.Status</td>
                         <td>
-                            <button class="button edit-button" onclick="editOrder('001')">Edit</button>
-                            <button class="button-secondary delete-button" onclick="deleteOrder('001')">Delete</button>
+                            <button class="button edit-button" onclick="editOrder(@order.OrderId)">Edit</button>
+                            <button class="button-secondary delete-button" onclick="deleteOrder(@order.OrderId)">Delete</button>
                         </td>
                     </tr>
                 }
@@ -61,24 +61,24 @@ Layout = "~/Views/Admin/_AdminLayout.cshtml";
             <form id="edit-order-form" class="user-form">
                 <!-- Order Information -->
                 <div class="form-group">
-                    <label for="order-id">Order ID</label>
-                    <input type="text" id="order-id" class="user-form__input" readonly>
+                    <label asp-for="@Model.Order.OrderId">Order ID</label>
+                    <input type="text" asp-for="@Model.Order.OrderId" class="user-form__input" readonly>
                 </div>
                 <div class="form-group">
-                    <label for="customer-name">Customer Name</label>
-                    <input type="text" id="customer-name" class="user-form__input">
+                    <label asp-for="@Model.Order.CustomerName">Customer Name</label>
+                    <input type="text" asp-for="@Model.Order.CustomerName" class="user-form__input">
                 </div>
                 <div class="form-group">
-                    <label for="customer-email">Customer Email</label>
-                    <input type="email" id="customer-email" class="user-form__input">
+                    <label asp-for="@Model.Order.CustomerEmail">Customer Email</label>
+                    <input type="email" asp-for="@Model.Order.CustomerEmail" class="user-form__input">
                 </div>
                 <div class="form-group">
-                    <label for="order-date">Order Date</label>
-                    <input type="date" id="order-date" class="user-form__input">
+                    <label asp-for="@Model.Order.OrderDate">Order Date</label>
+                    <input type="date" asp-for="@Model.Order.OrderDate" class="user-form__input">
                 </div>
                 <div class="form-group">
-                    <label for="order-status">Order Status</label>
-                    <select id="order-status" class="user-form__input">
+                    <label asp-for="@Model.Order.Status">Order Status</label>
+                    <select asp-for="@Model.Order.Status" class="user-form__input">
                         <option value="pending">Pending</option>
                         <option value="shipped">Shipped</option>
                         <option value="delivered">Delivered</option>
@@ -145,88 +145,3 @@ Layout = "~/Views/Admin/_AdminLayout.cshtml";
             </form>
         </div>
     </div>
-    
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const profileDropdownButton = document.getElementById('profileDropdownButton');
-        const profileDropdown = document.getElementById('profileDropdown');
-        const logoutButton = document.getElementById('logout');
-        const toggle = document.querySelector('.header__toggle');
-        const sidebar = document.querySelector('.sidebar');
-
-        toggle.addEventListener('click', function () {
-            sidebar.classList.toggle('sidebar--active');
-        });
-
-        profileDropdownButton.addEventListener('click', function (e) {
-            e.stopPropagation();
-            profileDropdown.classList.toggle('admin-header__profile--active');
-        });
-
-        document.addEventListener('click', function () {
-            profileDropdown.classList.remove('admin-header__profile--active');
-        });
-        logoutButton.addEventListener('click', function () {
-            logout();
-        });
-    });
-    function logout(username, password) {
-        // const users = JSON.parse(localStorage.getItem('users')) || [];
-        // users = users.remove(user => user.username === username && user.password === password);
-        // users.push(userData);
-        // return localStorage.setItem('users', JSON.stringify(users));
-
-        window.location.href = '../../login/login.html';
-    }
-</script>
-<script>
-    updateSummary(); // Initial update when the page loads
-    function editOrder(orderId) {
-        // Populate the form with order details for editing
-        // For demonstration, we're using hardcoded values
-        document.getElementById('order-id').value = orderId;
-        document.getElementById('customer-name').value = 'John Doe';
-        document.getElementById('order-date').value = '2024-05-15';
-        document.getElementById('order-status').value = 'pending';
-    }
-
-    function deleteOrder(orderId) {
-        // Implement order deletion logic
-        alert(`Order #${orderId} deleted.`);
-    }
-
-    document.getElementById('edit-order-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        // Implement order update logic
-        alert('Order updated.');
-        updateSummary();
-    });
-
-    // Function to update summary based on table data
-    function updateSummary() {
-        const table = document.getElementById('order-table');
-        const rows = table.getElementsByTagName('tr');
-        let totalOrders = 0;
-        let totalAmount = 0;
-        let unpaidOrders = 0;
-
-        for (let i = 1; i < rows.length; i++) { // Start from 1 to skip header row
-            const cells = rows[i].getElementsByTagName('td');
-            const amount = parseFloat(cells[4].innerText.replace('$', '')); // Assuming amount is in 5th cell (index 4)
-            const paymentStatus = cells[5].innerText.trim(); // Assuming payment status is in 6th cell (index 5)
-
-            totalOrders++;
-            totalAmount += amount;
-
-            if (paymentStatus === 'Unpaid') {
-                unpaidOrders++;
-            }
-        }
-
-        // Update summary section
-        document.getElementById('total-orders').innerText = totalOrders;
-        document.getElementById('total-amount').innerText = `$${totalAmount.toFixed(2)}`;
-        document.getElementById('unpaid-orders').innerText = unpaidOrders;
-    }
-</script>
-

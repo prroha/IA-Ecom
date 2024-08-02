@@ -69,7 +69,9 @@ namespace IA_Ecom.Controllers
         public async Task<IActionResult> ManageProducts()
         {
             IEnumerable<Product> products = await productService.GetAllProductsAsync();
-            List<ProductViewModel> viewModel = products.Select(o => ProductMapper.MapToViewModel(o)).ToList();
+            List<ProductViewModel> productsViewModel = products.Select(o => ProductMapper.MapToViewModel(o)).ToList();
+            ManageProductViewModel viewModel = new ManageProductViewModel();
+            viewModel.Products = productsViewModel;
             return View(viewModel);
         }
 
@@ -103,7 +105,9 @@ namespace IA_Ecom.Controllers
         public async Task<IActionResult> ManageOrders()
         {
             IEnumerable<Order> orders = await orderService.GetAllOrdersAsync();
-            List<OrderViewModel> viewModel = orders.Select(o => OrderMapper.MapToViewModel(o)).ToList();
+            List<OrderViewModel> orderViewModel = orders.Select(o => OrderMapper.MapToViewModel(o)).ToList();
+            ManageOrderViewModel viewModel = new ManageOrderViewModel();
+            viewModel.Orders = orderViewModel;
             return View(viewModel);
         }
 
@@ -155,13 +159,14 @@ namespace IA_Ecom.Controllers
             return View(user);
         }
 
-        // GET: /admin/feedbacks
         [HttpGet("feedbacks")]
         public async Task<IActionResult> ManageFeedbacks()
         {
             var feedbacks = await feedbackService.GetAllFeedbacksAsync();
             List<FeedbackViewModel> viewModel = feedbacks.Select(o => FeedbackMapper.MapToViewModel(o)).ToList();
-            return View(viewModel);
+            ManageFeedbackViewModel feedbackViewModel = new ManageFeedbackViewModel();
+             feedbackViewModel.Feedbacks = viewModel;
+            return View(feedbackViewModel);
         }
 
         // GET: /admin/feedbacks/{id}

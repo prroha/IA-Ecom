@@ -1,0 +1,68 @@
+@model IA_Ecom.ViewModels.ManageFeedbackViewModel
+
+@{
+    ViewData["Title"] = "Feedback Management";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<div class="page-title">
+    <h2>Feedback Management</h2>
+</div>
+<div class="responsive-grid">
+    <!-- Feedback List -->
+    <div class="card">
+        <h3 class="card-title">Feedbacks</h3>
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>Feedback ID</th>
+                    <th>User</th>
+                    <th>Comment</th>
+                    <th>Date</th>
+                    <th>Rating</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var feedback in Model.Feedbacks)
+                {
+                    <tr>
+                        <td>@feedback.FeedbackId</td>
+                        <td>@feedback.Username</td>
+                        <td>@feedback.Message</td>
+                        <td>@feedback.Date</td>
+                        <td>@feedback.Rating</td>
+                        <td>
+                            <button class="button edit-button" onclick="editFeedback(@feedback.FeedbackId)">Edit</button>
+                            <button class="button-secondary delete-button" onclick="deleteFeedback(@feedback.FeedbackId)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Edit Feedback -->
+    <div class="card">
+        <h3 class="card-title">Edit Feedback</h3>
+        <form id="edit-feedback-form" asp-controller="Admin" asp-action="EditFeedback" class="user-form">
+            <div class="form-group">
+                <label asp-for="@Model.Feedback.FeedbackId">Feedback ID</label>
+                <input asp-for="@Model.Feedback.FeedbackId" class="user-form__input" readonly>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Feedback.Username">User Name</label>
+                <input type="text" asp-for="@Model.Feedback.Username" class="user-form__input" readonly>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Feedback.Message">Comment</label>
+                <textarea asp-for="@Model.Feedback.Message" class="user-form__input"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Feedback.Rating">Rating</label>
+                <input type="number" asp-for="@Model.Feedback.Rating" class="user-form__input" min="1" max="5">
+            </div>
+            <button type="submit" class="button">Save Changes</button>
+        </form>
+    </div>
+</div>

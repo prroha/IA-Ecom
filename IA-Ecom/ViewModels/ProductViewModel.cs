@@ -8,6 +8,8 @@ namespace IA_Ecom.ViewModels
 
         [Required]
         public string Name { get; set; }
+        [Required]
+        public string Category { get; set; }
 
         [Required]
         [DataType(DataType.Currency)]
@@ -17,6 +19,9 @@ namespace IA_Ecom.ViewModels
         public string Description { get; set; }
         
         public string ImageUrl { get; set; }
+        public string SKU { get; set; }
+        public string Color { get; set; }
+        public string Size { get; set; }
         public string ProductCondition { 
             get
             {
