@@ -34,7 +34,7 @@ Layout = "~/Views/Home/_PageLayout.cshtml";
                 <h2 class="product-info">@Model.Price</h2>
                 <form asp-controller="Order" asp-action="AddToCart" method="post" class="user-form">
                     <div class="form-group">
-                        <select id="select-size" name="ProductSize">
+                        <select id="select-size" name="ProductSize" required>
                             <option value="" selected>Select Size</option>
                             <option value="XL">XL</option>
                             <option value="XXL">XXL</option>
@@ -48,6 +48,7 @@ Layout = "~/Views/Home/_PageLayout.cshtml";
                     </div>
                     <input type="hidden" name="UnitPrice" class="user-form__input" value="@Model.Price" required>
                     <input type="hidden" name="ProductId" class="user-form__input" value="@Model.ProductId" required>
+                    <input type="hidden" name="ProductName" class="user-form__input" value="@Model.Name" required>
                     <button class="button">Add To Cart</button>
                 </form>
                 <h4>Product Details</h4>

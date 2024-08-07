@@ -26,6 +26,10 @@ namespace IA_Ecom.Services
         {
             return await customerRepository.GetByIdAsync(id);
         }
+        public async Task<User> GetUserByUserIdAsync(string id)
+        {
+            return await customerRepository.GetUserByUserIdAsync(id);
+        }
 
         public async Task AddUserAsync(User user)
         {

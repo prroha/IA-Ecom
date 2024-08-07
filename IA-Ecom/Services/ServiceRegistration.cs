@@ -29,6 +29,9 @@ namespace IA_Ecom
             
             
             services.AddScoped<IPaymentGateway, PaymentGateway>();
+            // Notification service can be singleton
+            services.AddSingleton<INotificationService, NotificationService>();
+ 
         }
     }
 }

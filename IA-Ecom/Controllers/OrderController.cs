@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using AutoMapper;
 using IA_Ecom.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,9 +8,8 @@ using IA_Ecom.ViewModels;
 
 namespace IA_Ecom.Controllers
 {
-    public class OrderController(IOrderService orderService, Mapper mapper) : Controller
+    public class OrderController(IOrderService orderService, IUserService userService, INotificationService notificationService) : Controller
     {
-        private readonly IMapper _mapper = mapper;
 
         [Authorize(Roles = "ADMIN")] 
         public IActionResult Index()
@@ -66,12 +64,31 @@ namespace IA_Ecom.Controllers
             if (ModelState.IsValid)
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the user ID from identity
+
+                // Retrieve the user from the database
+                var user = await userService.GetUserByUserIdAsync(userId);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                // Check if the user's address is missing
+                bool isAddressMissing = string.IsNullOrEmpty(user.Address);
+                if (isAddressMissing)
+                {
+                    notificationService.AddNotification("Please add your address information from the profile page.", NotificationType.Validation);
+                    
+                    return RedirectToAction("Details", "Product", new { id = viewModel.ProductId });
+                }                
                 OrderItem orderItem = OrderMapper.MapToModel(viewModel);
                 orderItem.CustomerId = userId;
-                await orderService.AddToCartAsync(orderItem);
-                return RedirectToAction(nameof(Index));
+                await orderService.AddToCartAsync(orderItem, user);
+                // return RedirectToAction(nameof(Index));
+                notificationService.AddNotification("Item Successfully added to Cart. Visit Cart Details to Checkout", NotificationType.Success);
+                return RedirectToAction("Details", "Product", new { id = viewModel.ProductId });
             }
-            return View(viewModel);
+                notificationService.AddNotification("Couldnot Perform the Action at the Moment.", NotificationType.Error);
+            return RedirectToAction("Details", "Product", new { id = viewModel.ProductId });
         }
         
         [HttpPost]

@@ -3,12 +3,10 @@ using IA_Ecom.Models;
 
 namespace IA_Ecom.Repositories
 {
-    public class UserRepository : GenericRepository<User>, IUserRepository
+    public class UserRepository(ApplicationDbContext context) : GenericRepository<User>(context), IUserRepository
     {
-        public UserRepository(ApplicationDbContext context) : base(context)
+        public async Task<User> GetUserByUserIdAsync(string userId)
         {
-        }
-
-        // Implement additional methods specific to Customer if any
-    }
+            return await context.Users.FindAsync(userId);
+        }    }
 }

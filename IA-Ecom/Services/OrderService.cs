@@ -109,9 +109,9 @@ namespace IA_Ecom.Services
             return true;
         }
 
-        public Task AddToCartAsync(OrderItem orderItem)
+        public Task AddToCartAsync(OrderItem orderItem, User user)
         {
-            return orderRepository.AddToCartAsync(orderItem);
+            return orderRepository.AddToCartAsync(orderItem, user);
         }
 
         public void AddCartItemToOrder(Order order, CartItem cartItem)

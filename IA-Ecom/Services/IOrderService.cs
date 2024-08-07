@@ -15,7 +15,7 @@ namespace IA_Ecom.Services
         Task UpdateOrderAsync(Order order);
         Task DeleteOrderAsync(int id);
         Task<bool> ProcessOrderAsync(int orderId, string customerId);
-        Task AddToCartAsync(OrderItem orderItem);
+        Task AddToCartAsync(OrderItem orderItem, User user);
         void AddCartItemToOrder(Order order, CartItem cartItem);
         void PlaceOrder(Order order);
         void ClearCart(string customerId);

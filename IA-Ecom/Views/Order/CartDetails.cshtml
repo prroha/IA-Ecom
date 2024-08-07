@@ -1,0 +1,64 @@
+@{
+    ViewData["Title"] = "Cart Details";
+    Layout = "~/Views/Home/_PageLayout.cshtml";
+}
+<div class="grid">
+    <h1 class="section-title">Shopping Cart</h1>
+
+    <div class="cart-container">
+        <table class="styled-table">
+            <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Remove</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Product 1</td>
+                <td><input type="number" class="cart-quantity" value="1"></td>
+                <td>$10.00</td>
+                <td><span class="button-remove">
+                        <i class='bx bx-trash-alt'></i></span>
+                </td>
+            </tr>
+            <tr>
+                <td>Product 2</td>
+                <td><input type="number" class="cart-quantity" value="2"></td>
+                <td>$20.00</td>
+                <td><span class="button-remove">
+                        <i class='bx bx-trash-alt'></i></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="cart-summary">
+            <p>Subtotal: $30.00</p>
+            <p>Discount: $5.00</p>
+            <p>Delivery Charge: $2.00</p>
+            <p>Tax: $1.50</p>
+            <h2>Total: $28.50</h2>
+        </div>
+
+        <div class="cart-actions">
+            <a href="process-payment.html" class="button-primary">Proceed to Checkout</a>
+        </div>
+    </div>
+
+</div>
+<section class="newsletter section" id="subscribed">
+    <div class="newsletter__container grid">
+        <div class="newsletter__subscribed">
+            <h2 class="section-title">OUR NEWSLETTER</h2>
+            <p class="newsletter__description">Stay updated with our latest offers and products</p>
+
+            <form action="" class="newsletter__form">
+                <input type="text" class="newsletter__input" placeholder="Enter your email">
+                <a href="#" class="button">SUBSCRIBE</a>
+            </form>
+        </div>
+    </div>
+</section>

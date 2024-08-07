@@ -1,0 +1,71 @@
+@inject INotificationService NotificationService
+
+@using IA_Ecom.Services
+@using IA_Ecom.ViewModels
+@{
+var notifications = NotificationService.GetNotifications();
+// var notificationsJson = Newtonsoft.Json.JsonConvert.SerializeObject(notifications);
+}
+<div class="notification-modal" id="notificationModal">
+    <div class="notification-modal-content">
+        <span class="notification-modal-close" id="modalClose">&times;</span>
+        <p class="notification-modal-message" id="modalMessage"></p>
+    </div>
+</div>
+<script>
+    function showModal(message) {
+        document.getElementById('modalMessage').textContent = message;
+
+        var modal = document.getElementById('notificationModal');
+        modal.style.display = 'block';
+
+        document.getElementById('modalClose').addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        function showToast(message, type) {
+            var toastClass = "toast-info"; // Default class
+            if (type === "success") {
+                toastClass = "toast-success";
+            } else if (type === "error") {
+                toastClass = "toast-error";
+            } else if (type === "warning") {
+                toastClass = "toast-warning";
+            }
+
+            var toast = $('<div class="toast ' + toastClass + '">' + message + '</div>');
+            $("body").append(toast);
+            toast.fadeIn().delay(3000).fadeOut(function () { $(this).remove(); });
+        }
+            // Loop through notifications and display them
+           @if (notifications.Any())
+           {
+               foreach (var notification in notifications)
+               {
+                   if (notification.Type == NotificationType.Success)
+                   {
+                       <text>
+                    showToast("@notification.Message", "success");
+                    </text>
+                   }
+                   else if (notification.Type == NotificationType.Error)
+                   {
+                       <text>
+                    showToast("@notification.Message", "error");
+                    </text>
+                   }
+                   else if (notification.Type == NotificationType.Validation)
+                   {
+                       <text>
+                    showModal("@notification.Message");
+                    </text>
+                   }
+               }
+           }
+
+            // Clear notifications after displaying them
+           // NotificationService.ClearNotifications();
+    });
+    </script>

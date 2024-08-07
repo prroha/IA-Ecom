@@ -27,7 +27,6 @@
 
     <ItemGroup>
       <Folder Include="App_Data\Objects\" />
-      <Folder Include="wwwroot\lib\" />
     </ItemGroup>
 
     <ItemGroup>

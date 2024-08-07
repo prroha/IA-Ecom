@@ -1,5 +1,6 @@
 using IA_Ecom.Data;
 using IA_Ecom.Models;
+using IA_Ecom.RequestModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace IA_Ecom.Repositories
@@ -8,7 +9,7 @@ namespace IA_Ecom.Repositories
     {
         private readonly ApplicationDbContext _dbContext = context;
 
-        public async Task AddToCartAsync(OrderItem orderItem)
+        public async Task AddToCartAsync(OrderItem orderItem, User user)
         {
             // Retrieve the current cart (order) for the user or create a new one
             var order = await _dbContext.Orders
@@ -19,10 +20,12 @@ namespace IA_Ecom.Repositories
             {
                 order = new Order
                 {
-                    CustomerId = orderItem.CustomerId,
+                    CustomerId = user.Id,
                     OrderDate = DateTime.UtcNow,
                     Status = "Cart",
+                    PaymentStatus = PaymentStatus.Pending,
                     TotalAmount = 0,
+                    ShippingAddress = user.Address,
                     OrderItems = new List<OrderItem>()
                 };
                 _dbContext.Orders.Add(order);
@@ -43,7 +46,9 @@ namespace IA_Ecom.Repositories
                 {
                     ProductId = orderItem.ProductId,
                     Quantity = orderItem.Quantity,
-                    UnitPrice = orderItem.UnitPrice
+                    UnitPrice = orderItem.UnitPrice,
+                    CustomerId = user.Id,
+                    ProductSize = orderItem.ProductSize
                 };
                 order.OrderItems.Add(orderItemDb);
             }

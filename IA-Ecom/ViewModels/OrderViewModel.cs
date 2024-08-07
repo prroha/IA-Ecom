@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace IA_Ecom.ViewModels
 {
-    public class OrderViewModel
+    public class OrderViewModel: BaseViewModel
     {
         [Required]
         public int OrderId { get; set; }
@@ -31,12 +31,13 @@ namespace IA_Ecom.ViewModels
         public string Status { get; set; }
     }
 
-    public class OrderItemViewModel
+    public class OrderItemViewModel: BaseViewModel
     {
         public int OrderItemId { get; set; }
         public int ProductId { get; set; }
         public string ProductName { get; set; }
         
+        [Required]
         public string ProductSize { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }

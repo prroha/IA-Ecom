@@ -101,11 +101,9 @@ namespace IA_Ecom.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CustomerId")
@@ -119,7 +117,6 @@ namespace IA_Ecom.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PostalCode")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ShippingAddress")
@@ -127,7 +124,6 @@ namespace IA_Ecom.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("State")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Status")

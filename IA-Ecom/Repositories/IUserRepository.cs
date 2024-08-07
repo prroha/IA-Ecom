@@ -4,6 +4,6 @@ namespace IA_Ecom.Repositories
 {
     public interface IUserRepository : IGenericRepository<User>
     {
-        // Define additional methods specific to Customer if any
+        Task<User> GetUserByUserIdAsync(string userId);
     }
 }
