@@ -50,11 +50,11 @@ namespace IA_Ecom.Controllers
 
             if (cart == null)
             {
-                // return View("EmptyCart");
                 return NotFound();
             }
 
-            return View("CartDetails", cart);
+            OrderViewModel viewModel = OrderMapper.MapToViewModel(cart);
+            return View("CartDetails", viewModel);
         }
         
         [HttpPost]
