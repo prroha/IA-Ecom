@@ -18,6 +18,8 @@ obj/
 /.idea
 IA-Ecom/bin
 IA-Ecom/obj
+IA-Ecom/bin/
+IA-Ecom/obj/
 
 # User-specific files
 *.user
