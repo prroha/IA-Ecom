@@ -1,0 +1,105 @@
+@model IA_Ecom.ViewModels.ManageProductViewModel;
+@{
+    ViewData["Title"] = "Order Management";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+<div class="page-title">
+    <h2>Product Management</h2>
+</div>
+<div class="responsive-grid">
+    <div class="card">
+        <h3 class="card-title">Products</h3>
+        <table class="product-table">
+            <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var product in Model.Products)
+            {
+                <tr>
+                    <td>@product.ProductId</td>
+                    <td>@product.Name</td>
+                    <td>@product.Category</td>
+                    <td>@product.Price</td>
+                    <td>@product.Stock</td>
+                    <td>
+                        <button class="button edit-button" onclick="editProduct(@product.ProductId)">Edit</button>
+                        <button class="button-secondary delete-button" onclick="deleteProduct(@product.ProductId)">Delete</button>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h3 class="card-title">Edit Product</h3>
+        <form id="edit-product-form" asp-controller="Admin" asp-action="AddProduct" class="user-form" enctype="multipart/form-data"> 
+            <div class="form-group horizontal-group">
+                <div >
+                    <label asp-for="@Model.Product.ProductId">Product ID</label>
+                    <input asp-for="@Model.Product.ProductId" class="user-form__input" readonly>
+                </div>
+                <div >
+                    <label asp-for="@Model.Product.Category">Product Category</label>
+                    <input type="text" asp-for="@Model.Product.Category" class="user-form__input">
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Product.Name">Product Name</label>
+                <input type="text" asp-for="@Model.Product.Name" class="user-form__input">
+            </div>
+            <div class="form-group horizontal-group">
+                <div>
+                    <label asp-for="@Model.Product.Price">Product Price</label>
+                    <input type="number" asp-for="@Model.Product.Price" class="user-form__input">
+                </div>
+                <div>
+                    <label asp-for="@Model.Product.Stock">Product Quantity</label>
+                    <input type="number" asp-for="@Model.Product.Stock" class="user-form__input">
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Product.Description">Product Description</label>
+                <textarea asp-for="@Model.Product.Description" class="user-form__input"></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Product.ImageUrl">Product Image URL</label>
+                <input type="url" asp-for="@Model.Product.ImageUrl" class="user-form__input">
+            </div>
+            <div class="form-group horizontal-group">
+                <div>
+                    <label asp-for="@Model.Product.SKU">SKU</label>
+                    <input type="text" asp-for="@Model.Product.SKU" class="user-form__input">
+                </div>
+                <div>
+                    <label for="product-weight">Weight</label>
+                    <input type="number" id="product-weight" class="user-form__input">
+                </div>
+            </div>
+            <div class="form-group horizontal-group">
+                <div>
+                    <label asp-for="@Model.Product.Color">Color</label>
+                    <input type="text" asp-for="@Model.Product.Color" class="user-form__input">
+                </div>
+                <div>
+                    <label asp-for="@Model.Product.Size">Size</label>
+                    <input type="text" asp-for="@Model.Product.Size" class="user-form__input">
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="@Model.Product.Images">Product Images</label>
+                <input asp-for="@Model.Product.Images" class="form-control" type="file" multiple />
+                <span asp-validation-for="@Model.Product.Images" class="text-danger"></span>
+            </div>
+            <button type="submit" class="button">Save Changes</button>
+        </form>
+    </div>
+</div>
