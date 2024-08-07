@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using IA_Ecom.Models;
 
 namespace IA_Ecom.ViewModels
 {
@@ -18,7 +19,7 @@ namespace IA_Ecom.ViewModels
         [Required]
         public string Description { get; set; }
         
-        public string ImageUrl { get; set; }
+        public string ThumbnailImageUrl { get; set; }
         public string SKU { get; set; }
         public string Color { get; set; }
         public string Size { get; set; }
@@ -33,6 +34,8 @@ namespace IA_Ecom.ViewModels
         public int Stock { get; set; }
 
         public DateTime EntryDate { get; set; }
-        // Files for multiple image uploads
-        public List<IFormFile> Images { get; set; }    }
+        // For multiple image uploads
+        public List<IFormFile> ImagesInput { get; set; }    
+        public List<string> ImageUrls { get; set; } = new(); 
+    }
 }

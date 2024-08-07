@@ -1,4 +1,8 @@
 @model List<IA_Ecom.ViewModels.ProductViewModel>;
+@{
+ViewData["Title"] = "Product Listing";
+Layout = "~/Views/Home/_PageLayout.cshtml";
+}
 <!-- FEATURED PRODUCTS -->
 <section class="featured section" id="featured">
     <h2 class="section-title">ALL PRODUCTS</h2>
@@ -11,7 +15,7 @@
                 <a asp-controller="Product" asp-action="Details" asp-route-id="@product.ProductId">
                     <div class="featured__box">
                         <div class="featured__new">@product.ProductCondition</div>
-                        <img src="@product.ImageUrl" class="featured__img" alt="@product.Name">
+                        <img src="@product.ThumbnailImageUrl" class="featured__img" alt="@product.Name">
                     </div>
 
                     <div class="featured__data">
@@ -56,5 +60,3 @@
         </div>
     </div>
 </section>
-    
-

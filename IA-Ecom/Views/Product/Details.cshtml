@@ -1,24 +1,31 @@
 @model IA_Ecom.ViewModels.ProductViewModel;
+@{
+ViewData["Title"] = "Product Details";
+Layout = "~/Views/Home/_PageLayout.cshtml";
+}
 <!-- DETAIL SECTION -->
     <section id="prod-details" class="section">
         <div class="section_content__container grid-two">
 
             <div class="product-image-show">
                 <div class="featured__new">@Model.ProductCondition</div>
-                <img src="@Model.ImageUrl" class="main-img" alt="@Model.Name" id="MainImg">
+                <img src="@Model.ThumbnailImageUrl" class="main-img" alt="@Model.Name" id="MainImg">
                 <div class="small-img-group">
-                    <div class="small-img-col">
-                        <img src="@Model.ImageUrl" class="small-img" alt="">
-                    </div>
-                    <div class="small-img-col">
-                        <img src="@Model.ImageUrl" class="small-img">
-                    </div>
-                    <div class="small-img-col">
-                        <img src="@Model.ImageUrl" class="small-img">
-                    </div>
-                    <div class="small-img-col">
-                        <img src="@Model.ImageUrl" class="small-img">
-                    </div>
+                    @foreach (var image in Model.ImageUrls)
+                    {
+                        <div class="small-img-col">
+                            <img src="@image" class="small-img" alt="">
+                        </div>
+                        <div class="small-img-col">
+                            <img src="@image" class="small-img">
+                        </div>
+                        <div class="small-img-col">
+                            <img src="@image" class="small-img">
+                        </div>
+                        <div class="small-img-col">
+                            <img src="@image" class="small-img">
+                        </div>
+                    }
                 </div>
             </div>
             <div class="product-info-detail">

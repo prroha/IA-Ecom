@@ -68,7 +68,7 @@ namespace IA_Ecom.Services
         }
         private async Task<string> SaveImageAsync(IFormFile image)
         {
-            var uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "App_Data");
+            var uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "App_Data/Objects");
             if (!Directory.Exists(uploadDir))
             {
                 Directory.CreateDirectory(uploadDir);

@@ -2,12 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using IA_Ecom.Mappers;
 using IA_Ecom.Models;
 using IA_Ecom.Services;
 using IA_Ecom.ViewModels;
 
 namespace IA_Ecom.Controllers
 {
+    // [Route("Product")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -19,7 +21,6 @@ namespace IA_Ecom.Controllers
             _mapper = mapper;
         }
 
-        // GET: /Product
         public async Task<IActionResult> Index()
         {
             var products = await _productService.GetAllProductsAsync();
@@ -27,19 +28,19 @@ namespace IA_Ecom.Controllers
             return View("Catalog", viewModel);
         }
 
-        // GET: /Product/Details/{id}
-        public IActionResult Details(int id)
+        // [HttpGet("Details/{id}")]
+        public async Task<IActionResult> Details(int id)
         {
-            var product = _productService.GetProductByIdAsync(id);
+            Product product = await _productService.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound();
             }
-            var productViewModel = _mapper.Map<ProductViewModel>(product); // Map Product to ProductViewModel
+            // Map Product to ProductViewModel
+            // var productViewModel = _mapper.Map<ProductViewModel>(product); 
+            ProductViewModel productViewModel = ProductMapper.MapToViewModel(product);
 
             return View(productViewModel);
         }
-
-        // Other actions for managing products
     }
 }

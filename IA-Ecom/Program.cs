@@ -61,7 +61,7 @@ static void ConfigureServices(WebApplicationBuilder builder)
         .AddEntityFrameworkStores<ApplicationDbContext>();
     services.AddControllersWithViews();
     // Register application services
-    services.AddAutoMapper(typeof(Program));
+    services.AddAutoMapper(typeof(MappingProfile));
     ServiceRegistration.RegisterServices(services, configuration);
     
     // Configure Identity options
