@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IA_Ecom.Repositories
 {
-    public class OrderRepository(ApplicationDbContext context, PaymentRepository paymentRepository) : GenericRepository<Order>(context), IOrderRepository
+    public class OrderRepository(ApplicationDbContext context) : GenericRepository<Order>(context), IOrderRepository
     {
         private readonly ApplicationDbContext _dbContext = context;
 

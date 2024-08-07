@@ -65,7 +65,7 @@ Layout = "~/Views/Admin/_AdminLayout.cshtml";
             <ul>
                 @foreach (var feedback in Model.Feedbacks)
                 {
-                    <li>@feedback?.Name - @feedback?.Message</li>
+                    <li>@feedback?.UserFullName - @feedback?.Message</li>
                 }
             </ul>
         </div>

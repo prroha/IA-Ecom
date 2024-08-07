@@ -33,6 +33,6 @@ namespace IA_Ecom.ViewModels
         public int Stock { get; set; }
 
         public DateTime EntryDate { get; set; }
-        // Other fields as needed for displaying or editing product details
-    }
+        // Files for multiple image uploads
+        public List<IFormFile> Images { get; set; }    }
 }

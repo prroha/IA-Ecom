@@ -94,7 +94,7 @@ namespace IA_Ecom.Controllers
             {
                 Product product = ProductMapper.MapToModel(productModel);
                 product.EntryDate = DateTime.Now;
-                await productService.AddProductAsync(product);
+                await productService.AddProductAsync(product, productModel.Images);
                 return RedirectToAction(nameof(ManageProducts));
             }
             return View(productModel);

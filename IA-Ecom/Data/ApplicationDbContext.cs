@@ -16,6 +16,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
         
         public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

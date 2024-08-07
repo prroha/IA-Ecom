@@ -11,7 +11,7 @@ public class FeedbackMapper
         return new FeedbackViewModel
         {
             FeedbackId = feedback.FeedbackId,
-            Name = feedback.Name,
+            UserFullName = feedback.Name,
             Message = feedback.Comment,
             Email = feedback.Email,
             Date = feedback.Date,
@@ -24,7 +24,7 @@ public class FeedbackMapper
         {
 
             FeedbackId = viewModel.FeedbackId,
-            Name = viewModel.Name,
+            Name = viewModel.UserFullName,
             Comment = viewModel.Message,
             Email = viewModel.Email,
             Date = viewModel.Date,

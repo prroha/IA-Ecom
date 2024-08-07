@@ -4,6 +4,10 @@ namespace IA_Ecom.Repositories
 {
     public interface IFeedbackRepository : IGenericRepository<Feedback>
     {
-        // Define additional methods specific to Feedback if any
+        // Task<IEnumerable<Feedback>> GetAllFeedbackAsync();
+        // Task<Feedback> GetFeedbackByIdAsync(int feedbackId);
+        // Task AddFeedbackAsync(Feedback feedback);
+        // Task UpdateFeedbackAsync(Feedback feedback);
+        // Task DeleteFeedbackAsync(int feedbackId);
     }
 }
