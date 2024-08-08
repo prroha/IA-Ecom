@@ -62,7 +62,7 @@ namespace IA_Ecom.Services
             var product = await _productRepository.GetByIdAsync(id);
             if (product != null)
             {
-                _productRepository.Remove(product);
+                await _productRepository.DeleteAsync(product.ProductId);
                 await _productRepository.SaveChangesAsync();
             }
         }

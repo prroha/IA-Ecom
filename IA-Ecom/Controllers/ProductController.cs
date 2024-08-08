@@ -9,7 +9,6 @@ using IA_Ecom.ViewModels;
 
 namespace IA_Ecom.Controllers
 {
-    // [Route("Product")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -28,7 +27,6 @@ namespace IA_Ecom.Controllers
             return View("Catalog", viewModel);
         }
 
-        // [HttpGet("Details/{id}")]
         public async Task<IActionResult> Details(int id)
         {
             Product product = await _productService.GetProductByIdAsync(id);
@@ -42,5 +40,6 @@ namespace IA_Ecom.Controllers
 
             return View(productViewModel);
         }
+        
     }
 }

@@ -7,9 +7,7 @@ namespace IA_Ecom.ViewModels
     {
         public int FeedbackId { get; set; }
 
-        [Required]
         public string Username { get; set; }
-        [Required]
         public string UserFullName { get; set; }
 
         [Required]

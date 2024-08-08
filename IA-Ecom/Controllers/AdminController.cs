@@ -17,6 +17,7 @@ namespace IA_Ecom.Controllers
         IOrderService orderService,
         IUserService userService,
     UserManager<User> userManager,
+        INotificationService notificationService,
         IFeedbackService feedbackService)
         : Controller
     {
@@ -74,16 +75,22 @@ namespace IA_Ecom.Controllers
             return View(viewModel);
         }
 
-        // GET: /admin/products/{id}
-        [HttpGet("products/{id}")]
+        // [HttpGet("products/{id}")]
+        [HttpGet()]
         public async Task<IActionResult> ProductDetails(int id)
         {
-            var product = await productService.GetProductByIdAsync(id);
+            IEnumerable<Product> products = await productService.GetAllProductsAsync();
+            Product product = products.First(p => p.ProductId == id);
             if (product == null)
             {
-                return NotFound();
+                notificationService.AddNotification("Product Not Found", NotificationType.Error);
+            return RedirectToAction("ManageProducts");
             }
-            return View(product);
+            List<ProductViewModel> productsViewModel = products.Select(o => ProductMapper.MapToViewModel(o)).ToList();
+            ManageProductViewModel viewModel = new ManageProductViewModel();
+            viewModel.Products = productsViewModel;
+            viewModel.Product = ProductMapper.MapToViewModel(product);
+            return View("ManageProducts", viewModel);
         }
 
         [HttpPost("products")]
@@ -98,8 +105,37 @@ namespace IA_Ecom.Controllers
             }
             return View(productModel);
         }
+        public async Task<IActionResult> EditProduct(int id)
+        {
+            if (ModelState.IsValid)
+            {
+                var product = await productService.GetProductByIdAsync(id);
+                if (product == null)
+                {
+                    notificationService.AddNotification("Product Not Found", NotificationType.Error);
+                    return RedirectToAction(nameof(ManageProducts));
+                }
+                await productService.UpdateProductAsync(product);
+                notificationService.AddNotification("Product Update", NotificationType.Success);
+                return RedirectToAction(nameof(ManageProducts));
+            }
+            notificationService.AddNotification("Could not Update Product", NotificationType.Error);
+            return RedirectToAction(nameof(ManageProducts));
+        }
 
-        [HttpGet("orders")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+                var product = await productService.GetProductByIdAsync(id);
+                if (product == null)
+                {
+                    notificationService.AddNotification("Product Not Found", NotificationType.Error);
+                    return RedirectToAction(nameof(ManageProducts));
+                }
+                await productService.DeleteProductAsync(id);
+                notificationService.AddNotification("Product Deleted", NotificationType.Success);
+                return RedirectToAction(nameof(ManageProducts));
+        }
+
         public async Task<IActionResult> ManageOrders()
         {
             IEnumerable<Order> orders = await orderService.GetAllOrdersAsync();
@@ -109,52 +145,91 @@ namespace IA_Ecom.Controllers
             return View(viewModel);
         }
 
-        // GET: /admin/orders/{id}
-        [HttpGet("orders/{id}")]
         public async Task<IActionResult> OrderDetails(int id)
         {
-            var order = await orderService.GetOrderByIdAsync(id);
+            IEnumerable<Order> orders = await orderService.GetAllOrdersAsync();
+            Order order = orders.First(p => p.OrderId == id);
             if (order == null)
             {
-                return NotFound();
+                notificationService.AddNotification("Order Not Found", NotificationType.Error);
+            return RedirectToAction("ManageOrders");
             }
-            return View(order);
+            List<OrderViewModel> orderViewModel = orders.Select(o => OrderMapper.MapToViewModel(o)).ToList();
+            ManageOrderViewModel viewModel = new ManageOrderViewModel();
+            viewModel.Orders = orderViewModel;
+            viewModel.Order = OrderMapper.MapToViewModel(order);
+            return View("ManageOrders", viewModel);
+            // var order = await orderService.GetOrderByIdAsync(id);
+            // if (order == null)
+            // {
+            //     return NotFound();
+            // }
+            // return View(order);
+        }
+        public async Task<IActionResult> DeleteOrder(int id)
+        {
+                var order = await orderService.GetOrderByIdAsync(id);
+                if (order == null)
+                {
+                    notificationService.AddNotification("Order Not Found", NotificationType.Error);
+                    return RedirectToAction(nameof(ManageOrders));
+                }
+                await orderService.DeleteOrderAsync(id);
+                notificationService.AddNotification("Order Deleted", NotificationType.Success);
+                return RedirectToAction(nameof(ManageOrders));
         }
 
-        [HttpGet("users")]
         public async Task<IActionResult> ManageUsers()
         {
-            var users = await userService.GetAllUsersAsync(); // Replace with your service method
-            var model = new List<UserViewModel>();
-
-            foreach (var user in users)
+            IEnumerable<User> users = await userService.GetAllUsersAsync();
+            var userTasks = users.Select(async user =>
             {
                 var roles = await userManager.GetRolesAsync(user);
-                var userViewModel = new UserViewModel
+                return new UserViewModel
                 {
                     UserId = user.Id,
                     Username = user.UserName,
                     Email = user.Email,
                     FullName = user.FullName,
-                    Role = roles.FirstOrDefault() // Assuming you have a method to fetch user's role
+                    Role = roles.FirstOrDefault() 
                 };
-                model.Add(userViewModel);
-            }
+            });
 
-            return View(model);
+            // Await all tasks and convert to a list
+            var userViewModels = await Task.WhenAll(userTasks);        
+            ManageUserViewModel viewModel = new();
+            viewModel.Users = userViewModels.ToList();
+            return View(viewModel);
         }
 
-        [HttpGet("users/{id}")]
-        public async Task<IActionResult> UserDetails(int id)
+        public async Task<IActionResult> UserDetails(string id)
         {
-            var user = await userService.GetUserByIdAsync(id);
+            var user = await userService.GetUserByUserIdAsync(id);
             if (user == null)
             {
-                return NotFound();
+                notificationService.AddNotification("User Details Not Found", NotificationType.Error);
+            return RedirectToAction("ManageUsers");
             }
-            return View(user);
+            var users = await userService.GetAllUsersAsync();
+            List<UserViewModel> userViewModels = users.Select(o => UserMapper.MapToViewModel(o)).ToList();
+            ManageUserViewModel viewModel = new ManageUserViewModel();
+             viewModel.Users = userViewModels;
+            viewModel.User = UserMapper.MapToViewModel(user);
+            return View("ManageUsers", viewModel);
         }
 
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+                var user = await userService.GetUserByUserIdAsync(id);
+                if (user == null)
+                {
+                    notificationService.AddNotification("User Not Found", NotificationType.Error);
+                    return RedirectToAction(nameof(ManageUsers));
+                }
+                await userService.DeleteUserAsync(id);
+                notificationService.AddNotification("User Deleted", NotificationType.Success);
+                return RedirectToAction(nameof(ManageUsers));
+        }
         [HttpGet("feedbacks")]
         public async Task<IActionResult> ManageFeedbacks()
         {
@@ -165,15 +240,33 @@ namespace IA_Ecom.Controllers
             return View(viewModel);
         }
 
-        [HttpGet("feedbacks/{id}")]
         public async Task<IActionResult> FeedbackDetails(int id)
         {
             var feedback = await feedbackService.GetFeedbackByIdAsync(id);
             if (feedback == null)
             {
-                return NotFound();
+                notificationService.AddNotification("Feedbacl Details Not Found", NotificationType.Error);
+            return RedirectToAction("ManageFeedbacks");
             }
-            return View(feedback);
+            var feedbacks = await feedbackService.GetAllFeedbacksAsync();
+            List<FeedbackViewModel> feedbackViewModel = feedbacks.Select(o => FeedbackMapper.MapToViewModel(o)).ToList();
+            ManageFeedbackViewModel viewModel = new ManageFeedbackViewModel();
+             viewModel.Feedbacks = feedbackViewModel;
+            viewModel.Feedback = FeedbackMapper.MapToViewModel(feedback);
+            return View("ManageFeedbacks", viewModel);
+        }
+        
+        public async Task<IActionResult> DeleteFeedback(int id)
+        {
+                var feedback = await feedbackService.GetFeedbackByIdAsync(id);
+                if (feedback == null)
+                {
+                    notificationService.AddNotification("Feedback Not Found", NotificationType.Error);
+                    return RedirectToAction(nameof(ManageFeedbacks));
+                }
+                await feedbackService.DeleteFeedbackAsync(id);
+                notificationService.AddNotification("Feedback Deleted", NotificationType.Success);
+                return RedirectToAction(nameof(ManageFeedbacks));
         }
     }
 }

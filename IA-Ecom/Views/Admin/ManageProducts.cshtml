@@ -30,8 +30,10 @@
                     <td>@product.Price</td>
                     <td>@product.Stock</td>
                     <td>
-                        <button class="button edit-button" onclick="editProduct(@product.ProductId)">Edit</button>
-                        <button class="button-secondary delete-button" onclick="deleteProduct(@product.ProductId)">Delete</button>
+                        @* <button class="button edit-button" onclick="editProduct(@product.ProductId)">Edit</button> *@
+                        <a asp-controller="Admin" asp-action="ProductDetails" asp-route-id="@product.ProductId" class="button edit-button">Edit</a>
+                        <a asp-controller="Admin" asp-action="DeleteProduct" asp-route-id="@product.ProductId" class="button-secondary delete-button">Delete</a>
+                        @* <button class="button-secondary delete-button" onclick="deleteProduct(@product.ProductId)">Delete</button> *@
                     </td>
                 </tr>
             }

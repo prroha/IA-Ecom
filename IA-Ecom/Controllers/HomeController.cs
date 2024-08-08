@@ -19,7 +19,7 @@ public class HomeController : Controller
     {
         if (User.Identity.IsAuthenticated && User.IsInRole("ADMIN"))
         {
-                return RedirectToAction("Dashboard", "Admin");
+            return RedirectToAction("Dashboard", "Admin");
         }
         return View();
     }
@@ -29,14 +29,14 @@ public class HomeController : Controller
         return View();
     }
 
-        public IActionResult ContactUs()
-        {
-            return View();
-        }
-        public IActionResult About()
-        {
-            return View();
-        }
+    public IActionResult ContactUs()
+    {
+        return View();
+    }
+    public IActionResult About()
+    {
+        return View();
+    }
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

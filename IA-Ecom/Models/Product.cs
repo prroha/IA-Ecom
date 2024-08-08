@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace IA_Ecom.Models
 {
-    public class Product
+    public class Product: BaseModel
     {
         public int ProductId { get; set; }
         public required string Name { get; set; }

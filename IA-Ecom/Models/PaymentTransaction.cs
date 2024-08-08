@@ -2,7 +2,7 @@ using IA_Ecom.RequestModels;
 
 namespace IA_Ecom.Models;
 
-public class PaymentTransaction
+public class PaymentTransaction: BaseModel
 {
     public int PaymentTransactionId { get; set; }
     public int OrderId { get; set; }

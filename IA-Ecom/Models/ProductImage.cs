@@ -1,6 +1,6 @@
 namespace IA_Ecom.Models;
 
-public class ProductImage
+public class ProductImage: BaseModel
 {
     public int ProductImageId { get; set; }
     public string ImageUrl { get; set; }

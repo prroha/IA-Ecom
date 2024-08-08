@@ -14,10 +14,10 @@ namespace IA_Ecom.Models
         [NotMapped]  // Ensure this property is not mapped to the database
         public string FullName => $"{FirstName} {LastName}".Trim();
 
-        // Additional properties as needed
         public string? Address { get; set; }
         public string? PhoneNumber { get; set; }    
-        // Constructor for initialization if needed
-         public User() { }
+        public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
+        public DateTime? DeletedDate { get; set; }
     }
 }

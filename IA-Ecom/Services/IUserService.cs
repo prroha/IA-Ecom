@@ -10,6 +10,6 @@ namespace IA_Ecom.Services
         Task<User> GetUserByUserIdAsync(string id);
         Task AddUserAsync(User customer);
         Task UpdateUserAsync(User customer);
-        Task DeleteUserAsync(int id);
+        Task DeleteUserAsync(string id);
     }
 }

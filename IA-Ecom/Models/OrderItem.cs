@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IA_Ecom.Models
 {
-    public class OrderItem
+    public class OrderItem: BaseModel
     {
         [Key]
         public int OrderItemId { get; set; }

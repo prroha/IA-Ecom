@@ -1,4 +1,4 @@
-@model List<IA_Ecom.ViewModels.UserViewModel>;
+@model IA_Ecom.ViewModels.ManageUserViewModel;
 @{
     ViewData["Title"] = "User Management";
     Layout = "~/Views/Admin/_AdminLayout.cshtml";
@@ -21,7 +21,7 @@
                 </tr>
                 </thead>
                 <tbody id="userTableBody">
-                @foreach (var user in Model)
+                @foreach (var user in Model.Users)
                 {
                     <tr>
                         <td>@user.Username</td>
@@ -29,11 +29,14 @@
                         <td>@user.FullName</td>
                         <td>@user.Role</td>
                         <td>
-                            <a href="@Url.Action("EditUser", new { id = user.UserId })" class="button">Edit</a>
-                            <a href="@Url.Action("DeleteUser", new { id = user.UserId })" class="button-secondary">Delete</a>
+                            <a asp-controller="Admin" asp-action="UserDetails" asp-route-id="@user.UserId" class="button edit-button">Edit</a>
+                            <a asp-controller="Admin" asp-action="DeleteUser" asp-route-id="@user.UserId" class="button-secondary delete-button">Delete</a>
+                            @* <a href="@Url.Action("EditUser", new { id = user.UserId })" class="button">Edit</a> *@
+                            @* <a href="@Url.Action("DeleteUser", new { id = user.UserId })" class="button-secondary">Delete</a> *@
                         </td>
                     </tr>
-                }                    </tbody>
+                }                 
+                </tbody>
             </table>
         </div>
     </div>
@@ -41,7 +44,7 @@
     <div class="card">
         <div class="">
             <h3>Create / Edit User</h3>
-            <form id="userForm" class="user-form">
+            <form asp-controller="Admin"  id="userForm" class="user-form">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" class="user-form__input form-control" placeholder="Enter your name" name="username" required>

@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using IA_Ecom.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using IA_Ecom.Models;
 using IA_Ecom.Services;
@@ -5,60 +7,52 @@ using IA_Ecom.ViewModels;
 
 namespace IA_Ecom.Controllers
 {
-    public class FeedbackController : Controller
+    public class FeedbackController(IFeedbackService feedbackService, INotificationService notificationService) : Controller
     {
-        private readonly IFeedbackService _feedbackService;
-
-        public FeedbackController(IFeedbackService feedbackService)
-        {
-            _feedbackService = feedbackService;
-        }
-
-        // GET: /Feedback
         public IActionResult Index()
         {
-            var feedbacks = _feedbackService.GetAllFeedbacksAsync();
+            var feedbacks = feedbackService.GetAllFeedbacksAsync();
             return View(feedbacks);
         }
 
-        // GET: /Feedback/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: /Feedback/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Feedback feedback)
         {
             if (ModelState.IsValid)
             {
-                _feedbackService.AddFeedbackAsync(feedback);
+                feedbackService.AddFeedbackAsync(feedback);
                 return RedirectToAction(nameof(Index));
             }
             return View(feedback);
         }
 
-// GET: /ContactUs
-        public IActionResult ContactUs()
-        {
-            return View("Home/ContactUs", new ContactUsViewModel());
-        }
 
-        // POST: /ContactUs
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult ContactUs(ContactUsViewModel model)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "Account"); // Redirect to the login page if user ID is not found
+            }
             if (ModelState.IsValid)
             {
-                // Process the form submission, e.g., save to database or send an email
-                // Redirect to a confirmation page or display a success message
-                return RedirectToAction("Confirmation");
+                Feedback feedback = FeedbackMapper.MapToModel(model);
+                feedback.Date = DateTime.Now;
+                feedback.UserId = userId;
+                feedbackService.AddFeedbackAsync(feedback);
+                notificationService.AddNotification("Your Message was submitted. Admin will review it and get back to you soon.", NotificationType.Success);
+                return RedirectToAction("ContactUs", "Home");
             }
-
-            return View("Home/ContactUs", new ContactUsViewModel());
+            notificationService.AddNotification("Could not Save. Please Try Again Later", NotificationType.Validation);
+            return View("../Home/ContactUs", new ContactUsViewModel());
         }
 
         public IActionResult Confirmation()

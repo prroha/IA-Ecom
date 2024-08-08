@@ -22,12 +22,20 @@ public class FeedbackMapper
     {
         return new Feedback
         {
-
             FeedbackId = viewModel.FeedbackId,
             Name = viewModel.UserFullName,
             Comment = viewModel.Message,
             Email = viewModel.Email,
             Date = viewModel.Date,
+        };
+    }
+    public static Feedback MapToModel(ContactUsViewModel viewModel)
+    {
+        return new Feedback
+        {
+            Name = viewModel.Name,
+            Comment = viewModel.Message,
+            Email = viewModel.Email,
         };
     }
 }

@@ -69,7 +69,6 @@ namespace IA_Ecom.Repositories
     {
         var cart = await _dbContext.Carts
             .Include(c => c.CartItems)
-            .ThenInclude(ci => ci.Product)
             .FirstOrDefaultAsync(c => c.CustomerId == customerId);
 
         if (cart == null)

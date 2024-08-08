@@ -5,7 +5,7 @@ using IA_Ecom.RequestModels;
 
 namespace IA_Ecom.Models
 {
-    public class Order
+    public class Order: BaseModel
     {
         public User Customer { get; set; }
 

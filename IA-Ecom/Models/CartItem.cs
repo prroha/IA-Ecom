@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IA_Ecom.Models
 {
-    public class CartItem
+    public class CartItem: BaseModel
     {
         [Key]
         public int CartItemId { get; set; }
@@ -14,9 +14,9 @@ namespace IA_Ecom.Models
         public Cart Cart { get; set; }
 
         [Required]
-        [ForeignKey("Product")]
+        // [ForeignKey("Product")]
         public int ProductId { get; set; }
-        public Product Product { get; set; }
+        // public Product Product { get; set; }
 
         [Required]
         public int Quantity { get; set; }

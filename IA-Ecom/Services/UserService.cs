@@ -43,12 +43,12 @@ namespace IA_Ecom.Services
             await customerRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteUserAsync(int id)
+        public async Task DeleteUserAsync(string userId)
         {
-            var user = await customerRepository.GetByIdAsync(id);
+            var user = await GetUserByUserIdAsync(userId);
             if (user != null)
             {
-                customerRepository.Remove(user);
+                user.DeletedDate = DateTime.UtcNow;
                 await customerRepository.SaveChangesAsync();
             }
         }

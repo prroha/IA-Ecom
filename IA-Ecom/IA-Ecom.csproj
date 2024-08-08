@@ -27,6 +27,7 @@
 
     <ItemGroup>
       <Folder Include="App_Data\Objects\" />
+      <Folder Include="Migrations\" />
     </ItemGroup>
 
     <ItemGroup>
