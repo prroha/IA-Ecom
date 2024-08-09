@@ -1,16 +1,20 @@
 using System.Threading.Tasks;
 using IA_Ecom.Controllers;
+using IA_Ecom.Mappers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using IA_Ecom.ViewModels; // Ensure to include your ViewModel namespace
-using IA_Ecom.Models; // Ensure to include your ApplicationUser class namespace
+using IA_Ecom.Models;
+using IA_Ecom.Services; // Ensure to include your ApplicationUser class namespace
 
 namespace IA_Ecom.Controllers;
 
 public class AccountController(
     SignInManager<User> signInManager,
     UserManager<User> userManager,
-    RoleManager<IdentityRole> roleManager)
+    RoleManager<IdentityRole> roleManager,
+    IUserService userService,
+    INotificationService notificationService)
     : Controller
 {
     // GET: /Account/Login
@@ -37,7 +41,6 @@ public class AccountController(
         }
     }
 
-    // POST: /Account/Login
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
@@ -130,5 +133,36 @@ public class AccountController(
         }
     }
 
-    // Other actions for managing user registration, logout, etc.
+    [HttpGet]
+    public async Task<IActionResult> GetProfile(string userId)
+    {
+        var user = await userService.GetUserByUserIdAsync(userId);
+        if (user == null)
+        {
+            notificationService.AddNotification("User Profile Not Found", NotificationType.Error);
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+        ProfileViewModel viewModel = UserMapper.MapToProfileViewModel(user);
+        return View("../Admin/Profile", viewModel); 
+    }
+    [HttpPost]
+    public async Task<IActionResult> Profile(ProfileViewModel viewModel)
+    {
+        if (ModelState.IsValid &&  !String.IsNullOrEmpty(viewModel.UserId))
+        {
+            var existingUser = await userService.GetUserByUserIdAsync(viewModel.UserId);
+            if (existingUser == null)
+            {
+                notificationService.AddNotification("User Not Found", NotificationType.Error);
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+            User user = UserMapper.MapToModel(viewModel);
+            user.UpdatedDate = DateTime.UtcNow;
+            notificationService.AddNotification("Profile Updated Successfully", NotificationType.Success);
+            await userService.UpdateProfileAsync(user, viewModel.ImageInput);
+            return RedirectToAction(nameof(GetProfile), new{useriD= viewModel.UserId}); 
+        }
+        notificationService.AddNotification("Error Occurred", NotificationType.Validation);
+        return Redirect(Request.Headers["Referer"].ToString());
+    }
 }

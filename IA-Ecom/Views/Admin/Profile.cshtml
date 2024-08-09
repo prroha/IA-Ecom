@@ -8,55 +8,74 @@
     <h2>Edit Profile</h2>
 </div>
 <div class="card grid-two w-1000">
-    <form id="userForm" class="">
-        <div class="form-group">
-            <label for="fullName">Full Name</label>
-            <input type="text" id="fullName" class="user-form__input form-control" placeholder="Enter your full name" name="fullName" required>
+    <form asp-controller="Account" asp-action="Profile" method="POST" enctype="multipart/form-data">
+        <div class="horizontal-group">
+            <div >
+                <label asp-for="FirstName">First Name</label>
+                <input asp-for="FirstName" class="user-form__input form-control" placeholder="Enter your First Name" required>
+            </div>
+            <div >
+                <label asp-for="LastName">Last Name</label>
+                <input asp-for="LastName" class="user-form__input form-control" placeholder="Enter your Last Name" required>
+            </div>
         </div>
 
         <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" class="user-form__input form-control" placeholder="Enter your email" required>
+            <label asp-for="Email">Email</label>
+            <input asp-for="Email" class="user-form__input form-control" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+            <label asp-for="PhoneNumber">PhoneNumber</label>
+            <input asp-for="PhoneNumber" class="user-form__input form-control" placeholder="Enter your PhoneNumber" required>
         </div>
 
         <div class="form-group">
-            <label for="role">Role</label>
-            <select name="role" id="role">
-                <option value="admin">Admin</option>
-                <option value="editor">Editor</option>
-                <option value="viewer">Viewer</option>
-            </select>
+            <label asp-for="Address">Address</label>
+            <input asp-for="Address" class="user-form__input form-control" placeholder="Enter your Address" required>
         </div>
-
+        <div class="form-group">
+            <label asp-for="ImageInput">Profile Image</label>
+            <input asp-for="ImageInput" class="form-control" id="ImageInput" type="file" />
+            <span asp-validation-for="ImageInput" class="text-danger"></span>
+        </div>
+        <input asp-for="UserId" type="hidden" readonly/>
+        <input asp-for="Username" type="hidden" readonly/>
         <button type="submit" class="button">Update</button>
     </form>
     <div class="profile-image">
-        <div class="profile-image header__profile-img">
-            <i class="bx bxs-user-circle profile-icon"></i>
+        <div class="profile-image--cover">
+            @if (String.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <i class="bx bxs-user-circle profile-icon" id="profileIcon"></i>
+            }
+            else
+            {
+                <img src="@Model.ImageUrl" class="profile-image--img" alt="@Model.FullName">
+            }
+            <img src="" class="profile-image--img" id="ProfileAvatar" alt="@Model.FullName" style="display: none">
         </div>
     </div>
 </div>
+@section Scripts
+{
+    <script>
+    document.getElementById('ImageInput').addEventListener('change', function(event) {
+        var file = event.target.files[0]; 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const userForm = document.getElementById('userForm');
-        const logoutButton = document.getElementById('logout');
+        if (file) {
+            var reader = new FileReader();
 
-        userForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const email = userForm.email.value;
-            const fullName = userForm.fullName.value;
-            const role = userForm.role.value;
+            reader.onload = function(e) {
+                var previewImage = document.getElementById('ProfileAvatar');
+                if (previewImage){
+                previewImage.src = e.target.result; 
+                previewImage.style.display = 'block';
+                    var profileIcon = document.getElementById('profileIcon');
+                    profileIcon.style.display = 'none';
+                }
+            }
 
-            // Perform form submission logic here
-        });
-
-        logoutButton.addEventListener('click', function () {
-            logout();
-        });
-
-        function logout() {
-            window.location.href = '../login/login.html';
+            reader.readAsDataURL(file); 
         }
     });
-</script>
+</script>}

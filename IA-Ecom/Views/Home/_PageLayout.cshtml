@@ -1,7 +1,9 @@
-@* @model IA_Ecom.Views.Home._PageLayout *@
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewData["Title"] = "Simon Shoes";
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
 <!DOCTYPE html>
@@ -10,6 +12,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/jpeg" href="./images/favicon.jpeg">
     <title>@ViewData["Title"] - IA_Ecom</title>
     <link rel="stylesheet" href="~/css/main.css" asp-append-version="true"/>
     @RenderSection("Styles", required: false)
@@ -49,8 +52,8 @@
                                 <i class="bx bxs-user-circle profile-icon" id="profileDropdownButton"></i>
                             </div>
                             <div class="header__profile-dropdown" id="profileDropdown">
-                                <a class="admin-header__profile-link" asp-area="" asp-controller="Home" asp-action="Index">Edit Profile</a>
-                                <a class="admin-header__profile-link" asp-area="" asp-controller="Admin" asp-action="Profile">Home Page</a>
+                                <a class="admin-header__profile-link" asp-area="" asp-controller="Account" asp-action="GetProfile" asp-route-userId="@userId">Edit Profile</a>
+                                <a class="admin-header__profile-link" asp-area="" asp-controller="Home" asp-action="Index">Home Page</a>
                                 <a class="admin-header__profile-link" asp-area="" asp-controller="Account" asp-action="Logout" id="logout">Logout</a>
                             </div>
                         </div>

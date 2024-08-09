@@ -10,7 +10,7 @@ namespace IA_Ecom.Services
         Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product> GetProductByIdAsync(int id);
         Task AddProductAsync(Product product, List<IFormFile> images);
-        Task UpdateProductAsync(Product product);
+        Task UpdateProductAsync(Product product, List<IFormFile> images);
         Task DeleteProductAsync(int id);
     }
 }

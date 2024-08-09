@@ -4,15 +4,13 @@ namespace IA_Ecom.Services;
 
 public class AdminService: IAdminService
 {
-    private readonly IWebHostEnvironment _webHostEnvironment;
-    public AdminService(IWebHostEnvironment webHostEnvironment)
+    public AdminService()
     {
-        _webHostEnvironment = webHostEnvironment;
     }
     public async Task<List<string>> UploadImagesAsync(List<IFormFile> images)
     {
         var imageUrls = new List<string>();
-        var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "App_Data/Users");
+        var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "App_Data/Users");
 
         if (!Directory.Exists(uploadPath))
         {

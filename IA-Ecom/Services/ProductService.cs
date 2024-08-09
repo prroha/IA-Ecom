@@ -8,12 +8,10 @@ namespace IA_Ecom.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
-        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductService(IProductRepository productRepository,IWebHostEnvironment webHostEnvironment)
+        public ProductService(IProductRepository productRepository)
         {
             _productRepository = productRepository;
-            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<int> CountAllAsync()
@@ -42,6 +40,7 @@ namespace IA_Ecom.Services
                     var filePath = await SaveImageAsync(image);
                     productImages.Add(new ProductImage
                     {
+                        ImageName = image.FileName,
                         ImageUrl = filePath,
                         ProductId = product.ProductId
                     });
@@ -51,9 +50,50 @@ namespace IA_Ecom.Services
             await _productRepository.SaveChangesAsync();
         }
 
-        public async Task UpdateProductAsync(Product product)
+        public async Task UpdateProductAsync(Product product, List<IFormFile> images)
         {
             _productRepository.Update(product);
+            // Load existing images from the database
+            var existingImages = await _productRepository.GetProductImagesAsync(product.ProductId);
+        
+            // Remove images that are no longer present
+            var imagesToRemove = existingImages
+                .Where(img => !images.Any(newImg => newImg.FileName == img.ImageName))
+                .ToList();
+
+            if (imagesToRemove.Any())
+            {
+                await RemoveImagesAsync(imagesToRemove);
+                await _productRepository.RemoveProductImagesAsync(imagesToRemove);
+            }
+            // Handle new images
+            if (images != null && images.Count > 0)
+            {
+                var productImages = new List<ProductImage>();
+
+                foreach (var image in images)
+                {
+                    var filePath = await SaveImageAsync(image);
+
+                    if (existingImages.Any(img => img.ImageUrl == filePath))
+                    {
+                        // Skip adding existing images again
+                        continue;
+                    }
+
+                    productImages.Add(new ProductImage
+                    {
+                        ImageName = image.FileName,
+                        ImageUrl = filePath,
+                        ProductId = product.ProductId
+                    });
+                }
+
+                if (productImages.Any())
+                {
+                    await _productRepository.AddProductImagesAsync(productImages);
+                }
+            }
             await _productRepository.SaveChangesAsync();
         }
 
@@ -68,7 +108,7 @@ namespace IA_Ecom.Services
         }
         private async Task<string> SaveImageAsync(IFormFile image)
         {
-            var uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "App_Data/Objects");
+            var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "App_Data/Objects");
             if (!Directory.Exists(uploadDir))
             {
                 Directory.CreateDirectory(uploadDir);
@@ -84,5 +124,23 @@ namespace IA_Ecom.Services
 
             return $"/App_Data/Objects/{fileName}";
         }
+
+        private async Task RemoveImagesAsync(List<ProductImage> images)
+        {
+            if (images.Any())
+            {
+                foreach (var image in images)
+                {
+                    // Construct the full file path for each image to remove
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), image.ImageUrl.TrimStart('/'));
+
+                    // Check if the file exists and delete it
+                    if (File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                    }
+                }
+            }
+            }
     }
 }

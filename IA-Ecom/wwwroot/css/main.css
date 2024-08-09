@@ -145,7 +145,7 @@
 }
 /* OFFER */
 .offer__bg {
-    background: url('../images/product13.jpg') no-repeat center center / cover;
+    background: url('../images/product14.jpg') no-repeat center center / cover;
     text-align: center;
 }
 
@@ -508,7 +508,21 @@
     width: auto;
     height: auto;
 }
-
+.profile-image .profile-image--cover {
+    width: 250px; 
+    height: 250px;
+    border-radius: 50%; /* Make it circular */
+    overflow: hidden; /* Hide overflow if the image is larger */
+    display: inline-block; /* Ensure it displays as a block */
+    /*border: 2px solid var(--secondary-color); !* Optional border for the circle *!*/
+    /* add a shadow for better visual effect */
+    /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); */
+}
+.profile-image--cover .profile-image--img{
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+}
 .profile-image .profile-icon {
     font-size: 15rem; /* Adjust the size as needed */
 }

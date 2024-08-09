@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IA_Ecom.Repositories
 {
-    public class UserRepository(ApplicationDbContext context) :  IUserRepository
+    public class UserRepository(ApplicationDbContext context) : IUserRepository
     {
         public async Task<User> GetUserByUserIdAsync(string userId)
         {
@@ -22,9 +22,9 @@ namespace IA_Ecom.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IList<User>> GetAllAsync()
+        public async Task<IList<User>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await context.Users.Where(u => u.DeletedDate != null).ToListAsync();
         }
 
         public Task<IEnumerable<User>> FindAsync(Expression<Func<User, bool>> predicate)
@@ -37,24 +37,47 @@ namespace IA_Ecom.Repositories
             throw new NotImplementedException();
         }
 
-        public void Update(User entity)
+        public async Task UpdateAsync(User user)
         {
-            throw new NotImplementedException();
-        }
+            var existingEntity = await context.Users.FindAsync(user.Id);
+            if (existingEntity != null)
+            {
+                var entityType = user.GetType();
+                var properties = entityType.GetProperties();
+                foreach (var property in properties)
+                {
+                    context.Entry(existingEntity).Property(property.Name).IsModified = true;
+                }
+
+                // context.Update(user);
+                await context.SaveChangesAsync();
+                
+            }
+            
+                }
 
         public void Remove(User entity)
         {
             throw new NotImplementedException();
         }
 
+
         public Task DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
-
-        public Task SaveChangesAsync()
+        public async Task DeleteAsync(string id)
         {
-            throw new NotImplementedException();
+            User user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user != null)
+            {
+                user.DeletedDate = DateTime.UtcNow;
+            }
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Security.Claims;
 using IA_Ecom.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using IA_Ecom.Models;
@@ -86,11 +87,15 @@ namespace IA_Ecom.Controllers
             return View("ManageProducts", viewModel);
         }
 
-        [HttpPost("products")]
+        [HttpPost()]
         public async Task<IActionResult> AddProduct(ProductViewModel productModel)
         {
             if (ModelState.IsValid)
             {
+                if (productModel.ProductId != 0)
+                {
+                    await EditProduct(productModel);
+                }
                 Product product = ProductMapper.MapToModel(productModel);
                 product.EntryDate = DateTime.Now;
                 await productService.AddProductAsync(product, productModel.ImagesInput);
@@ -98,18 +103,18 @@ namespace IA_Ecom.Controllers
             }
             return View(productModel);
         }
-        public async Task<IActionResult> EditProduct(int id)
+        private async Task<IActionResult> EditProduct(ProductViewModel productModel)
         {
             if (ModelState.IsValid)
             {
-                var product = await productService.GetProductByIdAsync(id);
+                var product = await productService.GetProductByIdAsync(productModel.ProductId);
                 if (product == null)
                 {
                     notificationService.AddNotification("Product Not Found", NotificationType.Error);
                     return RedirectToAction(nameof(ManageProducts));
                 }
-                await productService.UpdateProductAsync(product);
-                notificationService.AddNotification("Product Update", NotificationType.Success);
+                await productService.UpdateProductAsync(product, productModel.ImagesInput);
+                notificationService.AddNotification("Product Updated Successfully", NotificationType.Success);
                 return RedirectToAction(nameof(ManageProducts));
             }
             notificationService.AddNotification("Could not Update Product", NotificationType.Error);
@@ -159,6 +164,26 @@ namespace IA_Ecom.Controllers
             // }
             // return View(order);
         }
+        [HttpPost()]
+        public async Task<IActionResult> EditOrder(OrderViewModel orderViewModel)
+        {
+            if (ModelState.IsValid &&  !String.IsNullOrEmpty(orderViewModel.CustomerId))
+            {
+                var customer = await userService.GetUserByUserIdAsync(orderViewModel.CustomerId);
+                Order existingOrder = await orderService.GetOrderByIdAsync(orderViewModel.OrderId);
+                if (existingOrder == null)
+                {
+                    notificationService.AddNotification("Order Not Found", NotificationType.Error);
+                    return RedirectToAction(nameof(ManageOrders));
+                }
+                Order order = OrderMapper.MapToModel(orderViewModel, customer);
+                order.UpdatedDate = DateTime.UtcNow;
+                await orderService.UpdateOrderAsync(order);
+                return RedirectToAction(nameof(ManageOrders));
+            }
+                    notificationService.AddNotification("Error Occurred", NotificationType.Validation);
+                return RedirectToAction(nameof(ManageOrders));
+        }
         public async Task<IActionResult> DeleteOrder(int id)
         {
                 var order = await orderService.GetOrderByIdAsync(id);
@@ -175,23 +200,9 @@ namespace IA_Ecom.Controllers
         public async Task<IActionResult> ManageUsers()
         {
             IEnumerable<User> users = await userService.GetAllUsersAsync();
-            var userTasks = users.Select(async user =>
-            {
-                var roles = await userManager.GetRolesAsync(user);
-                return new UserViewModel
-                {
-                    UserId = user.Id,
-                    Username = user.UserName,
-                    Email = user.Email,
-                    FullName = user.FullName,
-                    Role = roles.FirstOrDefault() 
-                };
-            });
-
-            // Await all tasks and convert to a list
-            var userViewModels = await Task.WhenAll(userTasks);        
             ManageUserViewModel viewModel = new();
-            viewModel.Users = userViewModels.ToList();
+            viewModel.Users = await GetUserViewModels(users);
+            viewModel.User = new UserViewModel();
             return View(viewModel);
         }
 
@@ -201,16 +212,49 @@ namespace IA_Ecom.Controllers
             if (user == null)
             {
                 notificationService.AddNotification("User Details Not Found", NotificationType.Error);
-            return RedirectToAction("ManageUsers");
+                return RedirectToAction("ManageUsers");
             }
-            var users = await userService.GetAllUsersAsync();
-            List<UserViewModel> userViewModels = users.Select(o => UserMapper.MapToViewModel(o)).ToList();
-            ManageUserViewModel viewModel = new ManageUserViewModel();
-             viewModel.Users = userViewModels;
-            viewModel.User = UserMapper.MapToViewModel(user);
+            IEnumerable<User> users = await userService.GetAllUsersAsync();
+            ManageUserViewModel viewModel = new();
+            List<UserViewModel> userModels = await GetUserViewModels(users);
+            viewModel.Users = userModels;
+            viewModel.User = userModels.First(u => u.UserId == id);
             return View("ManageUsers", viewModel);
         }
 
+        private async Task<List<UserViewModel>> GetUserViewModels(IEnumerable<User> users)
+        {
+            var userTasks = users.Select(async user =>
+            {
+                var roles = await userManager.GetRolesAsync(user);
+                var userModel = UserMapper.MapToViewModel(user);
+                userModel.Role = roles.FirstOrDefault();
+                return userModel;
+            });
+
+            // Await all tasks and convert to a list
+            return (await Task.WhenAll(userTasks)).ToList();        
+            
+        }
+
+        public async Task<IActionResult> EditUser(UserViewModel userViewModel)
+        {
+            if (ModelState.IsValid &&  !String.IsNullOrEmpty(userViewModel.UserId))
+            {
+                var existingUser = await userService.GetUserByUserIdAsync(userViewModel.UserId);
+                if (existingUser == null)
+                {
+                    notificationService.AddNotification("User Not Found", NotificationType.Error);
+                    return RedirectToAction(nameof(ManageUsers));
+                }
+                User user = UserMapper.MapToModel(userViewModel);
+                user.UpdatedDate = DateTime.UtcNow;
+                await userService.UpdateUserAsync(user);
+                    return RedirectToAction(nameof(ManageUsers));
+            }
+                    notificationService.AddNotification("Error Occurred", NotificationType.Validation);
+                    return RedirectToAction(nameof(ManageUsers));
+        }
         public async Task<IActionResult> DeleteUser(string id)
         {
                 var user = await userService.GetUserByUserIdAsync(id);

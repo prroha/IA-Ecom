@@ -46,8 +46,8 @@
                     <td>@order.TotalAmount</td>
                     <td>@order.Status</td>
                     <td>
-                        <button class="button edit-button" onclick="editOrder(@order.OrderId)">Edit</button>
-                        <button class="button-secondary delete-button" onclick="deleteOrder(@order.OrderId)">Delete</button>
+                        <a asp-controller="Admin" asp-action="OrderDetails" asp-route-id="@order.OrderId" class="button edit-button">Edit</a>
+                        <a asp-controller="Admin" asp-action="DeleteOrder" asp-route-id="@order.OrderId" class="button-secondary delete-button">Delete</a>
                     </td>
                 </tr>
             }
@@ -58,7 +58,7 @@
     <!-- Edit Order -->
     <div class="card">
         <h3 class="card-title">Edit Order</h3>
-        <form id="edit-order-form" class="user-form">
+        <form asp-controller="Admin" asp-action="EditOrder" method="post" class="user-form">
             <!-- Order Information -->
             <div class="form-group">
                 <label asp-for="@Model.Order.OrderId">Order ID</label>
@@ -141,6 +141,7 @@
                 <label for="special-instructions">Special Instructions</label>
                 <textarea id="special-instructions" class="user-form__input"></textarea>
             </div>
+            <input type="hidden" asp-for="@Model.Order.CustomerId" readonly>
             <button type="submit" class="button">Save Changes</button>
         </form>
     </div>

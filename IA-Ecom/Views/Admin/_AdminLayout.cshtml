@@ -1,13 +1,16 @@
+@using System.Security.Claims
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @* @model IA_Ecom.ViewModels.AdminDashboardViewModel *@
 @{
 ViewData["Title"] = "Admin Dashboard";
+var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/jpeg" href="./images/favicon.jpeg">
     <title>@ViewData["Title"] - IA_Ecom</title>
     <link rel="stylesheet" href="~/css/main.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true"/>
@@ -25,8 +28,8 @@ ViewData["Title"] = "Admin Dashboard";
                 <i class="bx bxs-user-circle profile-icon" id="profileDropdownButton"></i>
             </div>
             <div class="header__profile-dropdown" id="profileDropdown">
-                <a class="admin-header__profile-link" asp-area="" asp-controller="Home" asp-action="Index">Edit Profile</a>
-                <a class="admin-header__profile-link" asp-area="" asp-controller="Admin" asp-action="Profile">Home Page</a>
+                 <a class="admin-header__profile-link" asp-area="" asp-controller="Account" asp-action="GetProfile" asp-route-userId="@userId">Edit Profile</a>
+                <a class="admin-header__profile-link" asp-area="" asp-controller="Home" asp-action="Index">Home Page</a>
                 <a class="admin-header__profile-link" asp-area="" asp-controller="Account" asp-action="Logout" id="logout">Logout</a>
             </div>
         </div>
@@ -55,6 +58,7 @@ ViewData["Title"] = "Admin Dashboard";
 <main class="main-content-center">
     @RenderBody()
 </main>
+    @await Html.PartialAsync("_Notification")
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const profileDropdownButton = document.getElementById('profileDropdownButton');

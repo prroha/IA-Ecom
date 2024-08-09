@@ -33,8 +33,8 @@
                     <td>@feedback.Date</td>
                     <td>@feedback.Rating</td>
                     <td>
-                        <button class="button edit-button" onclick="editFeedback(@feedback.FeedbackId)">Edit</button>
-                        <button class="button-secondary delete-button" onclick="deleteFeedback(@feedback.FeedbackId)">Delete</button>
+                        <a asp-controller="Admin" asp-action="FeedbackDetails" asp-route-id="@feedback.FeedbackId" class="button edit-button">Edit</a>
+                        <a asp-controller="Admin" asp-action="DeleteFeedback" asp-route-id="@feedback.FeedbackId" class="button-secondary delete-button">Delete</a>
                     </td>
                 </tr>
             }
