@@ -33,7 +33,7 @@ public class ProductMapper
     {
         return new Product
         {
-            ProductId = viewModel.ProductId,
+            Id = viewModel.ProductId,
             Name = viewModel.Name,
             Description = viewModel.Description,
             Category = viewModel.Category,

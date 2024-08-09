@@ -20,7 +20,7 @@ namespace IA_Ecom.Repositories
             {
                 order = new Order
                 {
-                    CustomerId = user.Id,
+                    Customer = user,
                     OrderDate = DateTime.UtcNow,
                     Status = "Cart",
                     PaymentStatus = PaymentStatus.Pending,
@@ -133,6 +133,7 @@ namespace IA_Ecom.Repositories
         return await _dbContext.Orders
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.Product)
+            .Include(oi => oi.Customer)
             .FirstOrDefaultAsync(o => o.CustomerId == customerId && o.Status == "Cart");
     }
 

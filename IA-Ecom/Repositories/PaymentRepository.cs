@@ -2,9 +2,15 @@ using IA_Ecom.Data;
 using IA_Ecom.Models;
 using IA_Ecom.Repositories;
 using IA_Ecom.RequestModels;
+using Microsoft.EntityFrameworkCore;
 
 public class PaymentRepository(ApplicationDbContext dbContext) : IPaymentRepository
 {
+    public async Task<Payment> GetPaymentByOrderId(int orderId)
+    {
+        return await dbContext.Payments
+            .FirstOrDefaultAsync(o => o.OrderId == orderId);
+    }
     public async Task SavePaymentTransaction(Order order, PaymentResult paymentResult)
     {
         // Save the transaction details to the database

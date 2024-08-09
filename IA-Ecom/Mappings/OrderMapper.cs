@@ -27,7 +27,7 @@ public class OrderMapper
     {
         return new Order
         {
-            OrderId = viewModel.OrderId,
+            Id = viewModel.OrderId,
             Customer = customer,
             OrderDate = viewModel.OrderDate,
             Status = viewModel.Status,
@@ -58,11 +58,28 @@ public class OrderMapper
     {
         return new OrderItem
         {
-            OrderItemId = viewModel.OrderItemId,
+            Id = viewModel.OrderItemId,
             ProductId = viewModel.ProductId,
             ProductSize = viewModel.ProductSize,
             Quantity = viewModel.Quantity,
             UnitPrice = viewModel.UnitPrice
+        };
+    }
+    
+    public static OrderConfirmationViewModel MapToViewModel(Payment payment, Order order)
+    {
+        return new OrderConfirmationViewModel
+        {
+            OrderId = payment.OrderId,
+            OrderDate = order.OrderDate,
+            TotalAmount = order.TotalAmount,
+            PaymentMethod = payment.PaymentMethod,
+            // ShippingAddress = order.ShippingAddress,
+            // City = order.City,
+            // State = order.State,
+            // PostalCode = order.PostalCode,
+            // Country = order.Country,
+            OrderItems = order.OrderItems.Select(MapToViewModel).ToList()
         };
     }
 }

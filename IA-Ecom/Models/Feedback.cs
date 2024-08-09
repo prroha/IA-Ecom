@@ -2,7 +2,7 @@ namespace IA_Ecom.Models
 {
     public class Feedback: BaseModel
     {
-        public int FeedbackId { get; set; }
+        public int FeedbackId => Id;
         public string UserId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }

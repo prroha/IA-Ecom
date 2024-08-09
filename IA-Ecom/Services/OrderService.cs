@@ -48,7 +48,6 @@ namespace IA_Ecom.Services
         }
         public async Task<bool> CheckoutAsync(string customerId)
         {
-
             Order order = await orderRepository.GetOrderByCustomerIdAsync(customerId);
             if (order == null)
             {

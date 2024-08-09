@@ -5,17 +5,16 @@ namespace IA_Ecom.Models
 {
     public class OrderItem: BaseModel
     {
-        [Key]
-        public int OrderItemId { get; set; }
+        public int OrderItemId => Id;
 
         [Required]
-        [ForeignKey("Order")]
         public int OrderId { get; set; }
+        [ForeignKey("OrderId")]
         public Order Order { get; set; }
 
         [Required]
-        [ForeignKey("Product")]
         public int ProductId { get; set; }
+        [ForeignKey("ProductId")]
         public Product Product { get; set; }
 
         [Required]

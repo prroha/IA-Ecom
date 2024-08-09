@@ -7,6 +7,7 @@ namespace IA_Ecom.Services
 {
     public interface IPaymentService
     {
+        Task<Payment> GetPaymentByOrderId(int orderId);
         Task<bool> ProcessPayment(Order order);
 
     }

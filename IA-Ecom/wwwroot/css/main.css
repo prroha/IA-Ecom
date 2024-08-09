@@ -17,7 +17,7 @@
     align-self: center;
     font-size: var(--big-font-size);
     line-height: 1;
-    letter-spacing: .5rem;
+    /*letter-spacing: .5rem;*/
     margin-bottom: 4rem;
 }
 
@@ -145,8 +145,7 @@
 }
 /* OFFER */
 .offer__bg {
-    /*background: url('../img/offer.jpg') no-repeat center/cover;*/
-    background: url('../img/product13.jpg') no-repeat center/cover;
+    background: url('../images/product13.jpg') no-repeat center center / cover;
     text-align: center;
 }
 
@@ -741,10 +740,10 @@
     padding: var(--spacing-small) var(--spacing-medium);
     border-radius: var(--border-radius);
     z-index: 10000;
-    display: none;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     font-size: var(--normal-font-size);
     font-weight: var(--font-semi);
+    transition: opacity 0.5s ease-in-out;
 }
 
 .toast-success {
@@ -761,4 +760,8 @@
 
 .toast-info {
     background-color: var(--info-color);
+}
+
+.toast.show {
+    opacity: 1;
 }

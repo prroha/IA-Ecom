@@ -8,7 +8,7 @@ using IA_Ecom.ViewModels;
 
 namespace IA_Ecom.Controllers
 {
-    public class OrderController(IOrderService orderService, IUserService userService, INotificationService notificationService) : Controller
+    public class OrderController(IOrderService orderService,IPaymentService paymentService, IUserService userService, INotificationService notificationService) : Controller
     {
 
         [Authorize(Roles = "ADMIN")] 
@@ -43,6 +43,7 @@ namespace IA_Ecom.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetCartDetails()
         {
             var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -50,7 +51,8 @@ namespace IA_Ecom.Controllers
 
             if (cart == null)
             {
-                return NotFound();
+                notificationService.AddNotification("Cart is Empty", NotificationType.Validation);
+                return Redirect(Request.Headers["Referer"].ToString());
             }
 
             OrderViewModel viewModel = OrderMapper.MapToViewModel(cart);
@@ -111,9 +113,25 @@ namespace IA_Ecom.Controllers
             return RedirectToAction(nameof(OrderConfirmation));
         }
 
-        public IActionResult OrderConfirmation()
+        public async Task<IActionResult> OrderConfirmation(int orderId)
         {
-            return View();
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (orderId == 0)
+            {
+                var orderConfirmation = new OrderConfirmationViewModel();
+                orderConfirmation.OrderItems = new List<OrderItemViewModel>();
+                return View(orderConfirmation);
+            }
+            var order = await orderService.GetOrderByIdAsync(orderId);
+            var payment = await paymentService.GetPaymentByOrderId(orderId);
+
+            if (payment == null)
+            {
+                return NotFound();
+            }
+
+            OrderConfirmationViewModel viewModel = OrderMapper.MapToViewModel(payment, order);
+            return View(viewModel);
         }
 
     }

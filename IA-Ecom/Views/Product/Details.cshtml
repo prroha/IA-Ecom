@@ -32,7 +32,7 @@ Layout = "~/Views/Home/_PageLayout.cshtml";
                 <h6>Home / T-Shirt</h6>
                 <h4 class="product-title">@Model.Name</h4>
                 <h2 class="product-info">@Model.Price</h2>
-                <form asp-controller="Order" asp-action="AddToCart" method="post" class="user-form">
+                <form asp-controller="Order" asp-action="AddToCart" method="POST" class="user-form">
                     <div class="form-group">
                         <select id="select-size" name="ProductSize" required>
                             <option value="" selected>Select Size</option>
@@ -49,7 +49,7 @@ Layout = "~/Views/Home/_PageLayout.cshtml";
                     <input type="hidden" name="UnitPrice" class="user-form__input" value="@Model.Price" required>
                     <input type="hidden" name="ProductId" class="user-form__input" value="@Model.ProductId" required>
                     <input type="hidden" name="ProductName" class="user-form__input" value="@Model.Name" required>
-                    <button class="button">Add To Cart</button>
+                    <button class="button" type="submit">Add To Cart</button>
                 </form>
                 <h4>Product Details</h4>
                 <span>@Model.Description</span>

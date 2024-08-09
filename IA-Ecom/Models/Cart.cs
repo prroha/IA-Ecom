@@ -5,8 +5,7 @@ namespace IA_Ecom.Models
 {
     public class Cart: BaseModel
     {
-        [Key]
-        public int CartId { get; set; }
+        public int CartId => Id;
 
         [Required]
         public string CustomerId { get; set; }

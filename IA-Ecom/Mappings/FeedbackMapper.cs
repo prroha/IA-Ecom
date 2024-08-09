@@ -22,7 +22,7 @@ public class FeedbackMapper
     {
         return new Feedback
         {
-            FeedbackId = viewModel.FeedbackId,
+            Id = viewModel.FeedbackId,
             Name = viewModel.UserFullName,
             Comment = viewModel.Message,
             Email = viewModel.Email,

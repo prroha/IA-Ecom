@@ -5,18 +5,18 @@ namespace IA_Ecom.Models
 {
     public class CartItem: BaseModel
     {
-        [Key]
-        public int CartItemId { get; set; }
+        public int CartItemId => Id;
 
         [Required]
-        [ForeignKey("Cart")]
         public int CartId { get; set; }
+        
+        [ForeignKey("CartId")]
         public Cart Cart { get; set; }
 
         [Required]
-        // [ForeignKey("Product")]
         public int ProductId { get; set; }
-        // public Product Product { get; set; }
+        [ForeignKey("ProductId")]
+        public Product Product { get; set; }
 
         [Required]
         public int Quantity { get; set; }

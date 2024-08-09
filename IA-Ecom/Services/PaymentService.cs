@@ -7,6 +7,10 @@ namespace IA_Ecom.Services
 {
 public class PaymentService(IPaymentRepository paymentRepository, IPaymentGateway paymentGateway) : IPaymentService
 {
+    public async Task<Payment> GetPaymentByOrderId(int orderId)
+    {
+        return await paymentRepository.GetPaymentByOrderId(orderId);
+    }
     public async Task<bool> ProcessPayment(Order order)
     {
         try

@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<IA_Ecom.ViewModels.ProductViewModel>;
+@{
     ViewData["Title"] = "Home Page";
     Layout = "_PageLayout.cshtml";
 }
@@ -6,7 +7,7 @@
 <section class="home" id="home">
     <div class="home__container grid">
         <div class="home__data">
-            <h1 class="home__title">Comfort in Shoes <br><span>where you steps begin</span></h1>
+            <h1 class="home__title">Comfort in Shoes <br><span>where your steps begin</span></h1>
             <a href="#featured" class="button">Explore</a>
         </div>
 
@@ -17,24 +18,36 @@
 </section>
 
 <!-- COLLECTION -->
-<section class="collection section">
-    <div class="collection__container grid">
-        <div class="collection__box">
-            <img src="../img/product3.png" alt="" class="collection__img">
+@* <section class="collection section"> *@
+@*     <div class="collection__container grid"> *@
+@*         <div class="collection__box"> *@
+@*             <img src="../img/product3.png" alt="" class="collection__img"> *@
+@* *@
+@*             <div class="collection__data"> *@
+@*                 <h2 class="collection__title"><span class="collection__subtitle">Mens</span><br>Wear</h2> *@
+@*                 <a href="product-list.html" class="collection__view">View collection</a> *@
+@*             </div> *@
+@*         </div> *@
+@* *@
+@*         <div class="collection__box"> *@
+@*             <div class="collection__data"> *@
+@*                 <h2 class="collection__title"><span class="collection__subtitle">Women</span><br>Wear</h2> *@
+@*                 <a href="product-list.html" class="collection__view">View collection</a> *@
+@*             </div> *@
+@* *@
+@*             <img src="../img/product5.png" alt="" class="collection__img"> *@
+@*         </div> *@
+@*     </div> *@
+@* </section> *@
 
-            <div class="collection__data">
-                <h2 class="collection__title"><span class="collection__subtitle">Mens</span><br>Wear</h2>
-                <a href="product-list.html" class="collection__view">View collection</a>
-            </div>
-        </div>
+<!-- OFFER -->
+<section class="offer section">
+    <div class="offer__bg">
+        <div class="offer__data">
+            <h2 class="offer__title">Special Offer</h2>
+            <p class="offer__description">Special offers discounts for women this week only</p>
 
-        <div class="collection__box">
-            <div class="collection__data">
-                <h2 class="collection__title"><span class="collection__subtitle">Women</span><br>Wear</h2>
-                <a href="product-list.html" class="collection__view">View collection</a>
-            </div>
-
-            <img src="../img/product5.png" alt="" class="collection__img">
+            <a asp-controller="Product" asp-action="Index" class="button">SHOP NOW</a>
         </div>
     </div>
 </section>
@@ -42,13 +55,14 @@
 <!-- FEATURED PRODUCTS -->
 <section class="featured section" id="featured">
     <h2 class="section-title">FEATURED PRODUCTS</h2>
-    <a href="product-list.html" class="section-link">View All</a>
+    <a asp-controller="Product" asp-action="Index" class="section-link">View All</a>
 
     <div class="featured__container grid">
+        
         <div class="featured__product">
             <div class="featured__box">
                 <div class="featured__new">NEW</div>
-                <img src="../img/product0.png" class="featured__img" alt="">
+                <img src="./images/product0.png" class="featured__img" alt="">
             </div>
 
             <div class="featured__data">
@@ -60,7 +74,7 @@
         <div class="featured__product">
             <div class="featured__box">
                 <div class="featured__new">NEW</div>
-                <img src="../img/product2.png" class="featured__img" alt="">
+                <img src="./images/product2.png" class="featured__img" alt="">
             </div>
 
             <div class="featured__data">
@@ -72,7 +86,7 @@
         <div class="featured__product">
             <div class="featured__box">
                 <div class="featured__new">NEW</div>
-                <img src="../img/product1.png" class="featured__img" alt="">
+                <img src="./images/product1.png" class="featured__img" alt="">
             </div>
 
             <div class="featured__data">
@@ -84,7 +98,7 @@
         <div class="featured__product">
             <div class="featured__box">
                 <div class="featured__new">NEW</div>
-                <img src="../img/product3.png" class="featured__img" alt="">
+                <img src="./images/product3.png" class="featured__img" alt="">
             </div>
 
             <div class="featured__data">
@@ -95,71 +109,23 @@
     </div>
 </section>
 
-<!-- OFFER -->
-<section class="offer section">
-    <div class="offer__bg">
-        <div class="offer__data">
-            <h2 class="offer__title">Special Offer</h2>
-            <p class="offer__description">Special offers discounts for women this week only</p>
-
-            <a href="#" class="button">SHOP NOW</a>
-        </div>
-    </div>
-</section>
-
 <!-- NEW ARRIVALS -->
 <section class="featured section" id="new-products">
     <h2 class="section-title">NEW ARRIVALS</h2>
-    <a href="new-arrivals.html" class="section-link">View All</a>
+    <a asp-controller="Product" asp-action="Index" class="section-link">View All</a>
 
     <div class="new__container grid">
-        <div class="new__box">
-            <img src="../img/product5.png" alt="" class="new__img">
 
-            <div class="new__link">
-                <a href="#" class="button">VIEW PRODUCT</a>
+        @foreach (var product in Model)
+        {
+            <div class="new__box">
+                <img src="@product.ThumbnailImageUrl" alt="" class="new__img">
+
+                <div class="new__link">
+                    <a asp-controller="Product" asp-action="Details" asp-route-id="@product.ProductId" class="button">VIEW PRODUCT</a>
+                </div>
             </div>
-        </div>
-
-        <div class="new__box">
-            <img src="../img/product8.png" alt="" class="new__img">
-
-            <div class="new__link">
-                <a href="#" class="button">VIEW PRODUCT</a>
-            </div>
-        </div>
-
-        <div class="new__box">
-            <img src="../img/product9.png" alt="" class="new__img">
-
-            <div class="new__link">
-                <a href="#" class="button">VIEW PRODUCT</a>
-            </div>
-        </div>
-
-        <div class="new__box">
-            <img src="../img/product12.png" alt="" class="new__img">
-
-            <div class="new__link">
-                <a href="#" class="button">VIEW PRODUCT</a>
-            </div>
-        </div>
-
-        <div class="new__box">
-            <img src="../img/product14.png" alt="" class="new__img">
-
-            <div class="new__link">
-                <a href="#" class="button">VIEW PRODUCT</a>
-            </div>
-        </div>
-
-        <div class="new__box">
-            <img src="../img/product12.png" alt="" class="new__img">
-
-            <div class="new__link">
-                <a href="#" class="button">VIEW PRODUCT</a>
-            </div>
-        </div>
+        }
     </div>
 </section>
 
@@ -171,21 +137,21 @@
         <div class="review">
             <p class="review__text">"Amazing quality and fast delivery. Highly recommend!"</p>
             <div class="review__author">
-                <img src="../img/customer1.jpg" alt="Customer 1" class="review__img">
+                <img src="./images/customer1.jpg" alt="Customer 1" class="review__img">
                 <h4 class="review__name">John Doe</h4>
             </div>
         </div>
         <div class="review">
             <p class="review__text">"Great customer service and fantastic products."</p>
             <div class="review__author">
-                <img src="../img/customer2.jpg" alt="Customer 2" class="review__img">
+                <img src="./images/customer2.jpg" alt="Customer 2" class="review__img">
                 <h4 class="review__name">Jane Smith</h4>
             </div>
         </div>
         <div class="review">
             <p class="review__text">"I love the variety and the special offers they provide."</p>
             <div class="review__author">
-                <img src="../img/customer3.jpg" alt="Customer 3" class="review__img">
+                <img src="./images/customer3.jpg" alt="Customer 3" class="review__img">
                 <h4 class="review__name">Emily Johnson</h4>
             </div>
         </div>
@@ -198,15 +164,15 @@
         <div class="testimonial">
             <p class="testimonial__text">"Simon Shoes has been my go-to shop for years. Their product quality and customer service are unmatched."</p>
             <div class="testimonial__author">
-                <h4 class="testimonial__name">Michael Brown</h4>
-                <p class="testimonial__role">CEO, Company</p>
+                <h4 class="testimonial__name">Jonn Son</h4>
+                <p class="testimonial__role">CEO, Build Info</p>
             </div>
         </div>
         <div class="testimonial">
             <p class="testimonial__text">"I have never been disappointed with a purchase from Simon Shoes. They truly care about their customers."</p>
             <div class="testimonial__author">
                 <h4 class="testimonial__name">Sarah Davis</h4>
-                <p class="testimonial__role">Marketing Director</p>
+                <p class="testimonial__role">Marketing Director, Malaysia Wears</p>
             </div>
         </div>
     </div>
@@ -217,7 +183,7 @@
     <div class="newsletter__container grid">
         <div class="newsletter__subscribed">
             <h2 class="section-title">OUR NEWSLETTER</h2>
-            <p class="newsletter__description">Promotion new products and sales. Directly to your inbox.</p>
+            <p class="newsletter__description">Promotion of new products and sales. Directly to your inbox.</p>
 
             <form action="" class="newsletter__form">
                 <input type="text" class="newsletter__input" placeholder="Enter your email">
@@ -231,16 +197,16 @@
 <section class="sponsors section">
     <div class="sponsors__container grid">
         <div class="sponsors__logo">
-            <img src="../img/logo1.png" alt="">
+            <img src="./images/logo1.png" alt="">
         </div>
         <div class="sponsors__logo">
-            <img src="../img/logo2.png" alt="">
+            <img src="./images/logo2.png" alt="">
         </div>
         <div class="sponsors__logo">
-            <img src="../img/logo3.png" alt="">
+            <img src="./images/logo3.png" alt="">
         </div>
         <div class="sponsors__logo">
-            <img src="../img/logo4.png" alt="">
+            <img src="./images/logo4.png" alt="">
         </div>
     </div>
 </section>
