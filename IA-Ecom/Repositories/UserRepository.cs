@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using IA_Ecom.Data;
 using IA_Ecom.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace IA_Ecom.Repositories
 {
@@ -11,9 +12,9 @@ namespace IA_Ecom.Repositories
             return await context.Users.FindAsync(userId);
         }
 
-        public Task<int> CountAllAsync()
+        public async Task<int> CountAllAsync()
         {
-            throw new NotImplementedException();
+            return await context.Users.CountAsync();
         }
 
         public Task<User> GetByIdAsync(int id)

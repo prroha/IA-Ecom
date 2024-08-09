@@ -9,6 +9,13 @@ namespace IA_Ecom.Repositories
     {
         private readonly ApplicationDbContext _dbContext = context;
 
+        public async Task<IList<Order>> GetAllAsync()
+        {
+            return await _dbContext.Orders
+                .Where(entity => entity.DeletedDate == null)
+                .Include(o => o.Customer)
+                .ToListAsync();
+        }
         public async Task AddToCartAsync(OrderItem orderItem, User user)
         {
             // Retrieve the current cart (order) for the user or create a new one

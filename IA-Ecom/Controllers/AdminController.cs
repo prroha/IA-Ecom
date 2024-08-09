@@ -10,7 +10,6 @@ using Microsoft.CodeAnalysis;
 
 namespace IA_Ecom.Controllers
 {
-    [Route("admin")]
     [Authorize(Roles = "ADMIN")]
     public class AdminController(
         IProductService productService,
@@ -26,31 +25,27 @@ namespace IA_Ecom.Controllers
                 return RedirectToAction(nameof(Dashboard));
         }
         
-        [HttpGet]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Dashboard()
         {
             var usersCount = await userService.CountAllAsync();
             var productsCount = await productService.CountAllAsync();
             var ordersCount = await orderService.CountAllAsync();
+            var feedbackCount = await feedbackService.CountAllAsync();
 
             var dashboardData = new AdminDashboardViewModel
             {
                 UsersCount = usersCount,
                 ProductsCount = productsCount,
                 OrdersCount = ordersCount,
+                FeedbacksCount = feedbackCount,
                Users = [],
                Products = [],
                Orders = [],
                Feedbacks = [],
             };
 
-            // Example: Mapping ApplicationUser to AdminDashboardViewModel
-            // Replace with actual logic based on your application's requirements
-            // var users = await _dbContext.Users.ToListAsync();
-            // var mappedUsers = _mapper.Map<List<User>, List<AdminDashboardViewModel>>(users);
-
-            return View(dashboardData);
+            return View("Dashboard", dashboardData);
         }
         
         [HttpPost("profile")]
@@ -65,7 +60,6 @@ namespace IA_Ecom.Controllers
             return View(profile);
         }
         
-        [HttpGet("products")]
         public async Task<IActionResult> ManageProducts()
         {
             IEnumerable<Product> products = await productService.GetAllProductsAsync();
@@ -75,7 +69,6 @@ namespace IA_Ecom.Controllers
             return View(viewModel);
         }
 
-        // [HttpGet("products/{id}")]
         [HttpGet()]
         public async Task<IActionResult> ProductDetails(int id)
         {
@@ -230,7 +223,7 @@ namespace IA_Ecom.Controllers
                 notificationService.AddNotification("User Deleted", NotificationType.Success);
                 return RedirectToAction(nameof(ManageUsers));
         }
-        [HttpGet("feedbacks")]
+        
         public async Task<IActionResult> ManageFeedbacks()
         {
             var feedbacks = await feedbackService.GetAllFeedbacksAsync();

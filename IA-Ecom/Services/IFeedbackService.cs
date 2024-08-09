@@ -6,6 +6,8 @@ namespace IA_Ecom.Services
 {
     public interface IFeedbackService
     {
+        
+        Task<int> CountAllAsync();
         Task<IEnumerable<Feedback>> GetAllFeedbacksAsync();
         Task<Feedback> GetFeedbackByIdAsync(int id);
         Task AddFeedbackAsync(Feedback feedback);

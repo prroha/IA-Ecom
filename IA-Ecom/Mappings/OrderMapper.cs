@@ -10,16 +10,11 @@ public class OrderMapper
         return new OrderViewModel
         {
             OrderId = order.OrderId,
-            CustomerName = order.Customer.FullName, // Assuming Customer has a CustomerName property
+            CustomerName = order.Customer?.FullName, 
             OrderDate = order.OrderDate,
             Status = order.Status,
             TotalAmount = order.TotalAmount,
-            // ShippingAddress = order.ShippingAddress,
-            // City = order.City,
-            // State = order.State,
-            // PostalCode = order.PostalCode,
-            // Country = order.Country,
-            OrderItems = order.OrderItems.Select(MapToViewModel).ToList()
+            OrderItems = order.OrderItems?.Select(MapToViewModel)?.ToList() ?? new List<OrderItemViewModel>()
         };
     }
 
@@ -32,12 +27,7 @@ public class OrderMapper
             OrderDate = viewModel.OrderDate,
             Status = viewModel.Status,
             TotalAmount = viewModel.TotalAmount,
-            // ShippingAddress = viewModel.ShippingAddress,
-            // City = viewModel.City,
-            // State = viewModel.State,
-            // PostalCode = viewModel.PostalCode,
-            // Country = viewModel.Country,
-            OrderItems = viewModel.OrderItems.Select(MapToModel).ToList()
+            OrderItems = viewModel.OrderItems?.Select(MapToModel)?.ToList()
         };
     }
 
@@ -47,7 +37,7 @@ public class OrderMapper
         {
             OrderItemId = orderItem.OrderItemId,
             ProductId = orderItem.ProductId,
-            ProductName = orderItem.Product.Name, // Assuming OrderItem has a ProductName property
+            ProductName = orderItem.Product.Name,
             ProductSize = orderItem.ProductSize,
             Quantity = orderItem.Quantity,
             UnitPrice = orderItem.UnitPrice
@@ -74,12 +64,7 @@ public class OrderMapper
             OrderDate = order.OrderDate,
             TotalAmount = order.TotalAmount,
             PaymentMethod = payment.PaymentMethod,
-            // ShippingAddress = order.ShippingAddress,
-            // City = order.City,
-            // State = order.State,
-            // PostalCode = order.PostalCode,
-            // Country = order.Country,
-            OrderItems = order.OrderItems.Select(MapToViewModel).ToList()
+            OrderItems = order.OrderItems?.Select(MapToViewModel)?.ToList()
         };
     }
 }

@@ -13,7 +13,7 @@ Layout = "~/Views/Admin/_AdminLayout.cshtml";
             User Management
         </div>
         <div class="card-body">
-            <!-- Example: List of users -->
+            <span class="title-info">Count: @Model.UsersCount</span>
             <ul>
                 @foreach (var user in Model.Users)
                 {
@@ -29,7 +29,7 @@ Layout = "~/Views/Admin/_AdminLayout.cshtml";
             Product Management
         </div>
         <div class="card-body">
-            <!-- Example: List of products -->
+            <span class="title-info">Count: @Model.ProductsCount</span>
             <ul>
                 @foreach (var product in Model.Products)
                 {
@@ -45,7 +45,7 @@ Layout = "~/Views/Admin/_AdminLayout.cshtml";
             Order Management
         </div>
         <div class="card-body">
-            <!-- Example: List of orders -->
+            <span class="title-info">Count: @Model.OrdersCount</span>
             <ul>
                 @foreach (var order in Model.Orders)
                 {
@@ -61,7 +61,7 @@ Layout = "~/Views/Admin/_AdminLayout.cshtml";
             Customer Feedback
         </div>
         <div class="card-body">
-            <!-- Example: List of feedbacks -->
+            <span class="title-info">Count: @Model.FeedbacksCount</span>
             <ul>
                 @foreach (var feedback in Model.Feedbacks)
                 {

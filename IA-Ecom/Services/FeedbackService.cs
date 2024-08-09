@@ -14,6 +14,10 @@ namespace IA_Ecom.Services
             _feedbackRepository = feedbackRepository;
         }
 
+        public async Task<int> CountAllAsync()
+        {
+            return await _feedbackRepository.CountAllAsync();
+        }
         public async Task<IEnumerable<Feedback>> GetAllFeedbacksAsync()
         {
             return await _feedbackRepository.GetAllAsync();

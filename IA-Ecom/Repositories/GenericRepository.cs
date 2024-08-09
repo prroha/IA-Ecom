@@ -35,7 +35,6 @@ namespace IA_Ecom.Repositories
 
         public async Task<IList<T>> GetAllAsync()
         {
-            // return await _context.Set<T>().ToListAsync();
             return await _context.Set<T>()
                 .Where(entity => entity.DeletedDate == null)
                 .ToListAsync();
