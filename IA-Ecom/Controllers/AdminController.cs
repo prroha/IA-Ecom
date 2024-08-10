@@ -90,10 +90,6 @@ namespace IA_Ecom.Controllers
         [HttpPost()]
         public async Task<IActionResult> AddProduct(ProductViewModel productModel)
         {
-            if (productModel.ProductId <= 0)
-            {
-                productModel.ProductId = 0;
-            }
             if (ModelState.IsValid)
             {
                 if (productModel.ProductId != 0)

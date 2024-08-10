@@ -49,7 +49,14 @@
             <input asp-for="ImagesInput" class="form-control" type="file" multiple />
             <span asp-validation-for="ImagesInput" class="text-danger"></span>
         </div>
-        <input type="hidden" asp-for="ProductId" value="@(Model?.ProductId != 0 ? Model?.ProductId : 0)" readonly>
+        @if (Model?.ProductId != null)
+        {
+        <input type="hidden" asp-for="ProductId" value="@Model?.ProductId" readonly>
+        }
+        else
+        {
+        <input type="hidden" asp-for="ProductId" value="0" readonly>
+        }
         <button type="submit" class="button">Save Changes</button>
     </form>
 </div>

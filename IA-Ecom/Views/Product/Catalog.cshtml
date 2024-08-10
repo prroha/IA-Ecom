@@ -18,7 +18,15 @@
                         {
                             <div class="featured__new">@product.ProductCondition</div>
                         }
-                        <img src="@product.ThumbnailImageUrl" class="featured__img" alt="@product.Name">
+                        @* <img src="@product.ThumbnailImageUrl" class="featured__img" alt="@product.Name"> *@
+                        @if (product?.ImageUrls?.Any() == true)
+                        {
+                            <img src="@product.ImageUrls[0]" class="main-img" alt="@product.Name" id="MainImg">
+                        }
+                        else
+                        {
+                            <img src="@product.ThumbnailImageUrl" class="main-img" alt="@product.Name" id="MainImg">
+                        }
                     </div>
 
                     <div class="featured__data">
