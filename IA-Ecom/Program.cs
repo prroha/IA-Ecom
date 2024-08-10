@@ -25,10 +25,6 @@ static void ConfigureServices(WebApplicationBuilder builder)
 {
     IServiceCollection services = builder.Services;
     IConfiguration configuration = builder.Configuration;
-    // Determine connection string based on environment
-    // var connectionString = builder.Environment.IsProduction()
-    //     ? configuration.GetConnectionString("DefaultConnectionSqlServer") ?? throw new InvalidOperationException("Connection string 'DefaultConnectionSqlServer' not found.")
-    //     : configuration.GetConnectionString("DefaultConnectionSqlite") ?? throw new InvalidOperationException("Connection string 'DefaultConnectionSqlite' not found.");
     // Register ApplicationDbContext with the chosen database provider
     if (builder.Environment.IsDevelopment())
     {
@@ -39,10 +35,13 @@ static void ConfigureServices(WebApplicationBuilder builder)
             Directory.CreateDirectory(appDataPath);
         }
 
-        string connectionString = configuration.GetConnectionString("DefaultConnectionSqlite") ?? 
-                           throw new InvalidOperationException("Connection string 'DefaultConnectionSqlite' not found.");
+        // string connectionString = configuration.GetConnectionString("DefaultConnectionSqlite") ?? 
+        //                    throw new InvalidOperationException("Connection string 'DefaultConnectionSqlite' not found.");
+        string connectionString = configuration.GetConnectionString("DefaultConnectionSqlServer") ?? 
+                           throw new InvalidOperationException("Connection string 'DefaultConnectionSqlServer' not found.");
         services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlite(connectionString));
+        options.UseSqlServer(connectionString));
+        // options.UseSqlite(connectionString));
     }
     else
     {
