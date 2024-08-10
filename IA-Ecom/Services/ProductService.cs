@@ -8,10 +8,12 @@ namespace IA_Ecom.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
+        private readonly IWebHostEnvironment _environment;
 
-        public ProductService(IProductRepository productRepository)
+        public ProductService(IProductRepository productRepository, IWebHostEnvironment environment)
         {
             _productRepository = productRepository;
+            _environment = environment;
         }
 
         public async Task<int> CountAllAsync()
@@ -25,34 +27,26 @@ namespace IA_Ecom.Services
 
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            return await _productRepository.GetByIdAsync(id);
+            Product product = await _productRepository.GetByIdAsync(id);
+            product.ProductImages = (await _productRepository.GetProductImagesAsync(product.ProductId))?.ToList();
+            return product;
         }
 
         public async Task AddProductAsync(Product product, List<IFormFile> images)
         {
             await _productRepository.AddAsync(product);
+            await _productRepository.SaveChangesAsync();
             // Save images
             if (images != null && images.Count > 0)
             {
-                var productImages = new List<ProductImage>();
-                foreach (var image in images)
-                {
-                    var filePath = await SaveImageAsync(image);
-                    productImages.Add(new ProductImage
-                    {
-                        ImageName = image.FileName,
-                        ImageUrl = filePath,
-                        ProductId = product.ProductId
-                    });
-                }
-                await _productRepository.AddProductImagesAsync(productImages);
-            }
+                await SaveImageAsync(images, product.ProductId, new List<ProductImage>());
             await _productRepository.SaveChangesAsync();
+            }
         }
 
         public async Task UpdateProductAsync(Product product, List<IFormFile> images)
         {
-            _productRepository.Update(product);
+            // _productRepository.Update(product);
             // Load existing images from the database
             var existingImages = await _productRepository.GetProductImagesAsync(product.ProductId);
         
@@ -69,30 +63,7 @@ namespace IA_Ecom.Services
             // Handle new images
             if (images != null && images.Count > 0)
             {
-                var productImages = new List<ProductImage>();
-
-                foreach (var image in images)
-                {
-                    var filePath = await SaveImageAsync(image);
-
-                    if (existingImages.Any(img => img.ImageUrl == filePath))
-                    {
-                        // Skip adding existing images again
-                        continue;
-                    }
-
-                    productImages.Add(new ProductImage
-                    {
-                        ImageName = image.FileName,
-                        ImageUrl = filePath,
-                        ProductId = product.ProductId
-                    });
-                }
-
-                if (productImages.Any())
-                {
-                    await _productRepository.AddProductImagesAsync(productImages);
-                }
+                await SaveImageAsync(images, product.ProductId, existingImages.ToList());
             }
             await _productRepository.SaveChangesAsync();
         }
@@ -106,9 +77,42 @@ namespace IA_Ecom.Services
                 await _productRepository.SaveChangesAsync();
             }
         }
-        private async Task<string> SaveImageAsync(IFormFile image)
+
+        private async Task SaveImageAsync(List<IFormFile> images, int productId, List<ProductImage> existingImages )
         {
-            var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "App_Data/Objects");
+            
+            if (images != null && images.Count > 0)
+            {
+                var productImages = new List<ProductImage>();
+
+                foreach (var image in images)
+                {
+                    var filePath = await StoreImageAsync(image);
+
+                    if (existingImages.Any(img => img.ImageUrl == filePath))
+                    {
+                        // Skip adding existing images again
+                        continue;
+                    }
+
+                    productImages.Add(new ProductImage
+                    {
+                        ImageName = image.FileName,
+                        ImageUrl = filePath,
+                        ProductId = productId
+                    });
+                }
+
+                if (productImages.Any())
+                {
+                    // product.ThumbnailImageUrl = productImages[0]?.ImageUrl;
+                    await _productRepository.AddProductImagesAsync(productImages);
+                }
+            }
+        }
+        private async Task<string> StoreImageAsync(IFormFile image)
+        {
+            var uploadDir = Path.Combine(_environment.ContentRootPath, "App_Data","Objects");
             if (!Directory.Exists(uploadDir))
             {
                 Directory.CreateDirectory(uploadDir);
@@ -122,7 +126,7 @@ namespace IA_Ecom.Services
                 await image.CopyToAsync(fileStream);
             }
 
-            return $"/App_Data/Objects/{fileName}";
+            return $"/Objects/{fileName}";
         }
 
         private async Task RemoveImagesAsync(List<ProductImage> images)
@@ -132,7 +136,7 @@ namespace IA_Ecom.Services
                 foreach (var image in images)
                 {
                     // Construct the full file path for each image to remove
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), image.ImageUrl.TrimStart('/'));
+                    var filePath = Path.Combine(_environment.ContentRootPath, image.ImageUrl.TrimStart('/'));
 
                     // Check if the file exists and delete it
                     if (File.Exists(filePath))
@@ -141,6 +145,6 @@ namespace IA_Ecom.Services
                     }
                 }
             }
-            }
+        }
     }
 }

@@ -9,15 +9,12 @@ namespace IA_Ecom.Repositories
     {
         public async Task AddProductImagesAsync(IEnumerable<ProductImage> images)
         {
-            
             context.ProductImages.AddRange(images);
-            await context.SaveChangesAsync();
         }
 
         public async Task RemoveProductImagesAsync(IEnumerable<ProductImage> images)
         {
             context.ProductImages.RemoveRange(images);
-            await context.SaveChangesAsync();
         }
         public async Task<IEnumerable<ProductImage>> GetProductImagesAsync(int productId)
         {

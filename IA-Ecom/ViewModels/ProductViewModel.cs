@@ -5,7 +5,7 @@ namespace IA_Ecom.ViewModels
 {
     public class ProductViewModel
     {
-        public int ProductId { get; set; }
+        public int ProductId { get; set; } = 0;
 
         [Required]
         public string Name { get; set; }
@@ -19,10 +19,10 @@ namespace IA_Ecom.ViewModels
         [Required]
         public string Description { get; set; }
         
-        public string ThumbnailImageUrl { get; set; }
-        public string SKU { get; set; }
-        public string Color { get; set; }
-        public string Size { get; set; }
+        public string? ThumbnailImageUrl { get; set; }
+        public string? SKU { get; set; }
+        public string? Color { get; set; }
+        public string? Size { get; set; }
         public string ProductCondition { 
             get
             {
@@ -35,7 +35,7 @@ namespace IA_Ecom.ViewModels
 
         public DateTime EntryDate { get; set; }
         // For multiple image uploads
-        public List<IFormFile> ImagesInput { get; set; }    
+        public List<IFormFile>? ImagesInput { get; set; }    
         public List<string> ImageUrls { get; set; } = new(); 
     }
 }

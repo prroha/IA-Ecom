@@ -44,4 +44,17 @@ public class ProductMapper
             OrderItems = new List<OrderItem>() // Initialize empty list, if needed
         };
     }
+    public static Product MapToModel(Product product, ProductViewModel viewModel)
+    {
+        product.Id = viewModel.ProductId;
+        product.Name = viewModel.Name;
+        product.Description = viewModel.Description;
+        product.Category = viewModel.Category;
+        product.Price = viewModel.Price;
+        product.Stock = viewModel.Stock;
+        product.Color = viewModel.Color;
+        product.ThumbnailImageUrl = viewModel.ThumbnailImageUrl;
+        product.OrderItems = new List<OrderItem>(); // Initialize empty list, if needed
+        return product;
+    }
 }

@@ -9,7 +9,7 @@ namespace IA_Ecom.Services
 {
     public class UserService(IUserRepository userRepository,
     UserManager<User> userManager,
-    IWebHostEnvironment _webHostEnvironment
+    IWebHostEnvironment _environment
         ) : IUserService
     {
         public async Task<int> CountAllAsync()
@@ -42,23 +42,23 @@ namespace IA_Ecom.Services
                 // Delete old image if it exists
                 if (!string.IsNullOrEmpty(user.ImageUrl))
                 {
-                    var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), user.ImageUrl.TrimStart('/'));
+                    var oldImagePath = Path.Combine(_environment.ContentRootPath, user.ImageUrl.TrimStart('/'));
                     if (System.IO.File.Exists(oldImagePath))
                     {
                         System.IO.File.Delete(oldImagePath);
                     }
                 }
                 // Save new image
-                var filePath = await SaveImageAsync(imageInput);
+                var filePath = await StoreImageAsync(imageInput);
                 user.ImageUrl = filePath;
             }
                 await userRepository.UpdateAsync(user);
-                // await userRepository.SaveChangesAsync();
+                await userRepository.SaveChangesAsync();
         }
 
-        private async Task<string> SaveImageAsync(IFormFile image)
+        private async Task<string> StoreImageAsync(IFormFile image)
         {
-            var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "App_Data/Objects");
+            var uploadDir = Path.Combine(_environment.ContentRootPath, "App_Data","Objects");
             if (!Directory.Exists(uploadDir))
             {
                 Directory.CreateDirectory(uploadDir);
@@ -72,7 +72,7 @@ namespace IA_Ecom.Services
                 await image.CopyToAsync(fileStream);
             }
 
-            return $"/App_Data/Objects/{fileName}";
+            return $"/Objects/{fileName}";
         }
 
         public async Task DeleteUserAsync(string userId)

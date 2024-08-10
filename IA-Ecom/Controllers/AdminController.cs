@@ -78,7 +78,7 @@ namespace IA_Ecom.Controllers
             if (product == null)
             {
                 notificationService.AddNotification("Product Not Found", NotificationType.Error);
-            return RedirectToAction("ManageProducts");
+                return RedirectToAction("ManageProducts");
             }
             List<ProductViewModel> productsViewModel = products.Select(o => ProductMapper.MapToViewModel(o)).ToList();
             ManageProductViewModel viewModel = new ManageProductViewModel();
@@ -90,6 +90,10 @@ namespace IA_Ecom.Controllers
         [HttpPost()]
         public async Task<IActionResult> AddProduct(ProductViewModel productModel)
         {
+            if (productModel.ProductId <= 0)
+            {
+                productModel.ProductId = 0;
+            }
             if (ModelState.IsValid)
             {
                 if (productModel.ProductId != 0)
@@ -97,11 +101,14 @@ namespace IA_Ecom.Controllers
                     await EditProduct(productModel);
                 }
                 Product product = ProductMapper.MapToModel(productModel);
-                product.EntryDate = DateTime.Now;
+                product.EntryDate = DateTime.UtcNow;
                 await productService.AddProductAsync(product, productModel.ImagesInput);
-                return RedirectToAction(nameof(ManageProducts));
+                notificationService.AddNotification("Product Saved Successfully", NotificationType.Success);
+                // return RedirectToAction(nameof(ManageProducts));
+            return Redirect(Request.Headers["Referer"].ToString());
             }
-            return View(productModel);
+            notificationService.AddNotification("Error Saving", NotificationType.Validation);
+            return Redirect(Request.Headers["Referer"].ToString());
         }
         private async Task<IActionResult> EditProduct(ProductViewModel productModel)
         {
@@ -113,25 +120,28 @@ namespace IA_Ecom.Controllers
                     notificationService.AddNotification("Product Not Found", NotificationType.Error);
                     return RedirectToAction(nameof(ManageProducts));
                 }
+                ProductMapper.MapToModel(product, productModel);
+                product.EntryDate = DateTime.UtcNow;
                 await productService.UpdateProductAsync(product, productModel.ImagesInput);
                 notificationService.AddNotification("Product Updated Successfully", NotificationType.Success);
-                return RedirectToAction(nameof(ManageProducts));
+                // return RedirectToAction(nameof(ManageProducts));
+            return Redirect(Request.Headers["Referer"].ToString());
             }
             notificationService.AddNotification("Could not Update Product", NotificationType.Error);
-            return RedirectToAction(nameof(ManageProducts));
+            return Redirect(Request.Headers["Referer"].ToString());
         }
 
         public async Task<IActionResult> DeleteProduct(int id)
         {
-                var product = await productService.GetProductByIdAsync(id);
-                if (product == null)
-                {
-                    notificationService.AddNotification("Product Not Found", NotificationType.Error);
-                    return RedirectToAction(nameof(ManageProducts));
-                }
-                await productService.DeleteProductAsync(id);
-                notificationService.AddNotification("Product Deleted", NotificationType.Success);
-                return RedirectToAction(nameof(ManageProducts));
+            var product = await productService.GetProductByIdAsync(id);
+            if (product == null)
+            {
+                notificationService.AddNotification("Product Not Found", NotificationType.Error);
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+            await productService.DeleteProductAsync(id);
+            notificationService.AddNotification("Product Deleted", NotificationType.Success);
+            return RedirectToAction(nameof(ManageProducts));
         }
 
         public async Task<IActionResult> ManageOrders()
@@ -150,7 +160,7 @@ namespace IA_Ecom.Controllers
             if (order == null)
             {
                 notificationService.AddNotification("Order Not Found", NotificationType.Error);
-            return RedirectToAction("ManageOrders");
+                return Redirect(Request.Headers["Referer"].ToString());
             }
             List<OrderViewModel> orderViewModel = orders.Select(o => OrderMapper.MapToViewModel(o)).ToList();
             ManageOrderViewModel viewModel = new ManageOrderViewModel();
@@ -174,7 +184,7 @@ namespace IA_Ecom.Controllers
                 if (existingOrder == null)
                 {
                     notificationService.AddNotification("Order Not Found", NotificationType.Error);
-                    return RedirectToAction(nameof(ManageOrders));
+                    return Redirect(Request.Headers["Referer"].ToString());
                 }
                 Order order = OrderMapper.MapToModel(orderViewModel, customer);
                 order.UpdatedDate = DateTime.UtcNow;
@@ -182,19 +192,19 @@ namespace IA_Ecom.Controllers
                 return RedirectToAction(nameof(ManageOrders));
             }
                     notificationService.AddNotification("Error Occurred", NotificationType.Validation);
-                return RedirectToAction(nameof(ManageOrders));
+        return Redirect(Request.Headers["Referer"].ToString());
         }
         public async Task<IActionResult> DeleteOrder(int id)
         {
-                var order = await orderService.GetOrderByIdAsync(id);
-                if (order == null)
-                {
-                    notificationService.AddNotification("Order Not Found", NotificationType.Error);
-                    return RedirectToAction(nameof(ManageOrders));
-                }
-                await orderService.DeleteOrderAsync(id);
-                notificationService.AddNotification("Order Deleted", NotificationType.Success);
-                return RedirectToAction(nameof(ManageOrders));
+            var order = await orderService.GetOrderByIdAsync(id);
+            if (order == null)
+            {
+                notificationService.AddNotification("Order Not Found", NotificationType.Error);
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+            await orderService.DeleteOrderAsync(id);
+            notificationService.AddNotification("Order Deleted", NotificationType.Success);
+            return RedirectToAction(nameof(ManageOrders));
         }
 
         public async Task<IActionResult> ManageUsers()
@@ -212,7 +222,7 @@ namespace IA_Ecom.Controllers
             if (user == null)
             {
                 notificationService.AddNotification("User Details Not Found", NotificationType.Error);
-                return RedirectToAction("ManageUsers");
+                return Redirect(Request.Headers["Referer"].ToString());
             }
             IEnumerable<User> users = await userService.GetAllUsersAsync();
             ManageUserViewModel viewModel = new();
@@ -245,27 +255,27 @@ namespace IA_Ecom.Controllers
                 if (existingUser == null)
                 {
                     notificationService.AddNotification("User Not Found", NotificationType.Error);
-                    return RedirectToAction(nameof(ManageUsers));
+                    return Redirect(Request.Headers["Referer"].ToString());
                 }
                 User user = UserMapper.MapToModel(userViewModel);
                 user.UpdatedDate = DateTime.UtcNow;
                 await userService.UpdateUserAsync(user);
-                    return RedirectToAction(nameof(ManageUsers));
+                return RedirectToAction(nameof(ManageUsers));
             }
-                    notificationService.AddNotification("Error Occurred", NotificationType.Validation);
-                    return RedirectToAction(nameof(ManageUsers));
+            notificationService.AddNotification("Error Occurred", NotificationType.Validation);
+            return Redirect(Request.Headers["Referer"].ToString());
         }
         public async Task<IActionResult> DeleteUser(string id)
         {
-                var user = await userService.GetUserByUserIdAsync(id);
-                if (user == null)
-                {
-                    notificationService.AddNotification("User Not Found", NotificationType.Error);
-                    return RedirectToAction(nameof(ManageUsers));
-                }
-                await userService.DeleteUserAsync(id);
-                notificationService.AddNotification("User Deleted", NotificationType.Success);
-                return RedirectToAction(nameof(ManageUsers));
+            var user = await userService.GetUserByUserIdAsync(id);
+            if (user == null)
+            {
+                notificationService.AddNotification("User Not Found", NotificationType.Error);
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+            await userService.DeleteUserAsync(id);
+            notificationService.AddNotification("User Deleted", NotificationType.Success);
+            return RedirectToAction(nameof(ManageUsers));
         }
         
         public async Task<IActionResult> ManageFeedbacks()
@@ -282,8 +292,8 @@ namespace IA_Ecom.Controllers
             var feedback = await feedbackService.GetFeedbackByIdAsync(id);
             if (feedback == null)
             {
-                notificationService.AddNotification("Feedbacl Details Not Found", NotificationType.Error);
-            return RedirectToAction("ManageFeedbacks");
+                notificationService.AddNotification("Feedback Details Not Found", NotificationType.Error);
+        return Redirect(Request.Headers["Referer"].ToString());
             }
             var feedbacks = await feedbackService.GetAllFeedbacksAsync();
             List<FeedbackViewModel> feedbackViewModel = feedbacks.Select(o => FeedbackMapper.MapToViewModel(o)).ToList();
@@ -299,7 +309,7 @@ namespace IA_Ecom.Controllers
                 if (feedback == null)
                 {
                     notificationService.AddNotification("Feedback Not Found", NotificationType.Error);
-                    return RedirectToAction(nameof(ManageFeedbacks));
+        return Redirect(Request.Headers["Referer"].ToString());
                 }
                 await feedbackService.DeleteFeedbackAsync(id);
                 notificationService.AddNotification("Feedback Deleted", NotificationType.Success);

@@ -17,11 +17,6 @@ namespace IA_Ecom.Repositories
             return await context.Users.CountAsync();
         }
 
-        public Task<User> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<IList<User>> GetAllAsync()
         {
             return await context.Users.Where(u => u.DeletedDate != null).ToListAsync();
@@ -32,40 +27,18 @@ namespace IA_Ecom.Repositories
             throw new NotImplementedException();
         }
 
-        public Task AddAsync(User entity)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task UpdateAsync(User user)
         {
-            var existingEntity = await context.Users.FindAsync(user.Id);
-            if (existingEntity != null)
-            {
-                var entityType = user.GetType();
-                var properties = entityType.GetProperties();
-                foreach (var property in properties)
-                {
-                    context.Entry(existingEntity).Property(property.Name).IsModified = true;
-                }
+                // var entityType = user.GetType();
+                // var properties = entityType.GetProperties();
+                // foreach (var property in properties)
+                // {
+                //     context.Entry(existingEntity).Property(property.Name).IsModified = true;
+                // }
 
-                // context.Update(user);
-                await context.SaveChangesAsync();
-                
-            }
-            
-                }
-
-        public void Remove(User entity)
-        {
-            throw new NotImplementedException();
+                context.Update(user);
         }
 
-
-        public Task DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
         public async Task DeleteAsync(string id)
         {
             User user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);

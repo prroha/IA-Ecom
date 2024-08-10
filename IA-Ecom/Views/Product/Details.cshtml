@@ -3,13 +3,24 @@
 ViewData["Title"] = "Product Details";
 Layout = "~/Views/Home/_PageLayout.cshtml";
 }
+@section Styles
+{
+<link rel="stylesheet" href="~/css/product-details.css" asp-append-version="true"/>
+}
 <!-- DETAIL SECTION -->
     <section id="prod-details" class="section">
         <div class="section_content__container grid-two">
 
             <div class="product-image-show">
-                <div class="featured__new">@Model.ProductCondition</div>
+                <div class="product-image__new">@Model.ProductCondition</div>
+                @if (Model?.ImageUrls?.Any() == true)
+                {
+                <img src="@Model.ImageUrls[0]" class="main-img" alt="@Model.Name" id="MainImg">
+                }
+                else
+                {
                 <img src="@Model.ThumbnailImageUrl" class="main-img" alt="@Model.Name" id="MainImg">
+                }
                 <div class="small-img-group">
                     @foreach (var image in Model.ImageUrls)
                     {

@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using IA_Ecom.ViewModels; // Ensure to include your ViewModel namespace
 using IA_Ecom.Models;
-using IA_Ecom.Services; // Ensure to include your ApplicationUser class namespace
+using IA_Ecom.Services;
+using Microsoft.AspNetCore.Authorization; // Ensure to include your ApplicationUser class namespace
 
 namespace IA_Ecom.Controllers;
 
@@ -134,6 +135,7 @@ public class AccountController(
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetProfile(string userId)
     {
         var user = await userService.GetUserByUserIdAsync(userId);
@@ -143,24 +145,24 @@ public class AccountController(
             return Redirect(Request.Headers["Referer"].ToString());
         }
         ProfileViewModel viewModel = UserMapper.MapToProfileViewModel(user);
-        return View("../Admin/Profile", viewModel); 
+        if (User.IsInRole("ADMIN"))
+        {
+            return View("../Admin/Profile", viewModel); 
+        }
+        return View("../Home/Profile", viewModel); 
     }
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Profile(ProfileViewModel viewModel)
     {
         if (ModelState.IsValid &&  !String.IsNullOrEmpty(viewModel.UserId))
         {
-            var existingUser = await userService.GetUserByUserIdAsync(viewModel.UserId);
-            if (existingUser == null)
-            {
-                notificationService.AddNotification("User Not Found", NotificationType.Error);
-                return Redirect(Request.Headers["Referer"].ToString());
-            }
-            User user = UserMapper.MapToModel(viewModel);
+            User user = await userService.GetUserByUserIdAsync(viewModel.UserId);
+            UserMapper.MapToModel(user, viewModel);
             user.UpdatedDate = DateTime.UtcNow;
-            notificationService.AddNotification("Profile Updated Successfully", NotificationType.Success);
             await userService.UpdateProfileAsync(user, viewModel.ImageInput);
-            return RedirectToAction(nameof(GetProfile), new{useriD= viewModel.UserId}); 
+            notificationService.AddNotification("Profile Updated Successfully", NotificationType.Success);
+            return Redirect(Request.Headers["Referer"].ToString());
         }
         notificationService.AddNotification("Error Occurred", NotificationType.Validation);
         return Redirect(Request.Headers["Referer"].ToString());

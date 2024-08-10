@@ -32,6 +32,7 @@ public static class UserMapper
     {
         return new User
         {
+            Id = viewModel.UserId,
             FirstName = viewModel.FirstName,
             LastName = viewModel.LastName,
             PhoneNumber = viewModel.PhoneNumber,
@@ -39,10 +40,21 @@ public static class UserMapper
             Email = viewModel.Email,
         };
     }
+    public static User MapToModel(User user, ProfileViewModel viewModel)
+    {
+           user.Id = viewModel.UserId;
+           user.FirstName = viewModel.FirstName;
+           user.LastName = viewModel.LastName;
+           user.PhoneNumber = viewModel.PhoneNumber;
+           user.Address = viewModel.Address;
+           user.Email = viewModel.Email;
+            return user;
+    }
     public static ProfileViewModel MapToProfileViewModel(User user)
     {
         return new ProfileViewModel
         {
+            UserId = user.Id,
             Username = user.UserName,
             FirstName = user.FirstName,
             LastName = user.LastName,

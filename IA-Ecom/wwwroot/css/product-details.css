@@ -68,3 +68,13 @@
     text-align: left;
     margin-bottom: var(--mb-2);
 }
+.product-image-show .product-image__new {
+    position: absolute;
+    /*top: 0;*/
+    /*left: 0;*/
+    background-color: var(--first-color);
+    /*background-color: var(--secondary-color);*/
+    color: var(--white-color);
+    padding: .3rem .75rem;
+    font-size: var(--small-font-size);
+}

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using IA_Ecom.Data;
 using IA_Ecom.Models;
 using IA_Test.Data;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -88,7 +89,14 @@ static void Configure(WebApplication app, IWebHostEnvironment env)
 
     app.UseHttpsRedirection();
     app.UseStaticFiles();
-
+// Serve static files from the App_Data/Objects directory
+    var appDataPath = Path.Combine(env.ContentRootPath, "App_Data", "Objects");
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(appDataPath),
+        RequestPath = "/objects" // URL prefix for files in App_Data/Objects
+    });
+    
     app.UseRouting();
 
     app.UseAuthorization();
