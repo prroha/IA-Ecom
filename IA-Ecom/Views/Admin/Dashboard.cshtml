@@ -3,8 +3,51 @@
     ViewData["Title"] = "Admin Dashboard";
 Layout = "~/Views/Admin/_AdminLayout.cshtml";
 }
+@section Styles {
+<style>
+    .card-count-items {
+        display: flex;
+        justify-content: space-between;
+    }
+    .card-count {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        margin-bottom: 20px;
+        text-align: center;
+        padding: 15px;
+        width: 200px;
+    }
 
-<div class="container">
+    .card-count .card-header {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 10px;
+        background-color: var(--info-color-light);
+        padding: 10px;
+        border-radius: 0.25rem 0.25rem 0 0;
+    }
+
+    .card-count .card-body {
+        font-size: 1.5rem;
+        color: #343a40;
+    }
+
+    .card-count .card .title-info {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .dashboard-container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+</style>
+}
+<div class="container" style="width: 1000px">
     <h1>Welcome to Admin Dashboard</h1>
     <div class="card">
         <div class="card-header">
@@ -14,68 +57,46 @@ Layout = "~/Views/Admin/_AdminLayout.cshtml";
         <canvas id="dashboardChart"></canvas>
     </div>
     </div>
+    <div class="card-count-items">
     <!-- User Management Section -->
-    <div class="card">
+    <div class="card-count">
         <div class="card-header">
-            User Management
+            Users 
         </div>
         <div class="card-body">
             <span class="title-info">Count: @Model.UsersCount</span>
-            <ul>
-                @foreach (var user in Model.Users)
-                {
-                    <li>@user?.FullName</li>
-                }
-            </ul>
         </div>
     </div>
 
     <!-- Product Management Section -->
-    <div class="card">
+    <div class="card-count">
         <div class="card-header">
-            Product Management
+            Product 
         </div>
         <div class="card-body">
             <span class="title-info">Count: @Model.ProductsCount</span>
-            <ul>
-                @foreach (var product in Model.Products)
-                {
-                    <li>@product?.Name - @product?.Price</li>
-                }
-            </ul>
         </div>
     </div>
 
     <!-- Order Management Section -->
-    <div class="card">
+    <div class="card-count">
         <div class="card-header">
-            Order Management
+            Orders 
         </div>
         <div class="card-body">
             <span class="title-info">Count: @Model.OrdersCount</span>
-            <ul>
-                @foreach (var order in Model.Orders)
-                {
-                    <li>@order?.OrderId - @order?.TotalAmount</li>
-                }
-            </ul>
         </div>
     </div>
 
     <!-- Customer Feedback Section -->
-    <div class="card">
+    <div class="card-count">
         <div class="card-header">
-            Customer Feedback
+            Customer Feedbacks
         </div>
         <div class="card-body">
             <span class="title-info">Count: @Model.FeedbacksCount</span>
-            <ul>
-                @foreach (var feedback in Model.Feedbacks)
-                {
-                    <li>@feedback?.UserFullName - @feedback?.Message</li>
-                }
-            </ul>
         </div>
+    </div>
     </div>
 </div>
 @section Scripts

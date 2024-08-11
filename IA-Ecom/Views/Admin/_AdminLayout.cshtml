@@ -10,10 +10,11 @@ var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="icon" type="image/jpeg" href="./images/favicon.jpeg">
+    <link rel="icon" type="image/jpeg" href="/images/favicon.jpeg">
     <title>@ViewData["Title"] - IA_Ecom</title>
     <link rel="stylesheet" href="~/css/main.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true"/>
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
     <!-- Header -->
@@ -22,7 +23,7 @@ var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         <i class="bx bx-menu" id="sidebarToggle"></i>
     </div>
     <div class="header__content p-2">
-        <div class="header__title">For Administrators</div>
+        <div class="header__title">Admin Panel</div>
         <div class="header__profile">
             <div class="header__profile-img">
                 <i class="bx bxs-user-circle profile-icon" id="profileDropdownButton"></i>
