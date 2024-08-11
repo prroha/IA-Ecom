@@ -253,9 +253,10 @@ namespace IA_Ecom.Controllers
                     notificationService.AddNotification("User Not Found", NotificationType.Error);
                     return Redirect(Request.Headers["Referer"].ToString());
                 }
-                User user = UserMapper.MapToModel(userViewModel);
-                user.UpdatedDate = DateTime.UtcNow;
-                await userService.UpdateUserAsync(user);
+                UserMapper.MapToModel(existingUser, userViewModel);
+                existingUser.UpdatedDate = DateTime.UtcNow;
+                await userService.UpdateUserAsync(existingUser);
+                notificationService.AddNotification("User Saved Successfully", NotificationType.Success);
                 return RedirectToAction(nameof(ManageUsers));
             }
             notificationService.AddNotification("Error Occurred", NotificationType.Validation);

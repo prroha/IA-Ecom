@@ -15,6 +15,7 @@ public static class UserMapper
             Address = user.Address,
             FullName = $"{user.FirstName} {user.LastName}",
             Email = user.Email,
+            UserId = user.Id,
         };
     }
     public static User MapToModel(UserViewModel viewModel)
@@ -27,6 +28,16 @@ public static class UserMapper
             Address = viewModel.Address,
             Email = viewModel.Email,
         };
+    }
+    public static User MapToModel(User user, UserViewModel viewModel)
+    {
+           user.Id = viewModel.UserId;
+           user.FirstName = viewModel.FirstName;
+           user.LastName = viewModel.LastName;
+           user.PhoneNumber = viewModel.PhoneNumber;
+           user.Address = viewModel.Address;
+           user.Email = viewModel.Email;
+           return user;
     }
     public static User MapToModel(ProfileViewModel viewModel)
     {

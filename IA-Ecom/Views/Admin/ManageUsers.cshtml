@@ -39,41 +39,8 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="">
-            <h3>Create / Edit User</h3>
-            <form asp-controller="Admin" asp-action="EditUser" id="userForm" class="user-form">
-                @* <div class="form-group"> *@
-                @*     <label asp-for="@Model.User.Username">Username</label> *@
-                @*     <input asp-for="@Model.User.Username" class="user-form__input form-control" placeholder="Enter your name" name="username" required> *@
-                @* </div> *@
-
-                <div class="form-group">
-                    <label asp-for="@Model.User.Email">Email</label>
-                    <input type="email" asp-for="@Model.User.Email" class="user-form__input form-control" placeholder="Enter your email" required>
-                </div>
-                <div class="horizontal-group">
-                    <div>
-                    <label asp-for="@Model.User.FirstName">FirstName</label>
-                    <input type="email" asp-for="@Model.User.FirstName" class="user-form__input form-control" placeholder="Enter your FirstName" required>
-                    </div>
-                    <div>
-                        <label asp-for="@Model.User.LastName">LastName</label>
-                        <input type="email" asp-for="@Model.User.LastName" class="user-form__input form-control" placeholder="Enter your LastName" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="@Model.User.Role">Role</label>
-                    <select asp-for="@Model.User.Role" asp-items="@Model.User.RoleOptions" id="role">
-                        <option value="">Select a Role</option>
-                    </select>
-                </div>
-
-                <input type="hidden" asp-for="@Model.User.UserId" required>
-                <button type="submit" class="button">Save User</button>
-            </form>
-
-        </div>
-    </div>
+    @{
+        // Render the partial view
+        Html.RenderPartial("_EditUser", Model.User);
+    }
 </div>
