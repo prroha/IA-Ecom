@@ -5,15 +5,25 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=Shoes@123!
+      - SA_PASSWORD=Shoes@123
     ports:
       - "1433:1433"
-      
+    networks:
+      - app-network
+
   ia-ecom:
     image: ia-ecom
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
     build:
       context: .
       dockerfile: IA-Ecom/Dockerfile
     ports:
       - "8080:8080"
       - "8081:8081"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

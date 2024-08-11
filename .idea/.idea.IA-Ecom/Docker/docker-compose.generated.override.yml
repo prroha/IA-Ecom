@@ -6,32 +6,17 @@ services:
       context: "/home/proha/.worspace/IA-Ecom"
       dockerfile: "IA-Ecom/Dockerfile"
       target: "base"
-      args:
-        BUILD_CONFIGURATION: "Debug"
     command: []
     entrypoint:
-    - "/opt/rider-debugger/linux-x64/JetBrains.Debugger.Worker"
-    - "--runtimeconfig"
-    - "/opt/rider-debugger/JetBrains.Debugger.Worker.runtimeconfig.json"
-    - "--mode=server"
-    - "--frontend-port=57100"
-    - "--backend-port=57300"
-    - "--timeout=60"
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/IA-Ecom.dll"
     environment:
-      ASPNETCORE_ENVIRONMENT: "Development"
       ASPNETCORE_STATICWEBASSETS: "/app/bin/Debug/net8.0/IA-Ecom.staticwebassets.runtime.CT.json"
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
-      RIDER_DEBUGGER_LOG_DIR: "/var/opt/rider-debugger"
-      RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
     image: "ia-ecom:dev"
-    ports:
-    - "127.0.0.1:57000:57100"
-    - "127.0.0.1:57200:57300"
+    ports: []
     volumes:
     - "/home/proha/.nuget/packages:/home/app/.nuget/packages"
     - "/home/proha/.worspace/IA-Ecom/IA-Ecom:/app:rw"
     - "/home/proha/.worspace/IA-Ecom:/src:rw"
-    - "/home/proha/.local/share/JetBrains/RiderRemoteDebugger/2024.1.2/Linux64:/opt/rider-debugger"
-    - "/opt/Rider/bin:/etc/opt/rider-debugger/backend-log.xml"
-    - "/home/proha/.cache/JetBrains/Rider2024.1/log/DebuggerWorker/JetBrains.Debugger.Worker.2024_8_11_06_46_00:/var/opt/rider-debugger:rw"
     working_dir: "/app"
