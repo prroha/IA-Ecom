@@ -5,8 +5,15 @@ Layout = "~/Views/Admin/_AdminLayout.cshtml";
 }
 
 <div class="container">
-    <h1>Welcome to the Admin Dashboard</h1>
-
+    <h1>Welcome to Admin Dashboard</h1>
+    <div class="card">
+        <div class="card-header">
+            Basic Visual Representation for Counts
+        </div>
+    <div class="container">
+        <canvas id="dashboardChart"></canvas>
+    </div>
+    </div>
     <!-- User Management Section -->
     <div class="card">
         <div class="card-header">
@@ -71,3 +78,42 @@ Layout = "~/Views/Admin/_AdminLayout.cshtml";
         </div>
     </div>
 </div>
+@section Scripts
+{
+
+<script src="/lib/Chart.js"></script>
+<script>
+    var ctx = document.getElementById('dashboardChart').getContext('2d');
+    var dashboardChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Users', 'Products', 'Orders', 'Feedbacks'],
+            datasets: [{
+                label: 'Count',
+                data: [@Model.UsersCount, @Model.ProductsCount, @Model.OrdersCount, @Model.FeedbacksCount],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+}
