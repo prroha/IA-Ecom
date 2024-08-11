@@ -1,72 +1,140 @@
 @model IA_Ecom.ViewModels.AdminDashboardViewModel
 @{
     ViewData["Title"] = "Admin Dashboard";
+Layout = "~/Views/Admin/_AdminLayout.cshtml";
 }
+@section Styles {
+<style>
+    .card-count-items {
+        display: flex;
+        justify-content: space-between;
+    }
+    .card-count {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        margin-bottom: 20px;
+        text-align: center;
+        padding: 15px;
+        width: 200px;
+    }
 
-<div class="container">
-    <h1>Welcome to the Admin Dashboard</h1>
+    .card-count .card-header {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 10px;
+        background-color: var(--info-color-light);
+        padding: 10px;
+        border-radius: 0.25rem 0.25rem 0 0;
+    }
 
-    <!-- User Management Section -->
+    .card-count .card-body {
+        font-size: 1.5rem;
+        color: #343a40;
+    }
+
+    .card-count .card .title-info {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .dashboard-container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+</style>
+}
+<div class="container" style="width: 1000px">
+    <h1>Welcome to Admin Dashboard</h1>
     <div class="card">
         <div class="card-header">
-            User Management
+            Basic Visual Representation for Counts
+        </div>
+    <div class="container">
+        <canvas id="dashboardChart"></canvas>
+    </div>
+    </div>
+    <div class="card-count-items">
+    <!-- User Management Section -->
+    <div class="card-count">
+        <div class="card-header">
+            Users 
         </div>
         <div class="card-body">
-            <!-- Example: List of users -->
-            <ul>
-                @foreach (var user in Model.Users)
-                {
-                    <li>@user?.FullName</li>
-                }
-            </ul>
+            <span class="title-info">Count: @Model.UsersCount</span>
         </div>
     </div>
 
     <!-- Product Management Section -->
-    <div class="card">
+    <div class="card-count">
         <div class="card-header">
-            Product Management
+            Product 
         </div>
         <div class="card-body">
-            <!-- Example: List of products -->
-            <ul>
-                @foreach (var product in Model.Products)
-                {
-                    <li>@product?.Name - @product?.Price</li>
-                }
-            </ul>
+            <span class="title-info">Count: @Model.ProductsCount</span>
         </div>
     </div>
 
     <!-- Order Management Section -->
-    <div class="card">
+    <div class="card-count">
         <div class="card-header">
-            Order Management
+            Orders 
         </div>
         <div class="card-body">
-            <!-- Example: List of orders -->
-            <ul>
-                @foreach (var order in Model.Orders)
-                {
-                    <li>@order?.OrderId - @order?.TotalAmount</li>
-                }
-            </ul>
+            <span class="title-info">Count: @Model.OrdersCount</span>
         </div>
     </div>
 
     <!-- Customer Feedback Section -->
-    <div class="card">
+    <div class="card-count">
         <div class="card-header">
-            Customer Feedback
+            Customer Feedbacks
         </div>
         <div class="card-body">
-            <!-- Example: List of feedbacks -->
-            <ul>
-                @foreach (var feedback in Model.Feedbacks)
-                {
-                    <li>@feedback?.Name - @feedback?.Message</li>
-                }
-            </ul>
+            <span class="title-info">Count: @Model.FeedbacksCount</span>
         </div>
     </div>
+    </div>
 </div>
+@section Scripts
+{
+
+<script src="/lib/Chart.js"></script>
+<script>
+    var ctx = document.getElementById('dashboardChart').getContext('2d');
+    var dashboardChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Users', 'Products', 'Orders', 'Feedbacks'],
+            datasets: [{
+                label: 'Count',
+                data: [@Model.UsersCount, @Model.ProductsCount, @Model.OrdersCount, @Model.FeedbacksCount],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+}

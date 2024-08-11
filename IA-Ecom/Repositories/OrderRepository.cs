@@ -1,5 +1,6 @@
 using IA_Ecom.Data;
 using IA_Ecom.Models;
+using IA_Ecom.RequestModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace IA_Ecom.Repositories
@@ -8,28 +9,84 @@ namespace IA_Ecom.Repositories
     {
         private readonly ApplicationDbContext _dbContext = context;
 
-// Add item to shopping cart (Order)
-    public async Task AddCartItemToOrderAsync(int orderId, CartItem cartItem)
-    {
-        var order = await GetOrderByIdAsync(orderId);
-        if (order != null)
+        public async Task<IList<Order>> GetAllAsync()
         {
-            order.OrderItems.Add(new OrderItem
+            return await _dbContext.Orders
+                .Where(entity => entity.DeletedDate == null)
+                .Include(o => o.Customer)
+                .ToListAsync();
+        }
+        public async Task<OrderItem> GetOrderItemByIdAsync(int id)
+        {
+            // var entity = await _context.Set<T>().FindAsync(id);
+            var entity = await context.OrderItems.FirstOrDefaultAsync(e => e.Id == id && e.DeletedDate == null);
+            if (entity == null)
             {
-                ProductId = cartItem.ProductId,
-                Quantity = cartItem.Quantity,
-                UnitPrice = cartItem.UnitPrice
-            });
+                throw new InvalidOperationException($"Entity of type OrderItem with id {id} not found.");
+            }
+            return entity;
+        }
+        public async Task AddToCartAsync(OrderItem orderItem, User user)
+        {
+            // Retrieve the current cart (order) for the user or create a new one
+            var order = await _dbContext.Orders
+                .Include(o => o.OrderItems)
+                .FirstOrDefaultAsync(o => o.CustomerId == orderItem.CustomerId && o.Status == "Cart");
 
-            _dbContext.Orders.Update(order);
+            if (order == null)
+            {
+                order = new Order
+                {
+                    Customer = user,
+                    OrderDate = DateTime.UtcNow,
+                    Status = "Cart",
+                    PaymentStatus = PaymentStatus.Pending,
+                    TotalAmount = 0,
+                    ShippingAddress = user.Address,
+                    OrderItems = new List<OrderItem>()
+                };
+                _dbContext.Orders.Add(order);
+            }
+
+            // Check if the product is already in the cart
+            var orderItemDb = order.OrderItems.FirstOrDefault(oi => oi.ProductId == orderItem.ProductId);
+            if (orderItemDb != null)
+            {
+                // Update quantity and price if product exists in cart
+                orderItemDb.Quantity += orderItem.Quantity;
+                orderItemDb.UnitPrice = orderItem.UnitPrice;
+            }
+            else
+            {
+                // Add new order item
+                orderItemDb = new OrderItem
+                {
+                    ProductId = orderItem.ProductId,
+                    Quantity = orderItem.Quantity,
+                    UnitPrice = orderItem.UnitPrice,
+                    CustomerId = user.Id,
+                    ProductSize = orderItem.ProductSize,
+                    OrderId = order.Id
+                };
+                order.OrderItems.Add(orderItemDb);
+            }
+
+            // Update the total amount
+            order.TotalAmount = order.OrderItems.Sum(oi => oi.Quantity * oi.UnitPrice);
+
             await _dbContext.SaveChangesAsync();
         }
-    }
+
+        public async Task<IEnumerable<Order>> GetAllOrdersAsync()
+        {
+            
+        return _dbContext.Orders
+            .Include(o => o.OrderItems);
+        }
     public async Task<Order> CreateOrderFromCartAsync(string customerId)
     {
         var cart = await _dbContext.Carts
             .Include(c => c.CartItems)
-            .ThenInclude(ci => ci.Product)
             .FirstOrDefaultAsync(c => c.CustomerId == customerId);
 
         if (cart == null)
@@ -89,13 +146,14 @@ namespace IA_Ecom.Repositories
             await _dbContext.SaveChangesAsync();
         }
     }
-    public IEnumerable<CartItem> GetCartItems(string customerId)
+    public async Task<Order> GetCartDetailsAsync(string customerId)
     {
-        var cart = _dbContext.Carts
-            .Include(c => c.CartItems)
-            .FirstOrDefault(c => c.CustomerId == customerId);
+       return await _dbContext.Orders
+           .Include(o => o.OrderItems.Where(oi => oi.DeletedDate == null)) 
+           .ThenInclude(oi => oi.Product)
+           .Include(o => o.Customer)
+           .FirstOrDefaultAsync(o => o.CustomerId == customerId && o.Status == "Cart" && o.DeletedDate == null); 
 
-        return cart?.CartItems ?? new List<CartItem>();
     }
 
     public void AddCartItemToOrder(Order order, CartItem cartItem)
@@ -147,6 +205,11 @@ namespace IA_Ecom.Repositories
         {
             return await GetByIdAsync(orderId);
         }
-        // Implement additional methods specific to Order if any
+        public async Task<Order> GetOrderByCustomerIdAsync(string customerId)
+        {
+            return  await _dbContext.Orders
+                                .Include(o => o.OrderItems)
+                                .FirstOrDefaultAsync(o => o.CustomerId ==customerId && o.Status == "Cart");
+        }
     }
 }

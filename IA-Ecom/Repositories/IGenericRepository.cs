@@ -14,6 +14,7 @@ namespace IA_Ecom.Repositories
         Task AddAsync(T entity);
         void Update(T entity);
         void Remove(T entity);
+        Task DeleteAsync(int id);
         Task SaveChangesAsync();
     }
 }

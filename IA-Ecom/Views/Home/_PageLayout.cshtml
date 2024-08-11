@@ -1,0 +1,153 @@
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    ViewData["Title"] = "Simon Shoes";
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/jpeg" href="/images/favicon.jpeg">
+    <title>@ViewData["Title"] - IA_Ecom</title>
+    <link rel="stylesheet" href="~/css/main.css" asp-append-version="true"/>
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+<!-- Header -->
+<header class="header">
+    <nav class="nav grid ">
+        <div class="header__title">
+            <a class="" asp-area="" asp-controller="Home" asp-action="Index">@ViewData["Title"]</a>
+        </div>
+
+        <div class="nav__menu" id="nav-menu">
+            <ul class="nav__list">
+                <li class="nav__item">
+                    <a class="nav__link active" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                <li class="nav__item">
+                    @* <a class="nav__link" asp-area="" asp-controller="Home" asp-action="Index" href="@Url.Action("Index", "Home")#featured">Featured</a> *@
+                    <a class="nav__link" href="@Url.Action("Index", "Home")#featured">Featured</a>
+                </li>
+                <li class="nav__item">
+                    @* <a class="nav__link" asp-area="" asp-controller="Home" asp-action="Index" href="@Url.Action("Index", "Home")#new-products">New Arrivals</a> *@
+                    <a class="nav__link" href="@Url.Action("Index", "Home")#new-products">New Arrivals</a>
+                </li>
+                <li class="nav__item">
+                    <a class="nav__link" asp-area="" asp-controller="Product" asp-action="Index">Products</a>
+                </li>
+                <li class="nav__item">
+                    <a class="nav__link" asp-area="" asp-controller="Home" asp-action="ContactUs">Contact Us</a>
+                </li>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="nav__item">
+                        <div class="header__profile" style="bottom: 14px;">
+                            <div class="header__profile-img">
+                                <i class="bx bxs-user-circle profile-icon" id="profileDropdownButton"></i>
+                            </div>
+                            <div class="header__profile-dropdown" id="profileDropdown">
+                                <a class="admin-header__profile-link" asp-area="" asp-controller="Account" asp-action="GetProfile" asp-route-userId="@userId">Edit Profile</a>
+                                <a class="admin-header__profile-link" asp-area="" asp-controller="Home" asp-action="Index">Home Page</a>
+                                <a class="admin-header__profile-link" asp-area="" asp-controller="Account" asp-action="Logout" id="logout">Logout</a>
+                            </div>
+                        </div>
+                    </li>
+                }
+                else {
+                    <li class="nav__item">
+                        <a class="nav__link" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                    </li>
+                }
+            </ul>
+        </div>
+
+            <ul class="nav__list">
+                <li class="nav__item">
+                    <a class="nav__link" asp-area="" asp-controller="Order" asp-action="GetCartDetails">
+                        <i class="bx bx-cart nav__cart" style="font-size: 2rem;"></i>
+                    </a></li>
+                <li class="nav__item">
+                    <a href="#" class="">
+                        <i class="bx bx-menu nav__toggle" id="nav-toggle"></i>
+                    </a>
+                </li>
+            </ul>
+    </nav>
+</header>
+
+<main class="main-content-center">
+    @RenderBody()
+</main>
+<!-- Include the Notification Modal -->
+@await Html.PartialAsync("_Notification")
+<!-- FOOTER -->
+<footer class="footer section">
+    <div class="footer__container grid">
+        <div class="footer__box">
+            <h3 class="footer__title">Simon Shoes</h3>
+            <p class="footer__deal">Products store</p>
+            <a href="#"><img src="~/images/appstore1.png" alt="" class="footer__store"></a>
+            <a href="#"><img src="~/images/appstore1.png" alt="" class="footer__store"></a>
+        </div>
+
+        <div class="footer__box">
+            <h3 class="footer__title">EXPLORE</h3>
+            <ul>
+                <li>
+                    <a class="footer__link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                <li>
+                    @* <a class="footer__link" asp-area="" asp-controller="Home" asp-action="Index" href="@Url.Action("Index", "Home")#featured">Featured</a> *@
+                    <a class="nav__link" href="@Url.Action("Index", "Home")#featured">Featured</a>
+                </li>
+                <li>
+                    @* <a class="footer__link" asp-area="" asp-controller="Home" asp-action="Index" href="@Url.Action("Index", "Home")#new-products">New Arrivals</a> *@
+                    <a class="nav__link" href="@Url.Action("Index", "Home")#new-products">New Arrivals</a>
+                </li>
+                <li><a href="#" class="footer__link">Subscribe</a></li>
+            </ul>
+        </div>
+
+        <div class="footer__box">
+            <h3 class="footer__title">OUR SERVICES</h3>
+            <ul>
+                <li><a href="#" class="footer__link">Pricing</a></li>
+                <li><a href="#" class="footer__link">Free Shipping</a></li>
+                <li><a href="#" class="footer__link">Gift Cards</a></li>
+            </ul>
+        </div>
+
+        <div class="footer__box">
+            <h3 class="footer__title">FOLLOW US</h3>
+            <a href="#" class="footer__social"><i class='bx bxl-facebook-square'></i></a>
+            <a href="#" class="footer__social"><i class='bx bxl-instagram-alt'></i></a>
+            <a href="#" class="footer__social"><i class='bx bxl-twitter'></i></a>
+        </div>
+    </div>
+
+    <p class="footer__copy">&#169; 2024 copyright all rights reserved.</p>
+</footer>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.location.hash) {
+            const target = document.querySelector(window.location.hash);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    });
+</script>
+
+<!-- JS Import -->
+<script src="~/js/main.js"></script>
+<script src="~/lib/jQuery.js"></script>
+
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

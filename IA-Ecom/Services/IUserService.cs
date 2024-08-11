@@ -6,9 +6,9 @@ namespace IA_Ecom.Services
     {
         Task<int> CountAllAsync();
         Task<IList<User>> GetAllUsersAsync();
-        Task<User> GetUserByIdAsync(int id);
-        Task AddUserAsync(User customer);
+        Task<User> GetUserByUserIdAsync(string id);
         Task UpdateUserAsync(User customer);
-        Task DeleteUserAsync(int id);
+        Task UpdateProfileAsync(User user, IFormFile imageInput);
+        Task DeleteUserAsync(string id);
     }
 }

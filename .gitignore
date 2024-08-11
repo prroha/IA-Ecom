@@ -14,6 +14,16 @@
 # Binaries
 bin/
 obj/
+./.idea
+/.idea
+.idea
+.git
+IA-Ecom/bin
+IA-Ecom/obj
+IA-Ecom/bin/
+IA-Ecom/obj/
+
+IA-Ecom/App_Data/
 
 # User-specific files
 *.user

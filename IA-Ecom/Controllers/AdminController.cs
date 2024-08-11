@@ -1,160 +1,316 @@
+using System.Collections;
+using System.Security.Claims;
+using IA_Ecom.Mappers;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using IA_Ecom.Models;
-using IA_Ecom.Services;
 using IA_Ecom.Models;
 using IA_Ecom.Services;
 using IA_Ecom.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis;
 
 namespace IA_Ecom.Controllers
 {
-    [Route("admin")]
-    [Authorize(Roles = "Admin")]
-    public class AdminController : Controller
+    [Authorize(Roles = "ADMIN")]
+    public class AdminController(
+        IProductService productService,
+        IOrderService orderService,
+        IUserService userService,
+    UserManager<User> userManager,
+        INotificationService notificationService,
+        IFeedbackService feedbackService)
+        : Controller
     {
-        private readonly IProductService _productService;
-        private readonly IOrderService _orderService;
-        private readonly IUserService _userService;
-        private readonly IFeedbackService _feedbackService;
-
-        public AdminController(
-            IProductService productService,
-            IOrderService orderService,
-            IUserService userService,
-            IFeedbackService feedbackService)
-        {
-            _productService = productService;
-            _orderService = orderService;
-            _userService = userService;
-            _feedbackService = feedbackService;
-        }
-
         public IActionResult Index()
         {
                 return RedirectToAction(nameof(Dashboard));
         }
         
-// GET: /Admin/Dashboard
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Dashboard()
         {
-            var usersCount = await _userService.CountAllAsync();
-            var productsCount = await _productService.CountAllAsync();
-            var ordersCount = await _orderService.CountAllAsync();
+            var usersCount = await userService.CountAllAsync();
+            var productsCount = await productService.CountAllAsync();
+            var ordersCount = await orderService.CountAllAsync();
+            var feedbackCount = await feedbackService.CountAllAsync();
 
             var dashboardData = new AdminDashboardViewModel
             {
                 UsersCount = usersCount,
                 ProductsCount = productsCount,
                 OrdersCount = ordersCount,
+                FeedbacksCount = feedbackCount,
                Users = [],
                Products = [],
                Orders = [],
                Feedbacks = [],
             };
 
-            // Example: Mapping ApplicationUser to AdminDashboardViewModel
-            // Replace with actual logic based on your application's requirements
-            // var users = await _dbContext.Users.ToListAsync();
-            // var mappedUsers = _mapper.Map<List<User>, List<AdminDashboardViewModel>>(users);
-
-            return View(dashboardData);
+            return View("Dashboard", dashboardData);
         }
-        // GET: /admin/products
-        [HttpGet("products")]
-        public async Task<IActionResult> Products()
+        
+        [HttpPost("profile")]
+        public async Task<IActionResult> Profile()
         {
-            var products = await _productService.GetAllProductsAsync();
-            return View(products);
+            var profile = new ProfileViewModel();
+            if (ModelState.IsValid)
+            {
+                // await _productService.AddProductAsync(product);
+                // return RedirectToAction(nameof(Products));
+            }
+            return View(profile);
+        }
+        
+        public async Task<IActionResult> ManageProducts()
+        {
+            IEnumerable<Product> products = await productService.GetAllProductsAsync();
+            List<ProductViewModel> productsViewModel = products.Select(o => ProductMapper.MapToViewModel(o)).ToList();
+            ManageProductViewModel viewModel = new ManageProductViewModel();
+            viewModel.Products = productsViewModel;
+            return View(viewModel);
         }
 
-        // GET: /admin/products/{id}
-        [HttpGet("products/{id}")]
+        [HttpGet()]
         public async Task<IActionResult> ProductDetails(int id)
         {
-            var product = await _productService.GetProductByIdAsync(id);
+            IEnumerable<Product> products = await productService.GetAllProductsAsync();
+            Product product = products.First(p => p.ProductId == id);
             if (product == null)
             {
-                return NotFound();
+                notificationService.AddNotification("Product Not Found", NotificationType.Error);
+                return RedirectToAction("ManageProducts");
             }
-            return View(product);
+            List<ProductViewModel> productsViewModel = products.Select(o => ProductMapper.MapToViewModel(o)).ToList();
+            ManageProductViewModel viewModel = new ManageProductViewModel();
+            viewModel.Products = productsViewModel;
+            viewModel.Product = ProductMapper.MapToViewModel(product);
+            return View("ManageProducts", viewModel);
         }
 
-        // POST: /admin/products/add
-        [HttpPost("products/add")]
-        public async Task<IActionResult> AddProduct(Product product)
+        [HttpPost()]
+        public async Task<IActionResult> AddProduct(ProductViewModel productModel)
         {
             if (ModelState.IsValid)
             {
-                await _productService.AddProductAsync(product);
-                return RedirectToAction(nameof(Products));
+                if (productModel.ProductId != 0)
+                {
+                    return await EditProduct(productModel);
+                }
+                Product product = ProductMapper.MapToModel(productModel);
+                product.EntryDate = DateTime.UtcNow;
+                await productService.AddProductAsync(product, productModel.ImagesInput);
+                notificationService.AddNotification("Product Saved Successfully", NotificationType.Success);
+                // return RedirectToAction(nameof(ManageProducts));
+            return Redirect(Request.Headers["Referer"].ToString());
             }
-            return View(product);
+            notificationService.AddNotification("Error Saving", NotificationType.Validation);
+            return Redirect(Request.Headers["Referer"].ToString());
         }
-
-        // GET: /admin/orders
-        [HttpGet("orders")]
-        public async Task<IActionResult> Orders()
+        private async Task<IActionResult> EditProduct(ProductViewModel productModel)
         {
-            var orders = await _orderService.GetAllOrdersAsync();
-            return View(orders);
+            if (ModelState.IsValid)
+            {
+                var product = await productService.GetProductByIdAsync(productModel.ProductId);
+                if (product == null)
+                {
+                    notificationService.AddNotification("Product Not Found", NotificationType.Error);
+                    return RedirectToAction(nameof(ManageProducts));
+                }
+                ProductMapper.MapToModel(product, productModel);
+                product.EntryDate = DateTime.UtcNow;
+                await productService.UpdateProductAsync(product, productModel.ImagesInput);
+                notificationService.AddNotification("Product Updated Successfully", NotificationType.Success);
+                // return RedirectToAction(nameof(ManageProducts));
+            return Redirect(Request.Headers["Referer"].ToString());
+            }
+            notificationService.AddNotification("Could not Update Product", NotificationType.Error);
+            return Redirect(Request.Headers["Referer"].ToString());
         }
 
-        // GET: /admin/orders/{id}
-        [HttpGet("orders/{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            var product = await productService.GetProductByIdAsync(id);
+            if (product == null)
+            {
+                notificationService.AddNotification("Product Not Found", NotificationType.Error);
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+            await productService.DeleteProductAsync(id);
+            notificationService.AddNotification("Product Deleted", NotificationType.Success);
+            return RedirectToAction(nameof(ManageProducts));
+        }
+
+        public async Task<IActionResult> ManageOrders()
+        {
+            IEnumerable<Order> orders = await orderService.GetAllOrdersAsync();
+            List<OrderViewModel> orderViewModel = orders.Select(o => OrderMapper.MapToViewModel(o)).ToList();
+            ManageOrderViewModel viewModel = new ManageOrderViewModel();
+            viewModel.Orders = orderViewModel;
+            return View(viewModel);
+        }
+
         public async Task<IActionResult> OrderDetails(int id)
         {
-            var order = await _orderService.GetOrderByIdAsync(id);
+            IEnumerable<Order> orders = await orderService.GetAllOrdersAsync();
+            Order order = orders.First(p => p.OrderId == id);
             if (order == null)
             {
-                return NotFound();
+                notificationService.AddNotification("Order Not Found", NotificationType.Error);
+                return Redirect(Request.Headers["Referer"].ToString());
             }
-            return View(order);
+            List<OrderViewModel> orderViewModel = orders.Select(o => OrderMapper.MapToViewModel(o)).ToList();
+            ManageOrderViewModel viewModel = new ManageOrderViewModel();
+            viewModel.Orders = orderViewModel;
+            viewModel.Order = OrderMapper.MapToViewModel(order);
+            return View("ManageOrders", viewModel);
+            // var order = await orderService.GetOrderByIdAsync(id);
+            // if (order == null)
+            // {
+            //     return NotFound();
+            // }
+            // return View(order);
+        }
+        [HttpPost()]
+        public async Task<IActionResult> EditOrder(OrderViewModel orderViewModel)
+        {
+            if (ModelState.IsValid &&  !String.IsNullOrEmpty(orderViewModel.CustomerId))
+            {
+                var customer = await userService.GetUserByUserIdAsync(orderViewModel.CustomerId);
+                Order existingOrder = await orderService.GetOrderByIdAsync(orderViewModel.OrderId);
+                if (existingOrder == null)
+                {
+                    notificationService.AddNotification("Order Not Found", NotificationType.Error);
+                    return Redirect(Request.Headers["Referer"].ToString());
+                }
+                Order order = OrderMapper.MapToModel(orderViewModel, customer);
+                order.UpdatedDate = DateTime.UtcNow;
+                await orderService.UpdateOrderAsync(order);
+                return RedirectToAction(nameof(ManageOrders));
+            }
+                    notificationService.AddNotification("Error Occurred", NotificationType.Validation);
+        return Redirect(Request.Headers["Referer"].ToString());
+        }
+        public async Task<IActionResult> DeleteOrder(int id)
+        {
+            var order = await orderService.GetOrderByIdAsync(id);
+            if (order == null)
+            {
+                notificationService.AddNotification("Order Not Found", NotificationType.Error);
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+            await orderService.DeleteOrderAsync(id);
+            notificationService.AddNotification("Order Deleted", NotificationType.Success);
+            return RedirectToAction(nameof(ManageOrders));
         }
 
-        // GET: /admin/users
-        [HttpGet("users")]
-        public async Task<IActionResult> Users()
+        public async Task<IActionResult> ManageUsers()
         {
-            var users = await _userService.GetAllUsersAsync();
-            return View(users);
+            IEnumerable<User> users = await userService.GetAllUsersAsync();
+            ManageUserViewModel viewModel = new();
+            viewModel.Users = await GetUserViewModels(users);
+            viewModel.User = new UserViewModel();
+            return View(viewModel);
         }
 
-        // GET: /admin/users/{id}
-        [HttpGet("users/{id}")]
-        public async Task<IActionResult> UserDetails(int id)
+        public async Task<IActionResult> UserDetails(string id)
         {
-            var user = await _userService.GetUserByIdAsync(id);
+            var user = await userService.GetUserByUserIdAsync(id);
             if (user == null)
             {
-                return NotFound();
+                notificationService.AddNotification("User Details Not Found", NotificationType.Error);
+                return Redirect(Request.Headers["Referer"].ToString());
             }
-            return View(user);
+            IEnumerable<User> users = await userService.GetAllUsersAsync();
+            ManageUserViewModel viewModel = new();
+            List<UserViewModel> userModels = await GetUserViewModels(users);
+            viewModel.Users = userModels;
+            viewModel.User = userModels.First(u => u.UserId == id);
+            return View("ManageUsers", viewModel);
         }
 
-        // GET: /admin/feedbacks
-        [HttpGet("feedbacks")]
-        public async Task<IActionResult> Feedbacks()
+        private async Task<List<UserViewModel>> GetUserViewModels(IEnumerable<User> users)
         {
-            var feedbacks = await _feedbackService.GetAllFeedbacksAsync();
-            return View(feedbacks);
+            var userTasks = users.Select(async user =>
+            {
+                var roles = await userManager.GetRolesAsync(user);
+                var userModel = UserMapper.MapToViewModel(user);
+                userModel.Role = roles.FirstOrDefault();
+                return userModel;
+            });
+
+            // Await all tasks and convert to a list
+            return (await Task.WhenAll(userTasks)).ToList();        
+            
         }
 
-        // GET: /admin/feedbacks/{id}
-        [HttpGet("feedbacks/{id}")]
+        public async Task<IActionResult> EditUser(UserViewModel userViewModel)
+        {
+            if (ModelState.IsValid &&  !String.IsNullOrEmpty(userViewModel.UserId))
+            {
+                var existingUser = await userService.GetUserByUserIdAsync(userViewModel.UserId);
+                if (existingUser == null)
+                {
+                    notificationService.AddNotification("User Not Found", NotificationType.Error);
+                    return Redirect(Request.Headers["Referer"].ToString());
+                }
+                UserMapper.MapToModel(existingUser, userViewModel);
+                existingUser.UpdatedDate = DateTime.UtcNow;
+                await userService.UpdateUserAsync(existingUser);
+                notificationService.AddNotification("User Saved Successfully", NotificationType.Success);
+                return RedirectToAction(nameof(ManageUsers));
+            }
+            notificationService.AddNotification("Can Only Edit User. Cannot Create.", NotificationType.Validation);
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var user = await userService.GetUserByUserIdAsync(id);
+            if (user == null)
+            {
+                notificationService.AddNotification("User Not Found", NotificationType.Error);
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+            await userService.DeleteUserAsync(id);
+            notificationService.AddNotification("User Deleted", NotificationType.Success);
+            return RedirectToAction(nameof(ManageUsers));
+        }
+        
+        public async Task<IActionResult> ManageFeedbacks()
+        {
+            var feedbacks = await feedbackService.GetAllFeedbacksAsync();
+            List<FeedbackViewModel> feedbackViewModel = feedbacks.Select(o => FeedbackMapper.MapToViewModel(o)).ToList();
+            ManageFeedbackViewModel viewModel = new ManageFeedbackViewModel();
+             viewModel.Feedbacks = feedbackViewModel;
+            return View(viewModel);
+        }
+
         public async Task<IActionResult> FeedbackDetails(int id)
         {
-            var feedback = await _feedbackService.GetFeedbackByIdAsync(id);
+            var feedback = await feedbackService.GetFeedbackByIdAsync(id);
             if (feedback == null)
             {
-                return NotFound();
+                notificationService.AddNotification("Feedback Details Not Found", NotificationType.Error);
+        return Redirect(Request.Headers["Referer"].ToString());
             }
-            return View(feedback);
+            var feedbacks = await feedbackService.GetAllFeedbacksAsync();
+            List<FeedbackViewModel> feedbackViewModel = feedbacks.Select(o => FeedbackMapper.MapToViewModel(o)).ToList();
+            ManageFeedbackViewModel viewModel = new ManageFeedbackViewModel();
+             viewModel.Feedbacks = feedbackViewModel;
+            viewModel.Feedback = FeedbackMapper.MapToViewModel(feedback);
+            return View("ManageFeedbacks", viewModel);
         }
-
-        // Other admin actions for managing users, orders, and feedbacks.
+        
+        public async Task<IActionResult> DeleteFeedback(int id)
+        {
+                var feedback = await feedbackService.GetFeedbackByIdAsync(id);
+                if (feedback == null)
+                {
+                    notificationService.AddNotification("Feedback Not Found", NotificationType.Error);
+        return Redirect(Request.Headers["Referer"].ToString());
+                }
+                await feedbackService.DeleteFeedbackAsync(id);
+                notificationService.AddNotification("Feedback Deleted", NotificationType.Success);
+                return RedirectToAction(nameof(ManageFeedbacks));
+        }
     }
 }

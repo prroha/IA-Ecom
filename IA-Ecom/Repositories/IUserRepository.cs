@@ -2,8 +2,12 @@ using IA_Ecom.Models;
 
 namespace IA_Ecom.Repositories
 {
-    public interface IUserRepository : IGenericRepository<User>
+    public interface IUserRepository
     {
-        // Define additional methods specific to Customer if any
+        Task<int> CountAllAsync();
+        Task<User> GetUserByUserIdAsync(string userId);
+        Task<IList<User>> GetAllAsync();
+        Task UpdateAsync(User user);
+        Task SaveChangesAsync();
     }
 }

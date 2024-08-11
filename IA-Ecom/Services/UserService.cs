@@ -2,52 +2,86 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using IA_Ecom.Models;
 using IA_Ecom.Repositories;
+using IA_Ecom.ViewModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace IA_Ecom.Services
 {
-    public class UserService : IUserService
+    public class UserService(IUserRepository userRepository,
+    UserManager<User> userManager,
+    IWebHostEnvironment _environment
+        ) : IUserService
     {
-        private readonly IUserRepository _userRepository;
-
-        public UserService(IUserRepository customerRepository)
-        {
-            _userRepository = customerRepository;
-        }
-
         public async Task<int> CountAllAsync()
         {
-            return await _userRepository.CountAllAsync();
+            return await userRepository.CountAllAsync();
         }
 
         public async Task<IList<User>> GetAllUsersAsync()
         {
-            return await _userRepository.GetAllAsync();
+            var users = userManager.Users.ToList(); // Fetch all users
+            return users;
         }
 
-        public async Task<User> GetUserByIdAsync(int id)
+        public async Task<User> GetUserByUserIdAsync(string id)
         {
-            return await _userRepository.GetByIdAsync(id);
+            return await userRepository.GetUserByUserIdAsync(id);
         }
 
-        public async Task AddUserAsync(User user)
-        {
-            await _userRepository.AddAsync(user);
-            await _userRepository.SaveChangesAsync();
-        }
 
         public async Task UpdateUserAsync(User user)
         {
-            _userRepository.Update(user);
-            await _userRepository.SaveChangesAsync();
+            await userRepository.UpdateAsync(user);
+            await userRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteUserAsync(int id)
+        public async Task UpdateProfileAsync(User user, IFormFile imageInput)
         {
-            var user = await _userRepository.GetByIdAsync(id);
+            if (imageInput != null && imageInput.Length > 0)
+            {
+                // Delete old image if it exists
+                if (!string.IsNullOrEmpty(user.ImageUrl))
+                {
+                    var oldImagePath = Path.Combine(_environment.ContentRootPath, user.ImageUrl.TrimStart('/'));
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+                // Save new image
+                var filePath = await StoreImageAsync(imageInput);
+                user.ImageUrl = filePath;
+            }
+                await userRepository.UpdateAsync(user);
+                await userRepository.SaveChangesAsync();
+        }
+
+        private async Task<string> StoreImageAsync(IFormFile image)
+        {
+            var uploadDir = Path.Combine(_environment.ContentRootPath, "App_Data","Objects");
+            if (!Directory.Exists(uploadDir))
+            {
+                Directory.CreateDirectory(uploadDir);
+            }
+
+            var fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+            var filePath = Path.Combine(uploadDir, fileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await image.CopyToAsync(fileStream);
+            }
+
+            return $"/Objects/{fileName}";
+        }
+
+        public async Task DeleteUserAsync(string userId)
+        {
+            var user = await GetUserByUserIdAsync(userId);
             if (user != null)
             {
-                _userRepository.Remove(user);
-                await _userRepository.SaveChangesAsync();
+                user.DeletedDate = DateTime.UtcNow;
+                await userRepository.SaveChangesAsync();
             }
         }
     }

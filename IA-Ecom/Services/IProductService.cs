@@ -9,8 +9,8 @@ namespace IA_Ecom.Services
         Task<int> CountAllAsync();
         Task<IEnumerable<Product>> GetAllProductsAsync();
         Task<Product> GetProductByIdAsync(int id);
-        Task AddProductAsync(Product product);
-        Task UpdateProductAsync(Product product);
+        Task AddProductAsync(Product product, List<IFormFile> images);
+        Task UpdateProductAsync(Product product, List<IFormFile> images);
         Task DeleteProductAsync(int id);
     }
 }

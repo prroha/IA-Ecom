@@ -35,9 +35,15 @@ namespace IA_Ecom.ViewModels
     public class RegisterViewModel
     {
         [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        [Required]
         [EmailAddress]
         public string Email { get; set; }
 
+        [Required]
+        public string Role { get; set; }
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at most {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
@@ -46,7 +52,7 @@ namespace IA_Ecom.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; }
+        public string Password2 { get; set; }
 
         // Additional fields as needed for registration form
     }

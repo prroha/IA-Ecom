@@ -1,94 +1,143 @@
 using System.Security.Claims;
+using IA_Ecom.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using IA_Ecom.Models;
+using IA_Ecom.RequestModels;
 using IA_Ecom.Services;
 using IA_Ecom.ViewModels;
 
 namespace IA_Ecom.Controllers
 {
-    public class OrderController : Controller
+        [Authorize] 
+    public class OrderController(IOrderService orderService,IPaymentService paymentService, IUserService userService, INotificationService notificationService) : Controller
     {
-        private readonly IOrderService _orderService;
 
-        public OrderController(IOrderService orderService)
+        [HttpGet]
+        public async Task<IActionResult> GetCartDetails()
         {
-            _orderService = orderService;
-        }
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var cart = await orderService.GetCartDetailsAsync(customerId);
 
-        // GET: /Order
-        [Authorize(Roles = "Admin")] // Example of restricting access to admin role
-        public IActionResult Index()
-        {
-            var orders = _orderService.GetAllOrdersAsync();
-            return View(orders);
-        }
-
-        // GET: /Order/Details/{id}
-        public IActionResult Details(int id)
-        {
-            var order = _orderService.GetOrderByIdAsync(id);
-            if (order == null)
+            if (cart == null)
             {
-                return NotFound();
-            }
-            return View(order);
-        }
-
-        // POST: /Order/Process/{id}
-        [HttpPost]
-        [Authorize(Roles = "Admin")] // Example of restricting access to admin role
-        public IActionResult Process(int id)
-        {
-            var order = _orderService.GetOrderByIdAsync(id);
-            if (order == null)
-            {
-                return NotFound();
+                notificationService.AddNotification("Cart is Empty", NotificationType.Validation);
+                return Redirect(Request.Headers["Referer"].ToString());
             }
 
-            // Process order logic (e.g., update order status, notify customer, etc.)
-
-            return RedirectToAction(nameof(Index));
+            OrderViewModel viewModel = OrderMapper.MapToViewModel(cart);
+            return View("CartDetails", viewModel);
         }
-
-        // POST: /ShoppingCart/AddToCart/{productId}
+        
         [HttpPost]
-        public IActionResult AddToCart(int productId)
-        {
-            // _orderService.AddToCart(productId);
-            return RedirectToAction(nameof(Index));
-        }
-// POST: /Order/Checkout
-        [HttpPost]
-        [Authorize] // Require authentication to checkout
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Checkout(OrderViewModel model)
+        [Authorize] 
+        public async Task<IActionResult> AddToCartAsync(OrderItemViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get the user ID from identity
-                if (string.IsNullOrEmpty(userId))
-                {
-                    return RedirectToAction("Login", "Account"); // Redirect to the login page if user ID is not found
-                }
-                // Example: Handle the complete order process in the service layer
-                var success = await _orderService.ProcessOrderAsync(model.OrderId, userId);
-                if (!success)
+
+                // Retrieve the user from the database
+                var user = await userService.GetUserByUserIdAsync(userId);
+                if (user == null)
                 {
                     return NotFound();
                 }
 
-                return RedirectToAction(nameof(Confirmation));
+                // Check if the user's address is missing
+                bool isAddressMissing = string.IsNullOrEmpty(user.Address);
+                if (isAddressMissing)
+                {
+                    notificationService.AddNotification("Please add your address information from the profile page.", NotificationType.Validation);
+                    
+                    return RedirectToAction("Details", "Product", new { id = viewModel.ProductId });
+                }                
+                OrderItem orderItem = OrderMapper.MapToModel(viewModel);
+                orderItem.CustomerId = userId;
+                await orderService.AddToCartAsync(orderItem, user);
+                // return RedirectToAction(nameof(Index));
+                notificationService.AddNotification("Item Successfully added to Cart. Visit Cart Details to Checkout", NotificationType.Success);
+                return RedirectToAction("Details", "Product", new { id = viewModel.ProductId });
             }
-            return View(model);
+                notificationService.AddNotification("Couldnot Perform the Action at the Moment.", NotificationType.Error);
+            return RedirectToAction("Details", "Product", new { id = viewModel.ProductId });
         }
-        // GET: /Order/Confirmation
-        public IActionResult Confirmation()
+        
+        private async Task<IActionResult> Checkout(PaymentMethod paymentMethod)
         {
-            // Display order confirmation page
-            return View();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login", "Account"); // Redirect to the login page if user ID is not found
+            }
+            var success = await orderService.CheckoutAsync(userId, paymentMethod);
+
+            if (!success)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction(nameof(OrderConfirmation));
+        }
+        
+        [HttpGet]
+        public IActionResult GetPaymentDetails()
+        {
+            return View("Checkout");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProcessPayment(PaymentMethod paymentMethod)
+        {
+            if (!PaymentMethodValidator.ValidatePaymentMethod(paymentMethod))
+            {
+                notificationService.AddNotification("Invalid payment details.", NotificationType.Validation);
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+
+            notificationService.AddNotification("Payment Details Validated", NotificationType.Success);
+            return await Checkout(paymentMethod);
         }
 
-        // Other actions for managing orders
+        public async Task<IActionResult> OrderConfirmation(int orderId)
+        {
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (orderId == 0)
+            {
+                var orderConfirmation = new OrderConfirmationViewModel();
+                orderConfirmation.OrderItems = new List<OrderItemViewModel>();
+                return View(orderConfirmation);
+            }
+            var order = await orderService.GetOrderByIdAsync(orderId);
+            var payment = await paymentService.GetPaymentByOrderId(orderId);
+
+            if (payment == null)
+            {
+                return NotFound();
+            }
+
+            OrderConfirmationViewModel viewModel = OrderMapper.MapToViewModel(payment, order);
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> DeleteOrderItem(int id)
+        {
+            if (id > 0)
+            {
+                try
+                {
+                    await orderService.DeleteOrderItemAsync(id);
+                    notificationService.AddNotification("OrderItem Deleted", NotificationType.Success);
+                    return RedirectToAction("GetCartDetails");
+                }
+                catch (Exception ex)
+                {
+                    notificationService.AddNotification("OrderItem Not Found", NotificationType.Error);
+                }
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+            notificationService.AddNotification("OrderItem not Found", NotificationType.Validation);
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
     }
 }

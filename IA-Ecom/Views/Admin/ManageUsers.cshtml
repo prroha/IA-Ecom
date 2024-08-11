@@ -1,0 +1,46 @@
+@model IA_Ecom.ViewModels.ManageUserViewModel;
+@{
+    ViewData["Title"] = "User Management";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+<div class="page-title">
+    <h2>User Management</h2>
+</div>
+<div class="responsive-grid">
+    <div class="card">
+        <div class="">
+            <h3>User List</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>FullName</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="userTableBody">
+                @foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>@user.Username</td>
+                        <td>@user.Email</td>
+                        <td>@user.FullName</td>
+                        <td>@user.Role</td>
+                        <td>
+                            <a asp-controller="Admin" asp-action="UserDetails" asp-route-id="@user.UserId" class="button edit-button">Edit</a>
+                            <a asp-controller="Admin" asp-action="DeleteUser" asp-route-id="@user.UserId" class="button-secondary delete-button">Delete</a>
+                        </td>
+                    </tr>
+                }                 
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @{
+        // Render the partial view
+        Html.RenderPartial("_EditUser", Model.User);
+    }
+</div>

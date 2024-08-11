@@ -15,15 +15,23 @@ namespace IA_Ecom
             // services.AddDbContext<ApplicationDbContext>(options =>
             //     options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IFeedbackService, FeedbackService>();
+            
+            
+            services.AddScoped<IPaymentGateway, PaymentGateway>();
+            // Notification service can be singleton
+            services.AddSingleton<INotificationService, NotificationService>();
+ 
         }
     }
 }

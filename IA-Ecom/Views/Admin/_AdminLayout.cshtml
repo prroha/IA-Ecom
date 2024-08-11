@@ -1,0 +1,96 @@
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@* @model IA_Ecom.ViewModels.AdminDashboardViewModel *@
+@{
+ViewData["Title"] = "Admin Dashboard";
+var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/jpeg" href="/images/favicon.jpeg">
+    <title>@ViewData["Title"] - IA_Ecom</title>
+    <link rel="stylesheet" href="~/css/main.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true"/>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <!-- Header -->
+<header class="admin-header">
+    <div class="header__toggle">
+        <i class="bx bx-menu" id="sidebarToggle"></i>
+    </div>
+    <div class="header__content p-2">
+        <div class="header__title">Admin Panel</div>
+        <div class="header__profile">
+            <div class="header__profile-img">
+                <i class="bx bxs-user-circle profile-icon" id="profileDropdownButton"></i>
+            </div>
+            <div class="header__profile-dropdown" id="profileDropdown">
+                 <a class="admin-header__profile-link" asp-area="" asp-controller="Account" asp-action="GetProfile" asp-route-userId="@userId">Edit Profile</a>
+                <a class="admin-header__profile-link" asp-area="" asp-controller="Home" asp-action="Index">Home Page</a>
+                <a class="admin-header__profile-link" asp-area="" asp-controller="Account" asp-action="Logout" id="logout">Logout</a>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Sidebar -->
+<aside class="sidebar">
+    <ul class="sidebar__menu">
+        <li>
+            <a asp-area="" asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
+        </li>
+        <li>
+            <a asp-area="" asp-controller="Admin" asp-action="ManageUsers">Users</a>
+        </li>
+        <li>
+            <a asp-area="" asp-controller="Admin" asp-action="ManageProducts">Products</a>
+        </li>
+        <li>
+            <a asp-area="" asp-controller="Admin" asp-action="ManageOrders">Orders</a>
+        </li>
+        <li>
+            <a asp-area="" asp-controller="Admin" asp-action="ManageFeedbacks">Feedbacks</a>
+        </li>
+    </ul>
+</aside>
+<main class="main-content-center">
+    @RenderBody()
+</main>
+    @await Html.PartialAsync("_Notification")
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const profileDropdownButton = document.getElementById('profileDropdownButton');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const logoutButton = document.getElementById('logout');
+        const toggle = document.querySelector('.header__toggle');
+        const sidebar = document.querySelector('.sidebar');
+
+        toggle.addEventListener('click', function () {
+            sidebar.classList.toggle('sidebar--active');
+        });
+
+        profileDropdownButton.addEventListener('click', function (e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('admin-header__profile--active');
+        });
+
+        document.addEventListener('click', function () {
+            profileDropdown.classList.remove('admin-header__profile--active');
+        });
+
+        logoutButton.addEventListener('click', function () {
+            logout();
+        });
+    });
+
+    function logout() {
+        window.location.href = '../../login/login.html';
+    }
+</script>
+    @* <script src="~/js/main.js" asp-append-version="true"></script> *@
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

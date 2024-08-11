@@ -1,26 +1,33 @@
 @model IA_Ecom.ViewModels.LoginViewModel
 @{
     ViewData["Title"] = "Login";
+Layout = "../Home/_PageLayout.cshtml";
 }
-
-<h1>Login</h1>
-
-<div>
-    <form method="post">
+<div class="section-title">
+    <h2>@ViewData["Title"]</h2>
+</div>
+<div class="card">
+<div class="w-400"> 
+    <form method="post" id="userForm" class="user-form">
         <div class="form-group">
             <label asp-for="@Model.Email"></label>
-            <input asp-for="@Model.Email" class="form-control" />
-            <span asp-validation-for="@Model.Email" class="text-danger"></span>
+            <input asp-for="@Model.Email" id="username" class="user-form__input form-control" placeholder="Enter username"/>
+            <span asp-validation-for="@Model.Email" class="text-error"></span>
         </div>
         <div class="form-group">
             <label asp-for="@Model.Password"></label>
-            <input asp-for="@Model.Password" class="form-control" />
-            <span asp-validation-for="@Model.Password" class="text-danger"></span>
+            <input asp-for="@Model.Password" class="user-form__input form-control" placeholder="Enter password"/>
+            <span asp-validation-for="@Model.Password" class="text-error"></span>
         </div>
         <div class="form-group">
-            <input asp-for="@Model.RememberMe" />
             <label asp-for="@Model.RememberMe"></label>
+            <input asp-for="@Model.RememberMe" class="user-form__input form-control"/>
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
+        <button type="submit" class="button">Login</button>
+        <div class="">
+            <label >Not a User?</label>
+        </div>
+        <a class="button" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
     </form>
+</div>
 </div>

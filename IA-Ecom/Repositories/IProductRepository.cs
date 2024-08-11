@@ -4,6 +4,8 @@ namespace IA_Ecom.Repositories
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
-        // Define additional methods specific to Product if any
+        Task AddProductImagesAsync(IEnumerable<ProductImage> images);
+        Task<IEnumerable<ProductImage>> GetProductImagesAsync(int productId);    
+        Task RemoveProductImagesAsync(IEnumerable<ProductImage> images);
     }
 }

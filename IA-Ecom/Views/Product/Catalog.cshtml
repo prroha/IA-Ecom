@@ -1,0 +1,73 @@
+@model List<IA_Ecom.ViewModels.ProductViewModel>;
+@{
+    ViewData["Title"] = "Product Listing";
+    Layout = "~/Views/Home/_PageLayout.cshtml";
+}
+<!-- FEATURED PRODUCTS -->
+<section class="featured section" id="featured">
+    <h2 class="section-title">ALL PRODUCTS</h2>
+
+    <div class="featured__container grid">
+
+        @foreach (var product in Model)
+        {
+            <div class="featured__product">
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@product.ProductId">
+                    <div class="featured__box">
+                        @if (product.ProductCondition != null)
+                        {
+                            <div class="featured__new">@product.ProductCondition</div>
+                        }
+                        @* <img src="@product.ThumbnailImageUrl" class="featured__img" alt="@product.Name"> *@
+                        @if (product?.ImageUrls?.Any() == true)
+                        {
+                            <img src="@product.ImageUrls[0]" class="main-img" alt="@product.Name" id="MainImg">
+                        }
+                        else
+                        {
+                            <img src="@product.ThumbnailImageUrl" class="main-img" alt="@product.Name" id="MainImg">
+                        }
+                    </div>
+
+                    <div class="featured__data">
+                        <h3 class="featured__name">@product.Name</h3>
+                        <span class="featured__price">@product.Price</span>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter section" id="subscribed">
+    <div class="newsletter__container grid">
+        <div class="newsletter__subscribed">
+            <h2 class="section-title">OUR NEWSLETTER</h2>
+            <p class="newsletter__description">Promotion new products and sales. Directly to your inbox.</p>
+
+            <form action="" class="newsletter__form">
+                <input type="text" class="newsletter__input" placeholder="Enter your email">
+                <a href="#" class="button">SUBSCRIBE</a>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- SPONSORS -->
+<section class="sponsors section">
+    <div class="sponsors__container grid">
+        <div class="sponsors__logo">
+            <img src="images/logo1.png" alt="">
+        </div>
+        <div class="sponsors__logo">
+            <img src="images/logo2.png" alt="">
+        </div>
+        <div class="sponsors__logo">
+            <img src="images/logo3.png" alt="">
+        </div>
+        <div class="sponsors__logo">
+            <img src="images/logo4.png" alt="">
+        </div>
+    </div>
+</section>

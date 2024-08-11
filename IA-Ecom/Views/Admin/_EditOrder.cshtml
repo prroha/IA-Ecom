@@ -1,0 +1,91 @@
+@model IA_Ecom.ViewModels.OrderViewModel
+
+<div class="card">
+    <h3 class="card-title">View Order</h3>
+    <form asp-controller="Admin" asp-action="EditOrder" method="post" class="user-form">
+        <!-- Order Information -->
+        <div class="form-group">
+            <label asp-for="OrderId">Order ID</label>
+            <input type="text" asp-for="OrderId" class="user-form__input" readonly>
+        </div>
+        <div class="form-group">
+            <label asp-for="CustomerName">Customer Name</label>
+            <input type="text" asp-for="CustomerName" class="user-form__input">
+        </div>
+        <div class="form-group">
+            <label asp-for="CustomerEmail">Customer Email</label>
+            <input type="email" asp-for="CustomerEmail" class="user-form__input">
+        </div>
+        <div class="form-group">
+            <label asp-for="OrderDate">Order Date</label>
+            <input type="date" asp-for="OrderDate" class="user-form__input">
+        </div>
+        <div class="form-group">
+            <label asp-for="Status">Order Status</label>
+            <select asp-for="Status" class="user-form__input">
+                <option value="pending">Pending</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+        </div>
+
+        <!-- Product Details -->
+        <div class="form-group">
+            <label for="product-id">Product ID</label>
+            <input type="text" id="product-id" class="user-form__input">
+        </div>
+        <div class="form-group">
+            <label for="product-name">Product Name</label>
+            <input type="text" id="product-name" class="user-form__input">
+        </div>
+        <div class="form-group">
+            <label for="product-quantity">Quantity</label>
+            <input type="number" id="product-quantity" class="user-form__input">
+        </div>
+        <div class="form-group">
+            <label for="unit-price">Unit Price</label>
+            <input type="text" id="unit-price" class="user-form__input">
+        </div>
+
+        <!-- Payment Information -->
+        <div class="form-group">
+            <label for="payment-method">Payment Method</label>
+            <input type="text" id="payment-method" class="user-form__input">
+        </div>
+        <div class="form-group">
+            <label for="payment-status">Payment Status</label>
+            <select id="payment-status" class="user-form__input">
+                <option value="paid">Paid</option>
+                <option value="pending">Pending</option>
+                <option value="refunded">Refunded</option>
+            </select>
+        </div>
+
+        <!-- Shipping Information -->
+        <div class="form-group">
+            <label for="shipping-method">Shipping Method</label>
+            <input type="text" id="shipping-method" class="user-form__input">
+        </div>
+        <div class="form-group">
+            <label for="tracking-number">Tracking Number</label>
+            <input type="text" id="tracking-number" class="user-form__input">
+        </div>
+
+        <!-- Addresses -->
+        <div class="form-group">
+            <label for="shipping-address">Shipping Address</label>
+            <textarea id="shipping-address" class="user-form__input"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="billing-address">Billing Address</label>
+            <textarea id="billing-address" class="user-form__input"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="special-instructions">Special Instructions</label>
+            <textarea id="special-instructions" class="user-form__input"></textarea>
+        </div>
+        <input type="hidden" asp-for="CustomerId" readonly>
+        @* <button type="submit" class="button">Save Changes</button> *@
+    </form>
+</div>

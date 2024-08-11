@@ -33,10 +33,10 @@ public static class SeedData
                 throw new Exception("An error occurred creating the database.", ex);
             }
 
-            await EnsureRoles(roleManager, new[] { "Admin", "User" });
+            await EnsureRoles(roleManager, new[] { "ADMIN", "USER" });
             await EnsureAdmin(userManager, roleManager);
             await EnsureTestUsers(userManager, roleManager);
-            // await EnsureTestProducts(context);
+            await EnsureTestProducts(context);
         }
     }
 
@@ -58,7 +58,6 @@ public static class SeedData
             UserName = "admin@admin.com",
             Email = "admin@admin.com",
             EmailConfirmed = true,
-            FullName = "Admin User",
             Address = "Admin Address",
             PhoneNumber = "1234567890",
             FirstName = "Admin",
@@ -77,7 +76,6 @@ public static class SeedData
                 UserName = "user@user.com",
                 Email = "user@user.com",
                 EmailConfirmed = true,
-                FullName = "User One",
                 Address = "Address 1",
                 PhoneNumber = "1234567890",
                 FirstName = "User",
@@ -88,7 +86,6 @@ public static class SeedData
                 UserName = "user2@user.com",
                 Email = "user2@user.com",
                 EmailConfirmed = true,
-                FullName = "User Two",
                 Address = "Address 2",
                 PhoneNumber = "1234567890",
                 FirstName = "User",
@@ -125,9 +122,12 @@ public static class SeedData
         {
             var testProducts = new List<Product>
             {
-                new Product { Name = "Product 1", Description = "Description for product 1", Price = 19.99m, Stock = 100 },
-                new Product { Name = "Product 2", Description = "Description for product 2", Price = 29.99m, Stock = 200 },
-                new Product { Name = "Product 3", Description = "Description for product 3", Price = 39.99m, Stock = 150 }
+                new Product { Name = "Mens Shoes - White", Description = "The Gildan Ultra Shoe is made from a substantial 6.0 oz. per sq. yd. fabric constructed from 100% cotton, this classic fit preshrunk jersey knit provides unmatched comfort with each wear. Featuring a taped neck and shoulder, and a seamless double-needle collar, and available in a range of colors, it offers it all in the ultimate head-turning package.", Price = 19.99m, Stock = 100, ThumbnailImageUrl = "/images/product0.png", Category = "Casual"},
+                new Product { Name = "Mens Shoes - Cherry", Description = "The Gildan Ultra Shoe is made from a substantial 6.0 oz. per sq. yd. fabric constructed from 100% cotton, this classic fit preshrunk jersey knit provides unmatched comfort with each wear. Featuring a taped neck and shoulder, and a seamless double-needle collar, and available in a range of colors, it offers it all in the ultimate head-turning package.", Price = 29.99m, Stock = 100, ThumbnailImageUrl = "/images/product1.jpeg", Category = "Party"},
+                new Product { Name = "Mens Shoes - Party", Description = "The Gildan Ultra Shoe is made from a substantial 6.0 oz. per sq. yd. fabric constructed from 100% cotton, this classic fit preshrunk jersey knit provides unmatched comfort with each wear. Featuring a taped neck and shoulder, and a seamless double-needle collar, and available in a range of colors, it offers it all in the ultimate head-turning package.", Price = 14.99m, Stock = 100, ThumbnailImageUrl = "/images/product2.jpeg", Category = "Casual"},
+                new Product { Name = "Premium Blue Shoes", Description = "The Gildan Ultra Shoe is made from a substantial 6.0 oz. per sq. yd. fabric constructed from 100% cotton, this classic fit preshrunk jersey knit provides unmatched comfort with each wear. Featuring a taped neck and shoulder, and a seamless double-needle collar, and available in a range of colors, it offers it all in the ultimate head-turning package.", Price = 16.99m, Stock = 100, ThumbnailImageUrl = "/images/product4.jpeg", Category = "Party"},
+                new Product { Name = "Ladies Shoes", Description = "The Gildan Ultra Shoe is made from a substantial 6.0 oz. per sq. yd. fabric constructed from 100% cotton, this classic fit preshrunk jersey knit provides unmatched comfort with each wear. Featuring a taped neck and shoulder, and a seamless double-needle collar, and available in a range of colors, it offers it all in the ultimate head-turning package.", Price = 23.99m, Stock = 100, ThumbnailImageUrl = "/images/product5.png", Category = "Sports"},
+                new Product { Name = "Casual Shoes", Description = "The Gildan Ultra Shoe is made from a substantial 6.0 oz. per sq. yd. fabric constructed from 100% cotton, this classic fit preshrunk jersey knit provides unmatched comfort with each wear. Featuring a taped neck and shoulder, and a seamless double-needle collar, and available in a range of colors, it offers it all in the ultimate head-turning package.", Price = 44.99m, Stock = 100, ThumbnailImageUrl = "/images/product8.png", Category = "Sneakers"},
             };
 
             context.Products.AddRange(testProducts);

@@ -1,4 +1,5 @@
 ﻿using IA_Ecom.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,17 +14,30 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
         
         public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<IdentityRole>(entity =>
+            {
+                entity.Property(m => m.Id)
+                    .HasMaxLength(450)
+                    .IsUnicode(false)
+                    .IsRequired();
 
-            // Configure relationships, indexes, etc.
+            });
+            // modelBuilder.Entity<OrderItem>()
+            //     .HasKey(oi => new { oi.OrderId, oi.ProductId });
             modelBuilder.Entity<OrderItem>()
-                .HasKey(oi => new { oi.OrderId, oi.ProductId });
+                .HasKey(oi => oi.Id); 
 
+            modelBuilder.Entity<OrderItem>()
+                .Property(oi => oi.Id)
+                .ValueGeneratedOnAdd();
             modelBuilder.Entity<OrderItem>()
                 .HasOne(oi => oi.Order)
                 .WithMany(o => o.OrderItems)

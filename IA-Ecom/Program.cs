@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using IA_Ecom.Data;
 using IA_Ecom.Models;
 using IA_Test.Data;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,10 +25,6 @@ static void ConfigureServices(WebApplicationBuilder builder)
 {
     IServiceCollection services = builder.Services;
     IConfiguration configuration = builder.Configuration;
-    // Determine connection string based on environment
-    // var connectionString = builder.Environment.IsProduction()
-    //     ? configuration.GetConnectionString("DefaultConnectionSqlServer") ?? throw new InvalidOperationException("Connection string 'DefaultConnectionSqlServer' not found.")
-    //     : configuration.GetConnectionString("DefaultConnectionSqlite") ?? throw new InvalidOperationException("Connection string 'DefaultConnectionSqlite' not found.");
     // Register ApplicationDbContext with the chosen database provider
     if (builder.Environment.IsDevelopment())
     {
@@ -40,7 +37,10 @@ static void ConfigureServices(WebApplicationBuilder builder)
 
         string connectionString = configuration.GetConnectionString("DefaultConnectionSqlite") ?? 
                            throw new InvalidOperationException("Connection string 'DefaultConnectionSqlite' not found.");
+        // string connectionString = configuration.GetConnectionString("DefaultConnectionSqlServer") ?? 
+        //                    throw new InvalidOperationException("Connection string 'DefaultConnectionSqlServer' not found.");
         services.AddDbContext<ApplicationDbContext>(options =>
+        // options.UseSqlServer(connectionString));
         options.UseSqlite(connectionString));
     }
     else
@@ -58,10 +58,12 @@ static void ConfigureServices(WebApplicationBuilder builder)
             options.SignIn.RequireConfirmedAccount = false;
         })
         .AddRoles<IdentityRole>()
-        .AddEntityFrameworkStores<ApplicationDbContext>();
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
+        
     services.AddControllersWithViews();
     // Register application services
-    services.AddAutoMapper(typeof(Program));
+    services.AddAutoMapper(typeof(MappingProfile));
     ServiceRegistration.RegisterServices(services, configuration);
     
     // Configure Identity options
@@ -88,7 +90,14 @@ static void Configure(WebApplication app, IWebHostEnvironment env)
 
     app.UseHttpsRedirection();
     app.UseStaticFiles();
-
+// Serve static files from the App_Data/Objects directory
+    var appDataPath = Path.Combine(env.ContentRootPath, "App_Data", "Objects");
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(appDataPath),
+        RequestPath = "/objects" // URL prefix for files in App_Data/Objects
+    });
+    
     app.UseRouting();
 
     app.UseAuthorization();

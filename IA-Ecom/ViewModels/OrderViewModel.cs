@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace IA_Ecom.ViewModels
 {
-    public class OrderViewModel
+    public class OrderViewModel: BaseViewModel
     {
-        public int Id { get; set; }
-
         [Required]
         public int OrderId { get; set; }
         [Required]
@@ -30,16 +28,18 @@ namespace IA_Ecom.ViewModels
         [DataType(DataType.Currency)]
         public decimal TotalAmount { get; set; }
 
-        // Additional fields as needed for displaying or editing order details
+        public string Status { get; set; }
     }
 
-    public class OrderItemViewModel
+    public class OrderItemViewModel: BaseViewModel
     {
+        public int OrderItemId { get; set; }
         public int ProductId { get; set; }
         public string ProductName { get; set; }
+        
+        [Required]
+        public string ProductSize { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
-
-        // Additional fields as needed for order item details
     }
 }

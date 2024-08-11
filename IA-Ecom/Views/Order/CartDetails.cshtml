@@ -1,0 +1,66 @@
+@model IA_Ecom.ViewModels.OrderViewModel;
+@{
+    ViewData["Title"] = "Cart Details";
+    Layout = "~/Views/Home/_PageLayout.cshtml";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/cart.css" asp-append-version="true"/>
+}
+<div class="grid">
+    <h1 class="section-title">@ViewData["Title"]</h1>
+
+    <div class="cart-container">
+        <table class="styled-table">
+            <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Remove</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var orderItem in Model.OrderItems)
+            {
+                <tr>
+                    <td>@orderItem.ProductName</td>
+                    @* <td><input type="number" class="cart-quantity" value="@orderItem.Quantity"></td> *@
+                    <td>@orderItem.Quantity</td>
+                    <td>$@orderItem.UnitPrice</td>
+                    <td>
+                        <a asp-controller="Order" asp-action="DeleteOrderItem" asp-route-id="@orderItem.OrderItemId" class="button-secondary delete-button">
+                            <i class='bx bx-trash-alt'></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        <div class="cart-summary">
+            <p>Subtotal: $@Model.TotalAmount</p>
+            <p>Discount: $0.00</p>
+            <p>Delivery Charge: $0.00</p>
+            <p>Tax: $0.00</p>
+            <h2>Total: $@Model.TotalAmount</h2>
+        </div>
+
+        <div class="cart-actions">
+            <a asp-controller="Order" asp-action="GetPaymentDetails" style="display:inline;" class="button"> Proceed </a>
+        </div>
+    </div>
+
+</div>
+<section class="newsletter section" id="subscribed">
+    <div class="newsletter__container grid">
+        <div class="newsletter__subscribed">
+            <h2 class="section-title">OUR NEWSLETTER</h2>
+            <p class="newsletter__description">Stay updated with our latest offers and products</p>
+
+            <form action="" class="newsletter__form">
+                <input type="text" class="newsletter__input" placeholder="Enter your email">
+                <a href="#" class="button">SUBSCRIBE</a>
+            </form>
+        </div>
+    </div>
+</section>

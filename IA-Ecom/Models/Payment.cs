@@ -4,14 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IA_Ecom.Models
 {
-    public class Payment
+    public class Payment: BaseModel
     {
-        [Key]
-        public int PaymentId { get; set; }
+        public int PaymentId => Id;
 
         [Required]
-        [ForeignKey("Order")]
         public int OrderId { get; set; }
+        [ForeignKey("OrderId")]
         public Order Order { get; set; }
 
         [Required]

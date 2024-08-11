@@ -1,0 +1,63 @@
+@model IA_Ecom.ViewModels.ManageOrderViewModel;
+@{
+    ViewData["Title"] = "Order Management";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+<div class="page-title">
+    <h2>Order Management</h2>
+</div>
+<div class="responsive-grid">
+    <!-- Order List -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Orders</h3>
+            <div class="summary-section">
+                <div class="summary-item">
+                    <p>Total Orders: <strong id="total-orders">0</strong></p>
+                </div>
+                <div class="summary-item">
+                    <p>Total Amount: <strong id="total-amount">$0.00</strong></p>
+                </div>
+                <div class="summary-item">
+                    <p>Unpaid Orders: <strong id="unpaid-orders">0</strong></p>
+                </div>
+            </div>
+        </div>
+        <table class="order-table" id="order-table">
+            <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Payment Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var order in Model.Orders)
+            {
+                <tr>
+                    <td>@order.OrderId</td>
+                    <td>@order.CustomerName</td>
+                    <td>@order.OrderDate</td>
+                    <td>@order.Status</td>
+                    <td>@order.TotalAmount</td>
+                    <td>@order.Status</td>
+                    <td>
+                        <a asp-controller="Admin" asp-action="OrderDetails" asp-route-id="@order.OrderId" class="button edit-button">View</a>
+                        <a asp-controller="Admin" asp-action="DeleteOrder" asp-route-id="@order.OrderId" class="button-secondary delete-button">Delete</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Edit Order -->
+    @{
+        // Render the partial view
+        Html.RenderPartial("_EditOrder", Model.Order);
+    }
+</div>
