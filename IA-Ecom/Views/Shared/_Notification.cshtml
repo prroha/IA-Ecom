@@ -8,11 +8,13 @@ var notifications = NotificationService.GetNotifications();
 }
 <div class="notification-modal" id="notificationModal">
     <div class="notification-modal-content card">
-        <span class="notification-modal-close  modalClose">&times;</span>
+        <div class="notification-modal-header">
+            <span>Error Occurred</span>
+            <span class="notification-modal-close  modalClose">&times;</span>
+        </div>
         <p class="notification-modal-message" id="modalMessage"></p>
         <button class="button-secondary" id="modalOk" >OK</button>
     </div>
-
 </div>
 <script>
     function showModal(message) {

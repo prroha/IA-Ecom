@@ -58,6 +58,7 @@ public class AccountController(
                 if (result.Succeeded)
                 {
                     var roles = await userManager.GetRolesAsync(user);
+                    notificationService.AddNotification("Logged in Successfully", NotificationType.Success);
                     if (roles.Contains("ADMIN"))
                     {
                         return RedirectToAction("Dashboard", "Admin");
@@ -67,12 +68,13 @@ public class AccountController(
                         return RedirectToLocal(returnUrl);
                     }
                 }
+                notificationService.AddNotification("Password Incorrect", NotificationType.Error);
+                return View(model);
             }
 
+            notificationService.AddNotification("User Not Found", NotificationType.Validation);
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
         }
-
-        // If model state is not valid or login fails, redisplay the form with validation errors
         return View(model);
     }
     [HttpGet]
@@ -97,6 +99,7 @@ public class AccountController(
                 }
                 await signInManager.SignInAsync(user, isPersistent: false);
                 var roles = await userManager.GetRolesAsync(user);
+                notificationService.AddNotification("User Registered Successfully", NotificationType.Success);
                 if (roles.Contains("ADMIN"))
                 {
                     return RedirectToAction("Dashboard", "Admin");
@@ -110,7 +113,9 @@ public class AccountController(
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
+            notificationService.AddNotification("Error Registering User", NotificationType.Error);
         }
+        notificationService.AddNotification("Invalid Field Inputs. Please recheck your information and resubmit", NotificationType.Validation);
         return View(model);
     }
     

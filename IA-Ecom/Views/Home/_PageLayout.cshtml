@@ -47,7 +47,7 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <li class="nav__item">
-                        <div class="header__profile">
+                        <div class="header__profile" style="bottom: 14px;">
                             <div class="header__profile-img">
                                 <i class="bx bxs-user-circle profile-icon" id="profileDropdownButton"></i>
                             </div>
@@ -67,11 +67,10 @@
             </ul>
         </div>
 
-        <div class="">
             <ul class="nav__list">
                 <li class="nav__item">
                     <a class="nav__link" asp-area="" asp-controller="Order" asp-action="GetCartDetails">
-                        <i class="bx bx-cart nav__cart"></i>
+                        <i class="bx bx-cart nav__cart" style="font-size: 2rem;"></i>
                     </a></li>
                 <li class="nav__item">
                     <a href="#" class="">
@@ -79,7 +78,6 @@
                     </a>
                 </li>
             </ul>
-        </div>
     </nav>
 </header>
 
