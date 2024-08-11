@@ -16,6 +16,8 @@ bin/
 obj/
 ./.idea
 /.idea
+.idea
+.git
 IA-Ecom/bin
 IA-Ecom/obj
 IA-Ecom/bin/
