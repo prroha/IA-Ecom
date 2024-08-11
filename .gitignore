@@ -23,7 +23,7 @@ IA-Ecom/obj
 IA-Ecom/bin/
 IA-Ecom/obj/
 
-IA-Ecom/App_Data/
+IA-Ecom/App_Data/iaShoesDb.*
 
 # User-specific files
 *.user
