@@ -94,7 +94,7 @@ namespace IA_Ecom.Controllers
             {
                 if (productModel.ProductId != 0)
                 {
-                    await EditProduct(productModel);
+                    return await EditProduct(productModel);
                 }
                 Product product = ProductMapper.MapToModel(productModel);
                 product.EntryDate = DateTime.UtcNow;
