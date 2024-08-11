@@ -33,7 +33,7 @@
                     <td>@feedback.Date</td>
                     <td>@feedback.Rating</td>
                     <td>
-                        <a asp-controller="Admin" asp-action="FeedbackDetails" asp-route-id="@feedback.FeedbackId" class="button edit-button">Edit</a>
+                        <a asp-controller="Admin" asp-action="FeedbackDetails" asp-route-id="@feedback.FeedbackId" class="button edit-button">View</a>
                         <a asp-controller="Admin" asp-action="DeleteFeedback" asp-route-id="@feedback.FeedbackId" class="button-secondary delete-button">Delete</a>
                     </td>
                 </tr>
@@ -44,7 +44,7 @@
 
     <!-- Edit Feedback -->
     <div class="card">
-        <h3 class="card-title">Edit Feedback</h3>
+        <h3 class="card-title">View Feedback</h3>
         <form id="edit-feedback-form" asp-controller="Admin" asp-action="EditFeedback" class="user-form">
             <div class="form-group">
                 <label asp-for="@Model.Feedback.FeedbackId">Feedback ID</label>
@@ -62,7 +62,7 @@
                 <label asp-for="@Model.Feedback.Rating">Rating</label>
                 <input type="number" asp-for="@Model.Feedback.Rating" class="user-form__input" min="1" max="5">
             </div>
-            <button type="submit" class="button">Save Changes</button>
+            @* <button type="submit" class="button">Save Changes</button> *@
         </form>
     </div>
 </div>

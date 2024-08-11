@@ -259,7 +259,7 @@ namespace IA_Ecom.Controllers
                 notificationService.AddNotification("User Saved Successfully", NotificationType.Success);
                 return RedirectToAction(nameof(ManageUsers));
             }
-            notificationService.AddNotification("Error Occurred", NotificationType.Validation);
+            notificationService.AddNotification("Can Only Edit User. Cannot Create.", NotificationType.Validation);
             return Redirect(Request.Headers["Referer"].ToString());
         }
         public async Task<IActionResult> DeleteUser(string id)
