@@ -45,9 +45,7 @@
         </div>
 
         <div class="cart-actions">
-            <form asp-controller="Order" asp-action="Checkout" method="post" style="display:inline;">
-                <button type="submit" class="button">Proceed</button>
-            </form>
+            <a asp-controller="Order" asp-action="GetPaymentDetails" style="display:inline;" class="button"> Proceed </a>
         </div>
     </div>
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using IA_Ecom.Models;
+using IA_Ecom.RequestModels;
 using IA_Ecom.ViewModels;
 
 namespace IA_Ecom.Services
@@ -19,6 +20,6 @@ namespace IA_Ecom.Services
         void AddCartItemToOrder(Order order, CartItem cartItem);
         void PlaceOrder(Order order);
         void ClearCart(string customerId);
-        Task<bool> CheckoutAsync(string customerId);
+        Task<bool> CheckoutAsync(string customerId, PaymentMethod paymentMethod);
     }
 }

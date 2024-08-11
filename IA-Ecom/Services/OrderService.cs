@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using IA_Ecom.Models;
 using IA_Ecom.Repositories;
+using IA_Ecom.RequestModels;
 
 namespace IA_Ecom.Services
 {
@@ -46,7 +47,7 @@ namespace IA_Ecom.Services
                 await orderRepository.SaveChangesAsync();
             }
         }
-        public async Task<bool> CheckoutAsync(string customerId)
+        public async Task<bool> CheckoutAsync(string customerId, PaymentMethod paymentMethod)
         {
             Order order = await orderRepository.GetOrderByCustomerIdAsync(customerId);
             if (order == null)
@@ -54,7 +55,7 @@ namespace IA_Ecom.Services
                 return false; // Empty Cart
             }
 
-            bool paymentSuccessful = await paymentService.ProcessPayment(order);
+            bool paymentSuccessful = await paymentService.ProcessPayment(order, paymentMethod);
 
             if (!paymentSuccessful)
             {

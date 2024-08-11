@@ -3,45 +3,15 @@ using IA_Ecom.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using IA_Ecom.Models;
+using IA_Ecom.RequestModels;
 using IA_Ecom.Services;
 using IA_Ecom.ViewModels;
 
 namespace IA_Ecom.Controllers
 {
+        [Authorize] 
     public class OrderController(IOrderService orderService,IPaymentService paymentService, IUserService userService, INotificationService notificationService) : Controller
     {
-
-        [Authorize(Roles = "ADMIN")] 
-        public IActionResult Index()
-        {
-            var orders = orderService.GetAllOrdersAsync();
-            return View(orders);
-        }
-
-        public IActionResult Details(int id)
-        {
-            var order = orderService.GetOrderByIdAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-            return View(order);
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "ADMIN")] 
-        public IActionResult Process(int id)
-        {
-            var order = orderService.GetOrderByIdAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            // Process order logic (e.g., update order status, notify customer, etc.)
-
-            return RedirectToAction(nameof(Index));
-        }
 
         [HttpGet]
         public async Task<IActionResult> GetCartDetails()
@@ -93,17 +63,14 @@ namespace IA_Ecom.Controllers
             return RedirectToAction("Details", "Product", new { id = viewModel.ProductId });
         }
         
-        [HttpPost]
-        [Authorize] 
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Checkout()
+        private async Task<IActionResult> Checkout(PaymentMethod paymentMethod)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(userId))
             {
                 return RedirectToAction("Login", "Account"); // Redirect to the login page if user ID is not found
             }
-            var success = await orderService.CheckoutAsync(userId);
+            var success = await orderService.CheckoutAsync(userId, paymentMethod);
 
             if (!success)
             {
@@ -111,6 +78,25 @@ namespace IA_Ecom.Controllers
             }
 
             return RedirectToAction(nameof(OrderConfirmation));
+        }
+        
+        [HttpGet]
+        public IActionResult GetPaymentDetails()
+        {
+            return View("Checkout");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProcessPayment(PaymentMethod paymentMethod)
+        {
+            if (!PaymentMethodValidator.ValidatePaymentMethod(paymentMethod))
+            {
+                notificationService.AddNotification("Invalid payment details.", NotificationType.Validation);
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+
+            notificationService.AddNotification("Payment Details Validated", NotificationType.Success);
+            return await Checkout(paymentMethod);
         }
 
         public async Task<IActionResult> OrderConfirmation(int orderId)

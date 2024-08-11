@@ -11,7 +11,7 @@ public class PaymentService(IPaymentRepository paymentRepository, IPaymentGatewa
     {
         return await paymentRepository.GetPaymentByOrderId(orderId);
     }
-    public async Task<bool> ProcessPayment(Order order)
+    public async Task<bool> ProcessPayment(Order order, PaymentMethod paymentMethod)
     {
         try
         {
@@ -26,7 +26,7 @@ public class PaymentService(IPaymentRepository paymentRepository, IPaymentGatewa
             {
                 Amount = order.TotalAmount,
                 Currency = "USD",
-                PaymentMethod = GetPaymentMethodForUser(order.CustomerId),
+                PaymentMethod = GetPaymentMethodForUser(paymentMethod),
                 Description = $"Order #{order.OrderId} payment"
             };
 
@@ -40,12 +40,9 @@ public class PaymentService(IPaymentRepository paymentRepository, IPaymentGatewa
                 await paymentRepository.SavePaymentTransaction(order, paymentResult);
                 return true;
             }
-            else
-            {
                 // Log error or handle payment failure case
                 Console.WriteLine($"Payment failed: {paymentResult.ErrorMessage}");
                 return false;
-            }
         }
         catch (Exception ex)
         {
@@ -54,15 +51,14 @@ public class PaymentService(IPaymentRepository paymentRepository, IPaymentGatewa
         }
     }
 
-    private PaymentMethod GetPaymentMethodForUser(string userId)
+    private PaymentMethod GetPaymentMethodForUser(PaymentMethod paymentMethod)
     {
-        // Logic to retrieve user's payment method. For now this is dumy data
         return new PaymentMethod
         {
-            CardNumber = "4111111111111111",
-            ExpiryMonth = 12,
-            ExpiryYear = 2024,
-            Cvc = "123"
+            CardNumber = paymentMethod.CardNumber,
+            ExpiryMonth = paymentMethod.ExpiryMonth,
+            ExpiryYear = paymentMethod.ExpiryYear,
+            CVV = paymentMethod.CVV
         };
     }
 

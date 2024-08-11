@@ -1,35 +1,42 @@
+@model IA_Ecom.RequestModels.PaymentMethod;
 @{
-ViewData["Title"] = "Checkout";
-Layout = "~/Views/Home/_PageLayout.cshtml";
+    ViewData["Title"] = "Checkout";
+    Layout = "~/Views/Home/_PageLayout.cshtml";
 }
 <div class="grid">
     <h1 class="section-title">Checkout</h1>
 
-    <div class="user-form card">
-        <form action="#" method="post" class="payment-form">
+    <div class="payment-form card">
+        <form asp-controller="Order" asp-action="ProcessPayment" method="post" class="user-form">
             <div class="form-group">
-                <label for="cardName">Name on Card</label>
-                <input type="text" id="cardName" class="newsletter__input" placeholder="Enter name" name="cardName" required>
+                <label asp-for="CardNumber">Card Number</label>
+                <input asp-for="CardNumber" class="user-form__input" placeholder="Enter Card Number" required>
+                <span asp-validation-for="CardNumber" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label for="cardNumber">Card Number</label>
-                <input type="text" id="cardNumber" class="newsletter__input" placeholder="Enter Number" name="cardNumber" required>
+                <label asp-for="CardHolderName">Name on Card</label>
+                <input asp-for="CardHolderName" class="user-form__input" placeholder="Enter Card Holders Name" required>
+                <span asp-validation-for="CardHolderName" class="text-danger"></span>
+            </div>
+
+            <div class="horizontal-group">
+                <div>
+                    <label asp-for="ExpiryYear">Expiry Year</label>
+                    <input asp-for="ExpiryYear" class="user-form__input" required>
+                    <span asp-validation-for="ExpiryYear" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="ExpiryMonth">Expiry Month</label>
+                    <input asp-for="ExpiryMonth" class="user-form__input" required>
+                    <span asp-validation-for="ExpiryMonth" class="text-danger"></span>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="expDate">Expiry Date</label>
-                <input type="text" id="expDate" class="newsletter__input" placeholder="MM/YY" name="expDate" required>
-            </div>
-
-            <div class="form-group">
-                <label for="cvv">CVV</label>
-                <input type="text" id="cvv" class="newsletter__input" placeholder="Enter CVV" name="cvv" required>
-            </div>
-
-            <div class="form-group">
-                <label for="billingAddress">Billing Address</label>
-                <input type="text" id="billingAddress" class="newsletter__input" placeholder="Enter Billing Address" name="billingAddress" required>
+                <label asp-for="CVV">CVV</label>
+                <input asp-for="CVV" class="user-form__input" placeholder="Enter CVV" required>
+                <span asp-validation-for="CVV" class="text-danger"></span>
             </div>
 
             <button type="submit" class="button">Pay Now</button>
