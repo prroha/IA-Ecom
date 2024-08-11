@@ -120,5 +120,24 @@ namespace IA_Ecom.Controllers
             return View(viewModel);
         }
 
+        public async Task<IActionResult> DeleteOrderItem(int id)
+        {
+            if (id > 0)
+            {
+                try
+                {
+                    await orderService.DeleteOrderItemAsync(id);
+                    notificationService.AddNotification("OrderItem Deleted", NotificationType.Success);
+                    return RedirectToAction("GetCartDetails");
+                }
+                catch (Exception ex)
+                {
+                    notificationService.AddNotification("OrderItem Not Found", NotificationType.Error);
+                }
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+            notificationService.AddNotification("OrderItem not Found", NotificationType.Validation);
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
     }
 }

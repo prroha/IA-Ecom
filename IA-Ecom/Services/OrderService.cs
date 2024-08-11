@@ -21,6 +21,10 @@ namespace IA_Ecom.Services
         {
             return await orderRepository.GetByIdAsync(id);
         }
+        public async Task<OrderItem> GetOrderItemByIdAsync(int id)
+        {
+            return await orderRepository.GetOrderItemByIdAsync(id);
+        }
         public async Task<Order> GetCartDetailsAsync(string customerId)
         {
             return await orderRepository.GetCartDetailsAsync(customerId);
@@ -44,6 +48,15 @@ namespace IA_Ecom.Services
             if (order != null)
             {
                 orderRepository.Remove(order);
+                await orderRepository.SaveChangesAsync();
+            }
+        }
+        public async Task DeleteOrderItemAsync(int id)
+        {
+            var orderItem = await orderRepository.GetOrderItemByIdAsync(id);
+            if (orderItem != null)
+            {
+                orderItem.DeletedDate = DateTime.UtcNow;
                 await orderRepository.SaveChangesAsync();
             }
         }

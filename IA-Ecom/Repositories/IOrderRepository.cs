@@ -6,6 +6,7 @@ namespace IA_Ecom.Repositories
     {
         // Define additional methods specific to Order if any
         // IEnumerable<CartItem> GetCartItems(string customerId);
+        Task<OrderItem> GetOrderItemByIdAsync(int id);
         Task<IEnumerable<Order>> GetAllOrdersAsync();
         Task AddToCartAsync(OrderItem orderItem, User user);
         Task<Order> GetOrderByCustomerIdAsync(string customerId);

@@ -35,13 +35,13 @@ static void ConfigureServices(WebApplicationBuilder builder)
             Directory.CreateDirectory(appDataPath);
         }
 
-        // string connectionString = configuration.GetConnectionString("DefaultConnectionSqlite") ?? 
-        //                    throw new InvalidOperationException("Connection string 'DefaultConnectionSqlite' not found.");
-        string connectionString = configuration.GetConnectionString("DefaultConnectionSqlServer") ?? 
-                           throw new InvalidOperationException("Connection string 'DefaultConnectionSqlServer' not found.");
+        string connectionString = configuration.GetConnectionString("DefaultConnectionSqlite") ?? 
+                           throw new InvalidOperationException("Connection string 'DefaultConnectionSqlite' not found.");
+        // string connectionString = configuration.GetConnectionString("DefaultConnectionSqlServer") ?? 
+        //                    throw new InvalidOperationException("Connection string 'DefaultConnectionSqlServer' not found.");
         services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(connectionString));
-        // options.UseSqlite(connectionString));
+        // options.UseSqlServer(connectionString));
+        options.UseSqlite(connectionString));
     }
     else
     {
@@ -58,7 +58,9 @@ static void ConfigureServices(WebApplicationBuilder builder)
             options.SignIn.RequireConfirmedAccount = false;
         })
         .AddRoles<IdentityRole>()
-        .AddEntityFrameworkStores<ApplicationDbContext>();
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
+        
     services.AddControllersWithViews();
     // Register application services
     services.AddAutoMapper(typeof(MappingProfile));

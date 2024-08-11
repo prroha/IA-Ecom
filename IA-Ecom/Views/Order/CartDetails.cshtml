@@ -28,8 +28,9 @@
                     <td>@orderItem.Quantity</td>
                     <td>$@orderItem.UnitPrice</td>
                     <td>
-                        <span class="button-remove button-secondary">
-                            <i class='bx bx-trash-alt'></i></span>
+                        <a asp-controller="Order" asp-action="DeleteOrderItem" asp-route-id="@orderItem.OrderItemId" class="button-secondary delete-button">
+                            <i class='bx bx-trash-alt'></i>
+                        </a>
                     </td>
                 </tr>
             }

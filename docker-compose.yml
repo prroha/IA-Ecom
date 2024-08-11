@@ -1,6 +1,14 @@
 ﻿version: '3.8'
 
 services:
+  sql_server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Shoes@123!
+    ports:
+      - "1433:1433"
+      
   ia-ecom:
     image: ia-ecom
     build:
