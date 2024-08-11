@@ -28,7 +28,7 @@
             {
                 <tr>
                     <td>@feedback.FeedbackId</td>
-                    <td>@feedback.Username</td>
+                    <td>@feedback.UserFullName</td>
                     <td>@feedback.Message</td>
                     <td>@feedback.Date</td>
                     <td>@feedback.Rating</td>
@@ -51,8 +51,8 @@
                 <input asp-for="@Model.Feedback.FeedbackId" class="user-form__input" readonly>
             </div>
             <div class="form-group">
-                <label asp-for="@Model.Feedback.Username">User Name</label>
-                <input type="text" asp-for="@Model.Feedback.Username" class="user-form__input" readonly>
+                <label asp-for="@Model.Feedback.UserFullName">Full Name</label>
+                <input type="text" asp-for="@Model.Feedback.UserFullName" class="user-form__input" readonly>
             </div>
             <div class="form-group">
                 <label asp-for="@Model.Feedback.Message">Comment</label>
